@@ -68,8 +68,9 @@ def load_words(page_content: str):
 
 def pi_gai(data_json):
     st.balloons()
+    st.text("检测文章:" + st.session_state['passage'])
+    st.write("正确率为:" + st.session_state['accu'] + "%")
 
-    print(data_json)
     # 创建一个示例DataFrame
     # 创建一个 HTML 表格字符串
     html_table = """
@@ -173,6 +174,8 @@ if 'chinese_list' not in st.session_state:
     st.session_state['chinese_list'] = []
 if 'passage' not in st.session_state:
     st.session_state['passage'] = ''
+if 'accu' not in st.session_state:
+    st.session_state['accu'] = ''
 
 
 #
@@ -186,6 +189,7 @@ class NewStudent:
         st.title(f"{english_list[page_id - 1]}")
         st.write('-' + st.session_state['passage'])
         try:
+            st.session_state['accu'] = str('%.2f' % ((len(st.session_state['correct_list']) / (page_id - 1)) * 100))
             st.text(f"当前正确率:{('%.2f' % ((len(st.session_state['correct_list']) / (page_id - 1)) * 100))}%")
         except:
             ...
@@ -227,6 +231,7 @@ def main():
     - 5. 后添加若干控件
     - 6. 后邀请Sword,Raymond同学测试程序，发现若干bug，并修复
     - 7. 去除大量不必要功能并保留并更新原始功能
+    - 8. 添加一定的安全检测机制
     -----------
     2024/5/29日
     第一代版本发布""")
@@ -310,68 +315,84 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
         # print("data", st.session_state.data)
         st.session_state.num += 1
         right_or_wrong = st.empty()
+        try:
+            if st.session_state['chinese_list'][st.session_state.num - 2] == st.session_state.A:
+                # time.sleep(1)
+                with right_or_wrong.info("恭喜你答对了WoW"):
+                    time.sleep(time_to_sleep)
+                st.session_state['correct_list'].append(st.session_state.A)
 
-        if st.session_state['chinese_list'][st.session_state.num - 2] == st.session_state.A:
-            # time.sleep(1)
-            with right_or_wrong.info("恭喜你答对了WoW"):
-                time.sleep(time_to_sleep)
-            st.session_state['correct_list'].append(st.session_state.A)
+            else:
+                st.session_state['wrong_list'].append(st.session_state.A)
+                # time.sleep(1)
+                with right_or_wrong.error("回答错误QwQ"):
+                    time.sleep(time_to_sleep)
+            right_or_wrong.empty()
+            st.session_state.data.append({
+                'id': st.session_state.num, 'name': 'A' + st.session_state.A})
+        except:
+            st.warning("系统检测到非法操作,此次操作无效")
+            st.session_state['accu'] = "因非法操作，无效正确率"
 
-        else:
-            st.session_state['wrong_list'].append(st.session_state.A)
-            # time.sleep(1)
-            with right_or_wrong.error("回答错误QwQ"):
-                time.sleep(time_to_sleep)
-        right_or_wrong.empty()
-        st.session_state.data.append({
-            'id': st.session_state.num, 'name': 'A' + st.session_state.A})
+            time.sleep(1)
+            return
 
     def add_choice_B():
-
-        # print("点击B")
         print(f"session_state_num->{st.session_state.num}")
         # print("data", st.session_state.data)
         right_or_wrong = st.empty()
 
         st.session_state.num += 1
-        if st.session_state['chinese_list'][st.session_state.num - 2] == st.session_state.B:
-            # time.sleep(1)
-            with right_or_wrong.info("恭喜你答对了WoW"):
-                time.sleep(time_to_sleep)
-            st.session_state['correct_list'].append(st.session_state.B)
+        try:
+            if st.session_state['chinese_list'][st.session_state.num - 2] == st.session_state.B:
+                # time.sleep(1)
+                with right_or_wrong.info("恭喜你答对了WoW"):
+                    time.sleep(time_to_sleep)
+                st.session_state['correct_list'].append(st.session_state.B)
 
-        else:
-            st.session_state['wrong_list'].append(st.session_state.B)
-            # time.sleep(1)
-            with right_or_wrong.error("回答错误QwQ"):
-                time.sleep(time_to_sleep)
+            else:
+                st.session_state['wrong_list'].append(st.session_state.B)
+                # time.sleep(1)
+                with right_or_wrong.error("回答错误QwQ"):
+                    time.sleep(time_to_sleep)
 
-        right_or_wrong.empty()
-        st.session_state.data.append({
-            'id': st.session_state.num, 'name': 'B' + st.session_state.B})
+            right_or_wrong.empty()
+            st.session_state.data.append({
+                'id': st.session_state.num, 'name': 'B' + st.session_state.B})
+        except:
+            st.warning("系统检测到非法操作,此次操作无效")
+            st.session_state['accu'] = "因非法操作，无效正确率"
+            time.sleep(1)
+            return
 
     def add_choice_C():
-
         # print("点击C")
         print(f"session_state_num->{st.session_state.num}")
         # print("data", st.session_state.data)
         right_or_wrong = st.empty()
 
         st.session_state.num += 1
-        if st.session_state['chinese_list'][st.session_state.num - 2] == st.session_state.C:
-            with right_or_wrong.info("恭喜你答对了WoW"):
-                time.sleep(time_to_sleep)
-            # time.sleep(1)
-            st.session_state['correct_list'].append(st.session_state.C)
-        else:
-            right_or_wrong.error("回答错误QwQ")
-            # time.sleep(1)
-            with right_or_wrong.error("回答错误QwQ"):
-                time.sleep(time_to_sleep)
+        try:
 
-        right_or_wrong.empty()
-        st.session_state.data.append({
-            'id': st.session_state.num, 'name': 'C' + st.session_state.C})
+            if st.session_state['chinese_list'][st.session_state.num - 2] == st.session_state.C:
+                with right_or_wrong.info("恭喜你答对了WoW"):
+                    time.sleep(time_to_sleep)
+                # time.sleep(1)
+                st.session_state['correct_list'].append(st.session_state.C)
+            else:
+                right_or_wrong.error("回答错误QwQ")
+                # time.sleep(1)
+                with right_or_wrong.error("回答错误QwQ"):
+                    time.sleep(time_to_sleep)
+                right_or_wrong.empty()
+                st.session_state.data.append({
+                    'id': st.session_state.num, 'name': 'C' + st.session_state.C})
+        except:
+            st.warning("系统检测到非法操作,此次操作无效")
+            st.session_state['accu'] = "因非法操作，无效正确率"
+
+            time.sleep(1)
+            return
 
     while True:
         num = st.session_state.num
@@ -379,47 +400,51 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
             break
 
         else:
-            with st.form(key=str(num), clear_on_submit=True):
-                # chinese_list_ = st.session_state['chinese_all_list'][num]
-                # print(f"num{num},chinese_list{chinese_list__}")
-                original_word = chinese_list__[num - 1]
-                chinese_list_ = random.sample(
-                    [original_word] + random.sample(
-                        chinese_list__, 2),
-                    3)
+            try:
+                with st.form(key=str(num), clear_on_submit=True):
+                    # chinese_list_ = st.session_state['chinese_all_list'][num]
+                    # print(f"num{num},chinese_list{chinese_list__}")
+                    original_word = chinese_list__[num - 1]
+                    chinese_list_ = random.sample(
+                        [original_word] + random.sample(
+                            chinese_list__, 2),
+                        3)
 
-                print(f"choice_list_all{chinese_list_}")
-                NewStudent(english_list=english_list_, page_id=num)  # show_word
-                st.session_state.A = chinese_list_[0]
-                st.session_state.B = chinese_list_[1]
-                st.session_state.C = chinese_list_[2]
-                if st.form_submit_button(st.session_state.A, on_click=add_choice_A):
-                    continue
-                if st.form_submit_button(st.session_state.B, on_click=add_choice_B):
-                    continue
-                if st.form_submit_button(st.session_state.C, on_click=add_choice_C):
-                    continue
-                else:
-                    st.stop()
-                # if st.form_submit_button('选择A.' + choiceA):
-                #
-                # elif st.form_submit_button('选择B.' + choiceB):
-                #     print("点击B")
-                #     print(f"session_state_num->{st.session_state.num}")
-                #
-                #     st.session_state.num += 1
-                #     st.session_state.data.append({
-                #         'id': num, 'name': 'B' + choiceB})
-                #     # continue
-                # elif st.form_submit_button('选择C.' + choiceC):
-                #     print("点击C")
-                #     st.session_state.num += 1
-                #     print(f"session_state_num->{st.session_state.num}")
-                #     st.session_state.data.append({
-                #         'id': num, 'name': 'C' + choiceC})
-                # continue
+                    print(f"choice_list_all{chinese_list_}")
+                    NewStudent(english_list=english_list_, page_id=num)  # show_word
+                    st.session_state.A = chinese_list_[0]
+                    st.session_state.B = chinese_list_[1]
+                    st.session_state.C = chinese_list_[2]
+                    if st.form_submit_button(st.session_state.A, on_click=add_choice_A):
+                        continue
+                    if st.form_submit_button(st.session_state.B, on_click=add_choice_B):
+                        continue
+                    if st.form_submit_button(st.session_state.C, on_click=add_choice_C):
+                        continue
+                    else:
+                        st.stop()
+                    # if st.form_submit_button('选择A.' + choiceA):
+                    #
+                    # elif st.form_submit_button('选择B.' + choiceB):
+                    #     print("点击B")
+                    #     print(f"session_state_num->{st.session_state.num}")
+                    #
+                    #     st.session_state.num += 1
+                    #     st.session_state.data.append({
+                    #         'id': num, 'name': 'B' + choiceB})
+                    #     # continue
+                    # elif st.form_submit_button('选择C.' + choiceC):
+                    #     print("点击C")
+                    #     st.session_state.num += 1
+                    #     print(f"session_state_num->{st.session_state.num}")
+                    #     st.session_state.data.append({
+                    #         'id': num, 'name': 'C' + choiceC})
+                    # continue
+            except:
 
+                continue
     pi_gai(st.session_state.data)
 
 
 main()
+
