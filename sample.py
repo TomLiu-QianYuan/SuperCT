@@ -3,10 +3,15 @@ import time
 import json
 
 from bs4 import BeautifulSoup
-import requests
 
 import requests
 import streamlit as st
+
+st.set_page_config(page_title="SuperCT",
+                   page_icon=None,
+                   layout="centered",
+                   initial_sidebar_state="auto",
+                   menu_items=None)
 
 
 def get_html_content(url: str, save=False):
@@ -59,50 +64,6 @@ def load_words(page_content: str):
             f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(3)").text
 
     return word_dict
-
-
-if 'correct_list' not in st.session_state:
-    st.session_state['correct_list'] = []
-if 'wrong_list' not in st.session_state:
-    st.session_state['wrong_list'] = []
-
-chinese_list = []
-english_list = []
-begin = st.empty()
-option_sel = st.empty()
-if 'correct_words' not in st.session_state:
-    st.session_state.correct_words = '以下是正确的单词\n测试时间:' + time.strftime('%a %b %d %H:%M:%S %Y',
-                                                                                   time.localtime()) + '\n'
-if 'wrong_words' not in st.session_state:
-    st.session_state.wrong_words = '以下是错误的单词\n测试时间:' + time.strftime('%a %b %d %H:%M:%S %Y',
-                                                                                 time.localtime()) + '\n'
-if 'start' not in st.session_state:
-    st.session_state['start'] = False
-if 'num' not in st.session_state:
-    st.session_state.num = 1
-if 'data' not in st.session_state:
-    st.session_state.data = []
-if 'catalogs' not in st.session_state:
-    # st.info("检测到缓存未有目录列表,开始爬取")
-    with st.spinner(text="链接至https://shishiapcs.github.io"):
-        st.info("开始爬取")
-        st.session_state['catalogs'] = load_catalog(True, save=False)
-        st.success("爬取完毕")
-if 'chinese_all_list' not in st.session_state:
-    chinese_all_list = {}
-    for i in range(len(chinese_list)):
-        chinese_all_list[i + 1] = random.sample(chinese_list, 3)
-    st.session_state['chinese_all_list'] = chinese_all_list
-if 'english_list' not in st.session_state:
-    st.session_state['english_list'] = []
-if 'chinese_list' not in st.session_state:
-    st.session_state['chinese_list'] = []
-
-
-#
-# for i in range(len(chinese_list)):
-#     chinese_all_list[i+1] = random.sample(chinese_list,3)
-# print(chinese_all_list)
 
 
 def pi_gai(data_json):
@@ -158,9 +119,56 @@ def pi_gai(data_json):
     #         print("wrong:",chinese_)
 
 
+if 'correct_list' not in st.session_state:
+    st.session_state['correct_list'] = []
+if 'wrong_list' not in st.session_state:
+    st.session_state['wrong_list'] = []
+
+chinese_list = []
+english_list = []
+begin = st.empty()
+option_sel = st.empty()
+if 'correct_words' not in st.session_state:
+    st.session_state.correct_words = '以下是正确的单词\n测试时间:' + time.strftime('%a %b %d %H:%M:%S %Y',
+                                                                                   time.localtime()) + '\n'
+if 'wrong_words' not in st.session_state:
+    st.session_state.wrong_words = '以下是错误的单词\n测试时间:' + time.strftime('%a %b %d %H:%M:%S %Y',
+                                                                                 time.localtime()) + '\n'
+if 'start' not in st.session_state:
+    st.session_state['start'] = False
+if 'num' not in st.session_state:
+    st.session_state.num = 1
+if 'data' not in st.session_state:
+    st.session_state.data = []
+if 'catalogs' not in st.session_state:
+    # st.info("检测到缓存未有目录列表,开始爬取")
+    with st.spinner(text="链接至https://shishiapcs.github.io"):
+        st.info("开始爬取")
+        st.session_state['catalogs'] = load_catalog(True, save=False)
+        st.success("爬取完毕")
+if 'chinese_all_list' not in st.session_state:
+    chinese_all_list = {}
+    for i in range(len(chinese_list)):
+        chinese_all_list[i + 1] = random.sample(chinese_list, 3)
+    st.session_state['chinese_all_list'] = chinese_all_list
+if 'english_list' not in st.session_state:
+    st.session_state['english_list'] = []
+if 'chinese_list' not in st.session_state:
+    st.session_state['chinese_list'] = []
+if 'passage' not in st.session_state:
+    st.session_state['passage'] = ''
+
+
+#
+# for i in range(len(chinese_list)):
+#     chinese_all_list[i+1] = random.sample(chinese_list,3)
+# print(chinese_all_list)
+
+
 class NewStudent:
     def __init__(self, page_id, english_list):
         st.title(f"{english_list[page_id - 1]}")
+        st.write('取自-' + st.session_state['passage'])
         try:
             st.text(f"当前正确率:{('%.2f' % ((len(st.session_state['correct_list']) / (page_id - 1)) * 100))}%")
         except:
@@ -228,6 +236,7 @@ def main():
     if option:
 
         global english_list
+        st.session_state['passage'] = option
         place_holder_info.empty()
         place_holder.empty()
         begin.empty()
