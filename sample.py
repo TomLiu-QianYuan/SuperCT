@@ -176,10 +176,10 @@ place_holder_info = st.empty()
 def main():
     with place_holder_info.expander("程序的背后"):
         st.markdown("""
-    
     SuperCT
     - 描述:SuperCT to Scan Which Words You Unfamiliar
     - 感谢Carol小姐对作者的支持
+    ----------
     当前版本：
     V1.0.0(WebUIVersion)
     - 作者: TomLiu Suxyds(乾元)
