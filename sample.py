@@ -206,7 +206,7 @@ def main():
         st.markdown("""
     SuperCT
     - 描述:SuperCT:'Super CT machine to Scan Which Words You Unfamiliar'
-    - 感谢Carol小姐对作者的支持
+    - 感谢Carol小姐，Raymond先生,以及Sword先生
     ----------
     当前版本：
     V1.0.0(WebUIVersion)
@@ -227,14 +227,16 @@ def main():
     - 1. 我决定为carol小姐开发一款背单词软件，第一代程序使用的命令行ui，因小姐觉得太丑了，于是我决定使用更好看的ui
     - 2. 综合考虑了众多条件，因为我没钱购买昂贵的服务器，于是采用了这套免费的云服务项目（streamlit cloud）
     - 3. 但也意味着只能使用streamlit构建
-    - 4. 于是我不停的学习，修改bug，一次单词顺序的bug我差一点放弃这个项目的开发，好在carol小姐的支持和我不停的对比实例代码的不同，最终明白是streamlit动态机制和多个if语句条件导致的
+    - 4. 于是我不停的学习，修改bug，一次单词顺序的bug我差一点放弃这个项目的开发，好在carol小姐默默支持
+    - 4. 我不停地对比并研究示例代码，最终明白是streamlit的动态机制和我的多个if条件语句条件导致的及其隐蔽的bug
     - 5. 后添加若干控件
     - 6. 后邀请Sword,Raymond同学测试程序，发现若干bug，并修复
     - 7. 去除大量不必要功能并保留并更新原始功能
     - 8. 添加一定的安全检测机制
     -----------
     2024/5/29日
-    第一代版本发布""")
+    第一代版本发布并于5/29日晚完成初步上线部署
+    """)
     option = option_sel.selectbox(
         "选择一篇你喜欢的文章吧@OwO@",
         (st.session_state['catalogs'].keys()),
