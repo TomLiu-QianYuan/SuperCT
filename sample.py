@@ -386,9 +386,9 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
                 # time.sleep(1)
                 with right_or_wrong.error("回答错误QwQ"):
                     time.sleep(time_to_sleep)
-                right_or_wrong.empty()
-                st.session_state.data.append({
-                    'id': st.session_state.num, 'name': 'C' + st.session_state.C})
+            right_or_wrong.empty()
+            st.session_state.data.append({
+                'id': st.session_state.num, 'name': 'C' + st.session_state.C})
         except:
             st.warning("系统检测到非法操作,此次操作无效")
             st.session_state['accu'] = "因非法操作，无效正确率"
