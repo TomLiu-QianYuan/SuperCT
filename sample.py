@@ -119,6 +119,7 @@ def pi_gai(data_json):
     #         print("wrong:",chinese_)
 
 
+time_to_sleep = 1.2  # 微调此参数
 if 'correct_list' not in st.session_state:
     st.session_state['correct_list'] = []
 if 'wrong_list' not in st.session_state:
@@ -142,10 +143,25 @@ if 'data' not in st.session_state:
     st.session_state.data = []
 if 'catalogs' not in st.session_state:
     # st.info("检测到缓存未有目录列表,开始爬取")
-    with st.spinner(text="链接至https://shishiapcs.github.io"):
-        st.info("开始爬取")
-        st.session_state['catalogs'] = load_catalog(True, save=False)
-        st.success("爬取完毕")
+    with st.spinner(text="正在加载中"):
+        with st.expander("加载细节"):
+            st.info("开始|链接至https://shishiapcs.github.io")
+            content_title = get_html_content("https://shishiapcs.github.io", save=True)
+            st.success("结束|爬取起始页完毕")
+            soup = BeautifulSoup(
+                content_title, "html.parser"
+            )
+            articles = soup.select('body > article')
+            titles = dict()
+            if len(articles) >= 4:
+                for fourth_article in articles:  # 列表索引从0开始，所以第四个元素的索引是3
+                    header_h1_a = fourth_article.select_one('header > h1 > a')
+                    if header_h1_a.text.startswith("TPO"):
+                        titles[header_h1_a.text] = header_h1_a['href']
+            st.session_state['catalogs'] = titles
+            st.success("结束|解析文本完毕")
+            st.success("结束|链接至https://shishiapcs.github.io")
+
 if 'chinese_all_list' not in st.session_state:
     chinese_all_list = {}
     for i in range(len(chinese_list)):
@@ -168,7 +184,7 @@ if 'passage' not in st.session_state:
 class NewStudent:
     def __init__(self, page_id, english_list):
         st.title(f"{english_list[page_id - 1]}")
-        st.write('取自-' + st.session_state['passage'])
+        st.write('-' + st.session_state['passage'])
         try:
             st.text(f"当前正确率:{('%.2f' % ((len(st.session_state['correct_list']) / (page_id - 1)) * 100))}%")
         except:
@@ -202,7 +218,7 @@ def main():
     - 使用json库解析若干语句
     - 使用random打乱单词顺序
     - 使用大量切片逻辑和循环逻辑等精密算法
-
+    - 每一次打开网页都会爬取最新文章列表已经最新单词
     2024年初
     - 1. 我决定为carol小姐开发一款背单词软件，第一代程序使用的命令行ui，因小姐觉得太丑了，于是我决定使用更好看的ui
     - 2. 综合考虑了众多条件，因为我没钱购买昂贵的服务器，于是采用了这套免费的云服务项目（streamlit cloud）
@@ -210,26 +226,45 @@ def main():
     - 4. 于是我不停的学习，修改bug，一次单词顺序的bug我差一点放弃这个项目的开发，好在carol小姐的支持和我不停的对比实例代码的不同，最终明白是streamlit动态机制和多个if语句条件导致的
     - 5. 后添加若干控件
     - 6. 后邀请Sword,Raymond同学测试程序，发现若干bug，并修复
+    - 7. 去除大量不必要功能并保留并更新原始功能
     -----------
     2024/5/29日
     第一代版本发布""")
     option = option_sel.selectbox(
-        "选择你的文章?",
+        "选择一篇你喜欢的文章吧@OwO@",
         (st.session_state['catalogs'].keys()),
         index=None,
         placeholder="选择一篇文章吧"
     )
-    if st.session_state.num < 2:
-
-        ref_catalogs = begin.button("重新爬取文章列表")
-        # info = begin.button("程序背景")
-
-        if ref_catalogs:
-            with st.spinner(text="链接至https://shishiapcs.github.io"):
-                st.info("开始爬取")
-                st.session_state['catalogs'] = load_catalog(True, save=False)
-                st.success("爬取完毕")
-                st.code("选择文章后即开启检测QwQ")
+    # if st.session_state.num < 2:
+    #
+    # ref_catalogs = begin.button("重新爬取文章列表")
+    # # info = begin.button("程序背景")
+    #
+    # if ref_catalogs:
+    #     with st.spinner(text="正在加载中"):
+    #         with st.expander("加载细节"):
+    #             st.info("开始|链接至https://shishiapcs.github.io")
+    #             content_title = get_html_content("https://shishiapcs.github.io", save=True)
+    #             st.success("结束|爬取起始页完毕")
+    #             soup = BeautifulSoup(
+    #                 content_title, "html.parser"
+    #             )
+    #             articles__ = soup.select('body > article')
+    #             titles__ = dict()
+    #             if len(articles__) >= 4:
+    #                 for fourth_article__ in articles:  # 列表索引从0开始，所以第四个元素的索引是3
+    #                     header_h1_a__ = fourth_article__.select_one('header > h1 > a')
+    #                     if header_h1_a__.text.startswith("TPO"):
+    #                         titles__[header_h1_a__.text] = header_h1_a__['href']
+    #             st.session_state['catalogs'] = titles__
+    #             st.success("结束|解析文本完毕")
+    #             st.success("结束|链接至https://shishiapcs.github.io")
+    # with st.spinner(text="链接至https://shishiapcs.github.io"):
+    #     st.info("开始爬取")
+    #     st.session_state['catalogs'] = load_catalog(True, save=False)
+    #     st.success("爬取完毕")
+    #     st.code("选择文章后即开启检测QwQ")
     # ref_list = st.button("刷新")
     global chinese_list, english_list
 
@@ -278,14 +313,15 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
 
         if st.session_state['chinese_list'][st.session_state.num - 2] == st.session_state.A:
             # time.sleep(1)
-            right_or_wrong.info("恭喜你答对了WoW")
+            with right_or_wrong.info("恭喜你答对了WoW"):
+                time.sleep(time_to_sleep)
             st.session_state['correct_list'].append(st.session_state.A)
 
         else:
             st.session_state['wrong_list'].append(st.session_state.A)
             # time.sleep(1)
-            right_or_wrong.error("回答错误QwQ")
-        time.sleep(1)
+            with right_or_wrong.error("回答错误QwQ"):
+                time.sleep(time_to_sleep)
         right_or_wrong.empty()
         st.session_state.data.append({
             'id': st.session_state.num, 'name': 'A' + st.session_state.A})
@@ -300,14 +336,16 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
         st.session_state.num += 1
         if st.session_state['chinese_list'][st.session_state.num - 2] == st.session_state.B:
             # time.sleep(1)
-            right_or_wrong.info("恭喜你答对了WoW")
+            with right_or_wrong.info("恭喜你答对了WoW"):
+                time.sleep(time_to_sleep)
             st.session_state['correct_list'].append(st.session_state.B)
 
         else:
             st.session_state['wrong_list'].append(st.session_state.B)
             # time.sleep(1)
-            right_or_wrong.error("回答错误QwQ")
-        time.sleep(1)
+            with right_or_wrong.error("回答错误QwQ"):
+                time.sleep(time_to_sleep)
+
         right_or_wrong.empty()
         st.session_state.data.append({
             'id': st.session_state.num, 'name': 'B' + st.session_state.B})
@@ -321,14 +359,16 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
 
         st.session_state.num += 1
         if st.session_state['chinese_list'][st.session_state.num - 2] == st.session_state.C:
-            right_or_wrong.info("恭喜你答对了WoW")
+            with right_or_wrong.info("恭喜你答对了WoW"):
+                time.sleep(time_to_sleep)
             # time.sleep(1)
             st.session_state['correct_list'].append(st.session_state.C)
         else:
             right_or_wrong.error("回答错误QwQ")
             # time.sleep(1)
-            st.session_state['wrong_list'].append(st.session_state.C)
-        time.sleep(1)
+            with right_or_wrong.error("回答错误QwQ"):
+                time.sleep(time_to_sleep)
+
         right_or_wrong.empty()
         st.session_state.data.append({
             'id': st.session_state.num, 'name': 'C' + st.session_state.C})
@@ -353,11 +393,11 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
                 st.session_state.A = chinese_list_[0]
                 st.session_state.B = chinese_list_[1]
                 st.session_state.C = chinese_list_[2]
-                if st.form_submit_button("A." + st.session_state.A, on_click=add_choice_A):
+                if st.form_submit_button(st.session_state.A, on_click=add_choice_A):
                     continue
-                if st.form_submit_button("B." + st.session_state.B, on_click=add_choice_B):
+                if st.form_submit_button(st.session_state.B, on_click=add_choice_B):
                     continue
-                if st.form_submit_button("C." + st.session_state.C, on_click=add_choice_C):
+                if st.form_submit_button(st.session_state.C, on_click=add_choice_C):
                     continue
                 else:
                     st.stop()
