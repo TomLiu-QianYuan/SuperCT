@@ -119,7 +119,7 @@ def pi_gai(data_json):
     #         print("wrong:",chinese_)
 
 
-time_to_sleep = 1.2  # 微调此参数
+time_to_sleep = 0.5  # 微调此参数
 if 'correct_list' not in st.session_state:
     st.session_state['correct_list'] = []
 if 'wrong_list' not in st.session_state:
