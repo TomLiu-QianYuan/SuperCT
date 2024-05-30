@@ -169,7 +169,7 @@ def choice_model(temp_session_state_store_answer):
         st.session_state.data.append({
             'id': st.session_state.num, 'name': temp_session_state_store_answer})
     except:
-        st.warning("系统检测到非法操作,此次操作无效")
+        st.warning("~qwq~ SuperCT忙不过来了,即你操作无效一次")
         st.session_state['accu'] = "因非法操作，无效正确率"
         time.sleep(1)
         return
@@ -177,22 +177,22 @@ def choice_model(temp_session_state_store_answer):
 
 def main():
     option = option_sel.selectbox(
-        "选择一篇你喜欢的文章吧@OwO@",
+        "快来选择一篇你喜欢的文章吧@OwO@",
         (st.session_state['catalogs'].keys()),
         index=None,
-        placeholder="选择一篇文章吧"
+        placeholder="我爱学习"
     )
 
     if st.session_state.num < 2:
-        with place_holder_info.expander("程序的背后"):
+        with place_holder_info.expander("SuperCT的背后故事"):
             st.markdown(open("README.md", 'r', encoding='utf-8').read())
-        with setting_sel.expander("设置"):
+        with setting_sel.expander("^-^快来设置全新的SuperCT吧!"):
             global time_to_sleep
             global right_color
             global wrong_color
-            st.write("正在测试单词时:")
+            st.write("SuperCT正在测试单词时:")
             time_to_sleep = st.slider(label="切换单词时间(s)", min_value=0.0, max_value=10.0, value=time_to_sleep)
-            st.write("结束时:")
+            st.write("SuperCT结束测试单词时:")
             right_color = st.text_input(label="标记正确单词颜色", value=right_color)
             wrong_color = st.text_input(label="标记错误单词颜色", value=wrong_color)
     if option:
@@ -203,7 +203,7 @@ def main():
                     requests.get("https://shishiapcs.github.io" + st.session_state['catalogs'][option]
                                  ).text)
                 if not word_app:
-                    st.warning("@w@解析错误,换一个文章试试看?")
+                    st.warning("@w@SuperCT无法解析它,换一个文章试试看?")
                     return
             for i in word_app.keys():
                 st.session_state['english_list'].append(i)
