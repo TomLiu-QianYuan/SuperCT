@@ -89,23 +89,25 @@ def pi_gai():
     </table>
     <br>
     """
-    rows = ''
-    for num2, ic in enumerate(st.session_state['chinese_list']):
-        print(num2, ic)
-        if ic in st.session_state['correct_list']:
-            st.session_state.correct_words += ic + '\t' + st.session_state['english_list'][num2] + '\n'
-            color = right_color
-        else:
-            st.session_state.wrong_words += ic + '\t' + st.session_state['english_list'][num2] + '\n'
-            color = wrong_color
-        rows += f"<tr style='color: {color};'><td>{ic}</td><td>{st.session_state['english_list'][num2]}</td></tr>"
-    # 将数据行插入到表格中
-    html_table = html_table.format(rows)
-
-    st.markdown(html_table, unsafe_allow_html=True)
-    st.download_button("下载错误单词列表", st.session_state.wrong_words, file_name="错误的单词.txt")
-    st.download_button("下载正确单词列表", st.session_state.correct_words, file_name="正确的单词.txt")
-
+    try:
+        rows = ''
+        for num2, ic in enumerate(st.session_state['chinese_list']):
+            print(num2, ic)
+            if ic in st.session_state['correct_list']:
+                st.session_state.correct_words += ic + '\t' + st.session_state['english_list'][num2] + '\n'
+                color = right_color
+            else:
+                st.session_state.wrong_words += ic + '\t' + st.session_state['english_list'][num2] + '\n'
+                color = wrong_color
+            rows += f"<tr style='color: {color};'><td>{ic}</td><td>{st.session_state['english_list'][num2]}</td></tr>"
+        # 将数据行插入到表格中
+        html_table = html_table.format(rows)
+    
+        st.markdown(html_table, unsafe_allow_html=True)
+        st.download_button("下载错误单词列表", st.session_state.wrong_words, file_name="错误的单词.txt")
+        st.download_button("下载正确单词列表", st.session_state.correct_words, file_name="正确的单词.txt")
+    except Exception as error:
+        st.warning(f"这有些bug请将这段话给管理员:\ncorrect_list:{st.session_state['correct_list']}\nwroing_list:{st.session_state.wrong_words}\nerror")
 
 if 'correct_list' not in st.session_state:
     st.session_state['correct_list'] = []
