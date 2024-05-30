@@ -372,7 +372,7 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
                         st.stop()
                     
             except:
-
+                
                 continue
     pi_gai()
 
