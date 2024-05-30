@@ -7,6 +7,10 @@ from bs4 import BeautifulSoup
 import requests
 import streamlit as st
 
+right_color = "green"
+wrong_color = "red"
+time_to_sleep = 0.5  # 微调此参数
+
 st.set_page_config(page_title="SuperCT",
                    page_icon=None,
                    layout="centered",
@@ -66,7 +70,9 @@ def load_words(page_content: str):
     return word_dict
 
 
-def pi_gai(data_json):
+def pi_gai():
+    global right_color
+    global wrong_color
     st.balloons()
     st.text("检测文章:" + st.session_state['passage'])
     st.write("正确率为:" + st.session_state['accu'] + "%")
@@ -81,26 +87,17 @@ def pi_gai(data_json):
         </tr>
         {}
     </table>
+    <br>
     """
     rows = ''
-    # for word in data_json:
-    #     word_num = word['id']
-    #     print("word_num")
-    #     correct_chinese = st.session_state['chinese_list'][word_num - 2]
-    #     selected_chinese = (str(word['name']).
-    #                         replace("A", '').
-    #                         replace("B", '').
-    #                         replace("C", '').
-    #                         replace("D", ''))
     for num2, ic in enumerate(st.session_state['chinese_list']):
         print(num2, ic)
         if ic in st.session_state['correct_list']:
             st.session_state.correct_words += ic + '\t' + st.session_state['english_list'][num2] + '\n'
-            color = 'black'
+            color = right_color
         else:
             st.session_state.wrong_words += ic + '\t' + st.session_state['english_list'][num2] + '\n'
-
-            color = 'red'
+            color = wrong_color
         rows += f"<tr style='color: {color};'><td>{ic}</td><td>{st.session_state['english_list'][num2]}</td></tr>"
     # 将数据行插入到表格中
     html_table = html_table.format(rows)
@@ -109,18 +106,7 @@ def pi_gai(data_json):
     st.download_button("下载错误单词列表", st.session_state.wrong_words, file_name="错误的单词.txt")
     st.download_button("下载正确单词列表", st.session_state.correct_words, file_name="正确的单词.txt")
 
-    # for i in range(len(chinese_list) - 1):
-    #     print(f"choice {i}:", data_json[i])
-    #     english_ = english_list[i]
-    #
-    #     chinese_ = ''.join(str(data_json[i]['name']).split('')[1::])
-    #     print("chinese:", chinese_)
-    #     print("english:", english_)
-    #     if chinese_ != chinese_list[i]:
-    #         print("wrong:",chinese_)
 
-
-time_to_sleep = 0.5  # 微调此参数
 if 'correct_list' not in st.session_state:
     st.session_state['correct_list'] = []
 if 'wrong_list' not in st.session_state:
@@ -130,6 +116,7 @@ chinese_list = []
 english_list = []
 begin = st.empty()
 option_sel = st.empty()
+setting_sel = st.empty()
 if 'correct_words' not in st.session_state:
     st.session_state.correct_words = '以下是正确的单词\n测试时间:' + time.strftime('%a %b %d %H:%M:%S %Y',
                                                                                    time.localtime()) + '\n'
@@ -178,12 +165,6 @@ if 'accu' not in st.session_state:
     st.session_state['accu'] = ''
 
 
-#
-# for i in range(len(chinese_list)):
-#     chinese_all_list[i+1] = random.sample(chinese_list,3)
-# print(chinese_all_list)
-
-
 class NewStudent:
     def __init__(self, page_id, english_list):
         st.title(f"{english_list[page_id - 1]}")
@@ -205,7 +186,7 @@ def main():
     with place_holder_info.expander("程序的背后"):
         st.markdown("""
     SuperCT
-    - 描述:SuperCT:'Super CT machine to Scan Which Words You Unfamiliar'
+    - 描述:SuperCT:Super CT machine to Scan Which Words You Unfamiliar
     - 感谢Carol小姐，Raymond先生,以及Sword先生
     ----------
     当前版本：
@@ -223,6 +204,8 @@ def main():
     - 使用random打乱单词顺序
     - 使用大量切片逻辑和循环逻辑等精密算法
     - 每一次打开网页都会爬取最新文章列表已经最新单词
+    ----------
+    
     2024年初
     - 1. 我决定为carol小姐开发一款背单词软件，第一代程序使用的命令行ui，因小姐觉得太丑了，于是我决定使用更好看的ui
     - 2. 综合考虑了众多条件，因为我没钱购买昂贵的服务器，于是采用了这套免费的云服务项目（streamlit cloud）
@@ -236,6 +219,9 @@ def main():
     -----------
     2024/5/29日
     第一代版本发布并于5/29日晚完成初步上线部署
+    2024/5/30日
+    据Mr.Mou建议,添加一定量的个性化设置
+    并优化了诸多代码
     """)
     option = option_sel.selectbox(
         "选择一篇你喜欢的文章吧@OwO@",
@@ -243,53 +229,26 @@ def main():
         index=None,
         placeholder="选择一篇文章吧"
     )
-    # if st.session_state.num < 2:
-    #
-    # ref_catalogs = begin.button("重新爬取文章列表")
-    # # info = begin.button("程序背景")
-    #
-    # if ref_catalogs:
-    #     with st.spinner(text="正在加载中"):
-    #         with st.expander("加载细节"):
-    #             st.info("开始|链接至https://shishiapcs.github.io")
-    #             content_title = get_html_content("https://shishiapcs.github.io", save=True)
-    #             st.success("结束|爬取起始页完毕")
-    #             soup = BeautifulSoup(
-    #                 content_title, "html.parser"
-    #             )
-    #             articles__ = soup.select('body > article')
-    #             titles__ = dict()
-    #             if len(articles__) >= 4:
-    #                 for fourth_article__ in articles:  # 列表索引从0开始，所以第四个元素的索引是3
-    #                     header_h1_a__ = fourth_article__.select_one('header > h1 > a')
-    #                     if header_h1_a__.text.startswith("TPO"):
-    #                         titles__[header_h1_a__.text] = header_h1_a__['href']
-    #             st.session_state['catalogs'] = titles__
-    #             st.success("结束|解析文本完毕")
-    #             st.success("结束|链接至https://shishiapcs.github.io")
-    # with st.spinner(text="链接至https://shishiapcs.github.io"):
-    #     st.info("开始爬取")
-    #     st.session_state['catalogs'] = load_catalog(True, save=False)
-    #     st.success("爬取完毕")
-    #     st.code("选择文章后即开启检测QwQ")
-    # ref_list = st.button("刷新")
+
     global chinese_list, english_list
 
+    with setting_sel.expander("设置"):
+        global time_to_sleep
+        global right_color
+        global wrong_color
+        st.write("正在测试单词时:")
+        time_to_sleep = st.slider(label="切换单词时间(s)", min_value=0.0, max_value=10.0, value=time_to_sleep)
+        st.write("结束时:")
+        right_color = st.text_input(label="标记正确单词颜色", value=right_color)
+        wrong_color = st.text_input(label="标记错误单词颜色", value=wrong_color)
     if option:
 
         global english_list
+        setting_sel.empty()
         st.session_state['passage'] = option
         place_holder_info.empty()
         place_holder.empty()
         begin.empty()
-        # chinese_all_list_ = {}
-        # for i_ in range(len(chinese_list)):
-        #     print("original word", original_word)
-        #     print([original_word] + chinese_list)
-        #
-        #     chinese_all_list_[i_ + 1] = random.sample([original_word] + chinese_list, 3)
-        # st.session_state['chinese_all_list'] = chinese_all_list_
-        # st.session_state['start'] = True
         if st.session_state.num < 2:
             with st.spinner(text="链接至" + "https://shishiapcs.github.io" + st.session_state['catalogs'][option]):
                 word_app = load_words(
@@ -305,28 +264,22 @@ def main():
             place_holder.success("爬取完毕,加载单词...")
         place_holder.empty()
         option_sel.empty()
-        # print("chinese_list", chinese_list)
-        # print(st.session_state['english_list'])
         run(chinese_list__=st.session_state['chinese_list'])
 
 
 def run(english_list_=st.session_state['english_list'], chinese_list__: list = st.session_state['chinese_list']):
     def add_choice_A():
-        # print("点击A")
         print(f"session_state_num->{st.session_state.num}")
-        # print("data", st.session_state.data)
         st.session_state.num += 1
         right_or_wrong = st.empty()
         try:
             if st.session_state['chinese_list'][st.session_state.num - 2] == st.session_state.A:
-                # time.sleep(1)
                 with right_or_wrong.info("恭喜你答对了WoW"):
                     time.sleep(time_to_sleep)
                 st.session_state['correct_list'].append(st.session_state.A)
 
             else:
                 st.session_state['wrong_list'].append(st.session_state.A)
-                # time.sleep(1)
                 with right_or_wrong.error("回答错误QwQ"):
                     time.sleep(time_to_sleep)
             right_or_wrong.empty()
@@ -341,20 +294,17 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
 
     def add_choice_B():
         print(f"session_state_num->{st.session_state.num}")
-        # print("data", st.session_state.data)
         right_or_wrong = st.empty()
 
         st.session_state.num += 1
         try:
             if st.session_state['chinese_list'][st.session_state.num - 2] == st.session_state.B:
-                # time.sleep(1)
                 with right_or_wrong.info("恭喜你答对了WoW"):
                     time.sleep(time_to_sleep)
                 st.session_state['correct_list'].append(st.session_state.B)
 
             else:
                 st.session_state['wrong_list'].append(st.session_state.B)
-                # time.sleep(1)
                 with right_or_wrong.error("回答错误QwQ"):
                     time.sleep(time_to_sleep)
 
@@ -368,24 +318,19 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
             return
 
     def add_choice_C():
-        # print("点击C")
         print(f"session_state_num->{st.session_state.num}")
-        # print("data", st.session_state.data)
         right_or_wrong = st.empty()
+        time.sleep(time_to_sleep)
 
         st.session_state.num += 1
         try:
 
             if st.session_state['chinese_list'][st.session_state.num - 2] == st.session_state.C:
-                with right_or_wrong.info("恭喜你答对了WoW"):
-                    time.sleep(time_to_sleep)
-                # time.sleep(1)
+
+                right_or_wrong.info("恭喜你答对了WoW")
                 st.session_state['correct_list'].append(st.session_state.C)
             else:
                 right_or_wrong.error("回答错误QwQ")
-                # time.sleep(1)
-                with right_or_wrong.error("回答错误QwQ"):
-                    time.sleep(time_to_sleep)
             right_or_wrong.empty()
             st.session_state.data.append({
                 'id': st.session_state.num, 'name': 'C' + st.session_state.C})
@@ -404,8 +349,6 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
         else:
             try:
                 with st.form(key=str(num), clear_on_submit=True):
-                    # chinese_list_ = st.session_state['chinese_all_list'][num]
-                    # print(f"num{num},chinese_list{chinese_list__}")
                     original_word = chinese_list__[num - 1]
                     chinese_list_ = random.sample(
                         [original_word] + random.sample(
@@ -425,28 +368,11 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
                         continue
                     else:
                         st.stop()
-                    # if st.form_submit_button('选择A.' + choiceA):
-                    #
-                    # elif st.form_submit_button('选择B.' + choiceB):
-                    #     print("点击B")
-                    #     print(f"session_state_num->{st.session_state.num}")
-                    #
-                    #     st.session_state.num += 1
-                    #     st.session_state.data.append({
-                    #         'id': num, 'name': 'B' + choiceB})
-                    #     # continue
-                    # elif st.form_submit_button('选择C.' + choiceC):
-                    #     print("点击C")
-                    #     st.session_state.num += 1
-                    #     print(f"session_state_num->{st.session_state.num}")
-                    #     st.session_state.data.append({
-                    #         'id': num, 'name': 'C' + choiceC})
-                    # continue
+                    
             except:
 
                 continue
-    pi_gai(st.session_state.data)
+    pi_gai()
 
 
 main()
-
