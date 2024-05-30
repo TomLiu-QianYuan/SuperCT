@@ -201,7 +201,8 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
                     else:
                         st.stop()
             except Exception as error:
-                st.warning("可能")
+                st.warning(f"可能点击太快了,2s后进入下一个单词\nError:{error}")
+                time.sleep(2)
                 continue
     pi_gai()
 
