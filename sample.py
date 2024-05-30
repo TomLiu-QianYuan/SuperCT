@@ -140,7 +140,7 @@ def main():
 
     if st.session_state.num < 2:
         with place_holder_info.expander("程序的背后"):
-            st.markdown(open("about.md", 'r', encoding='utf-8').read())
+            st.markdown(open("README.md", 'r', encoding='utf-8').read())
         with setting_sel.expander("设置"):
             global time_to_sleep
             global right_color
