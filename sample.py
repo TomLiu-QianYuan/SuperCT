@@ -6,8 +6,54 @@ import streamlit as st
 
 right_color = "green"
 wrong_color = "red"
-time_to_sleep = 0.5  # 微调此参数
+time_to_sleep = 1.0  # 微调此参数
+correct_saying = [
+    "太nb了！你真是绝了！🔥🌟",
+    "太厉害了！你真是天才！🎓💡",
+    "牛气冲天！你的回答太棒了！🐮🌪️",
+    "你太强了！完全答对了！👊🎯",
+    "厉害了我的哥！你的智慧无人能敌！👨‍🔬🌌",
+    "太屌了！你的答案让人惊艳！🚀🌠",
+    "你真是神了！完全答对了！👽🛸",
+    "你太厉害了！你的智慧让人佩服！🤓📚",
+    "太牛了！你的回答太完美了！🌈🌟",
+    "你真是天才！你的智慧让人惊叹！🌟👀",
+    "太厉害了！你的答案太酷了！🤩🌈",
+    "你太屌了！你的智慧真是无穷的！🤖🌌",
+    "太nb了！你的回答太惊艳了！🎉🌟",
+    "你真是神了！你的智慧让人佩服！👼🌟",
+    "你太强了！你的智慧真是令人敬佩！💪💫",
+    "太牛了！你的回答展现了你的才华！👏🌟",
+    "你真是天才！你的智慧让人惊叹！🎓💡",
+    "太厉害了！你的答案太酷了！🤩🌈",
+    "你太屌了！你的智慧真是无穷的！🤖🌌",
+    "太nb了！你的回答太惊艳了！🎉🌟",
+    "你真是神了！你的智慧让人佩服！👼🌟"
+]
+wrong_saying = [
 
+    "别灰心，失败是成功之母！🌈🌱",
+    "错了没关系，重要的是你尝试了！👍💪",
+    "失败只是暂时的，坚持就是胜利！💪🏆",
+    "别丧气，每个人都会遇到挫折！😢🤗",
+    "失败不可怕，可怕的是放弃！🌟🚀",
+    "错了就错了，下次一定会更好！👏🌈",
+    "失败是通往成功的必经之路！🛣️🌌",
+    "别气馁，你还有很多机会！💪💯",
+    "失败只是成功的垫脚石！👀📚",
+    "别灰心，你的努力不会白费！💼⏰",
+    "每个人都会失败，重要的是重新站起来！🤓🌳",
+    "失败是成功的学前班！🎓📚",
+    "别丧气，失败是成长的阶梯！🌱🌈",
+    "错了就错了，关键是吸取教训！🤓💡",
+    "失败只是成功的暂时停留！🚧🏆",
+    "别灰心，你的潜力无限！💪🌟",
+    "失败是成功的磨砺！🌪️🔥",
+    "别气馁，失败是成功的学前班！🎓📚",
+    "失败只是成功的暂时停留！🚧🏆",
+    "别灰心，你的潜力无限！💪🌟",
+    "失败是成功的磨砺！🌪️🔥"
+]
 st.set_page_config(page_title="SuperCT",
                    page_icon=None,
                    layout="centered",
@@ -111,13 +157,13 @@ def choice_model(temp_session_state_store_answer):
     right_or_wrong = st.empty()
     try:
         if st.session_state['chinese_list'][st.session_state.num - 2] == temp_session_state_store_answer:
-            with right_or_wrong.info("恭喜你答对了WoW"):
+            with right_or_wrong.info(random.choice(correct_saying)):
                 time.sleep(time_to_sleep)
             st.session_state['correct_list'].append(temp_session_state_store_answer)
 
         else:
             st.session_state['wrong_list'].append(temp_session_state_store_answer)
-            with right_or_wrong.error("回答错误QwQ"):
+            with right_or_wrong.error(random.choice(wrong_saying)):
                 time.sleep(time_to_sleep)
         right_or_wrong.empty()
         st.session_state.data.append({
@@ -125,7 +171,6 @@ def choice_model(temp_session_state_store_answer):
     except:
         st.warning("系统检测到非法操作,此次操作无效")
         st.session_state['accu'] = "因非法操作，无效正确率"
-
         time.sleep(1)
         return
 
@@ -158,7 +203,7 @@ def main():
                     requests.get("https://shishiapcs.github.io" + st.session_state['catalogs'][option]
                                  ).text)
                 if not word_app:
-                    st.warning("解析错误,换一个文章试试看?@w@?")
+                    st.warning("@w@解析错误,换一个文章试试看?")
                     return
             for i in word_app.keys():
                 st.session_state['english_list'].append(i)
@@ -187,7 +232,6 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
                             chinese_list__, 2),
                         3)
 
-                    print(f"choice_list_all{chinese_list_}")
                     NewWordApp(english_list=english_list_, page_id=num)  # show_word
                     st.session_state.A = chinese_list_[0]
                     st.session_state.B = chinese_list_[1]
@@ -200,10 +244,10 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
                         continue
                     else:
                         st.stop()
-            except Exception as error:
-                st.warning(f"可能点击太快了,2s后进入下一个单词\nError:{error}")
+            except:
+                st.warning("!o!Super-CT不小心卡住了,将于2s后自动刷新")
                 time.sleep(2)
-                continue
+                st.rerun()
     pi_gai()
 
 
