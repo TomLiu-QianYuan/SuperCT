@@ -55,13 +55,8 @@ if 'accu' not in st.session_state:
     st.session_state['accu'] = ''
 if 'catalogs' not in st.session_state:
     # st.info("检测到缓存未有目录列表,开始爬取")
-    with st.spinner(text="正在加载网页中"):
-        with st.expander("展开加载细节"):
-            st.info("开始|链接至https://shishiapcs.github.io")
-            st.session_state['catalogs'] = functions.load_catalog(True, save=False)
-            st.success("结束|链接至https://shishiapcs.github.io")
-            st.info("信息-json格式如下:")
-            st.code(st.session_state['catalogs'])
+    with st.spinner(text="爬取网页中"):
+        st.session_state['catalogs'] = functions.load_catalog(True, save=False)
 
 option_sel = st.empty()
 

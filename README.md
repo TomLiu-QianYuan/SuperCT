@@ -1,7 +1,7 @@
 SuperCT
 
 - 描述:Super CT machine to Scan Which Words You Unfamiliar
-- 感谢Carol小姐，Raymond先生,以及Sword先生
+- 十分感谢Mr.Mou老师,Carol小姐，Raymond先生,以及Sword先生
 
 ----------
 当前版本：
@@ -65,4 +65,5 @@ WebVersion1.0.0本地测试通过
 大量删改不必要代码,大程度优化加载逻辑,优化函数加载等,并采用多文件管理代码
 
 2024/5/30日
+
 新增个性化提示鼓励,以及sword同学贡献他自定义的语料
