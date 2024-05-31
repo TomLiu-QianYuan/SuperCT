@@ -78,7 +78,6 @@ if st.session_state.num < 2:
 
 class NewWordApp:
     def __init__(self, page_id):
-        print("page-id:", page_id)
         # get real word(english)
         if st.session_state['choose_mode'] == '以英文选中文':
             example_sentence = st.session_state['example_dict'][st.session_state['chinese_list_'][page_id - 1]]
@@ -137,10 +136,7 @@ def choice_model(temp_session_state_store_answer):
     st.session_state.num += 1
 
     right_or_wrong = st.empty()
-    print("choice:", temp_session_state_store_answer)
     try:
-        print("chinese_lisT:")
-        print(st.session_state['chinese_list_'])
         if st.session_state['chinese_list_'][st.session_state.num - 2] == temp_session_state_store_answer:
             with right_or_wrong.info(random.choice(st.session_state['correct_saying'])):
                 time.sleep(time_to_sleep)
@@ -239,8 +235,6 @@ def run():
             if 1:
                 # try:
                 with st.form(key=str(num), clear_on_submit=True):
-                    print(st.session_state['chinese_list_'])
-                    print(st.session_state['english_list_'])
                     original_word = st.session_state['chinese_list_'][num - 1]
                     chinese_list_ = random.sample(
                         [original_word] + random.sample(
