@@ -18,6 +18,8 @@ try:
     print("test")
 except:
     st.rerun()
+if 'choose_mode' not in st.session_state:
+    choose_mode = "以中文选英文"
 if 'correct_list' not in st.session_state:
     st.session_state['correct_list'] = []
 if 'wrong_list' not in st.session_state:
@@ -89,7 +91,11 @@ def pi_gai():
     st.balloons()
     st.text("检测文章:" + st.session_state['passage'])
     st.write("正确率为:" + st.session_state['accu'] + "%")
-
+    if ['以中文选英文', "以英文选中文"] in st.session_state['choose_mode']:
+        temper_list = st.session_state['english_list']
+        st.session_state['english_list'] = st.session_state['chinese_list']
+        st.session_state['chinese_list'] = temper_list
+        st.session_state['choose_mode'] = ''
     if ka_zhu_guo:
         st.warning(f"本次检测卡了{ka_zhu_guo}次")
     html_table = """
@@ -160,12 +166,14 @@ def main():
             global right_color
             global wrong_color
             st.write("SuperCT正在测试单词时:")
+            st.session_state['choose_mode'] = st.radio(label="选择测试模式", options=['以中文选英文', '以英文选中文'])
             st.session_state['correct_saying'] = st.session_state['correct_saying_json'][
                 st.radio(label="谁为你庆祝答对单词",
                          options=st.session_state['correct_saying_json'].keys())]
             st.session_state['wrong_saying'] = st.session_state['wrong_saying_json'][
                 st.radio(label="谁为你鼓励答错单词",
                          options=st.session_state['wrong_saying_json'].keys())]
+
             time_to_sleep = st.slider(label="切换单词时间(s)", min_value=0.0, max_value=10.0, value=time_to_sleep)
             st.write("SuperCT结束测试单词时:")
             right_color = st.text_input(label="标记正确单词颜色", value=right_color)
