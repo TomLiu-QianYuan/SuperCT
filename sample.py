@@ -13,7 +13,10 @@ st.set_page_config(page_title="SuperCT",
                    layout="centered",
                    initial_sidebar_state="auto",
                    menu_items=None)
-
+try:
+    print("test")
+except:
+    st.rerun()
 if 'correct_list' not in st.session_state:
     st.session_state['correct_list'] = []
 if 'wrong_list' not in st.session_state:
@@ -40,7 +43,7 @@ if 'passage' not in st.session_state:
 
 if 'correct_saying_json' not in st.session_state:
     st.session_state['correct_saying_json'] = json.loads(open("correct_promot.json", 'r', encoding='utf-8').read())
-    print(st.session_state['correct_saying_json'])
+
 if 'wrong_saying_json' not in st.session_state:
     st.session_state['wrong_saying_json'] = json.loads(open("wrong_promot.json", 'r', encoding='utf-8').read())
 if 'correct_saying' not in st.session_state:
@@ -100,7 +103,6 @@ def pi_gai():
     """
     rows = ''
     for num2, ic in enumerate(st.session_state['chinese_list']):
-        print(num2, ic)
         if ic in st.session_state['correct_list']:
             st.session_state.correct_words += ic + '\t' + st.session_state['english_list'][num2] + '\n'
             color = right_color
