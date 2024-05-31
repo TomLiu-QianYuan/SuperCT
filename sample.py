@@ -232,8 +232,7 @@ def run():
         if num >= len(st.session_state['english_list_']) + 1:
             break
         else:
-            if 1:
-                # try:
+            try:
                 with st.form(key=str(num), clear_on_submit=True):
                     original_word = st.session_state['chinese_list_'][num - 1]
                     chinese_list_ = random.sample(
@@ -255,11 +254,10 @@ def run():
                         continue
                     else:
                         st.stop()
-            # except Exception as error:
-            #     print('error:', error)
-            #     st.warning("!o!Super-CT不小心卡住了,将于2s后自动刷新")
-            #     time.sleep(2)
-            #     st.rerun()
+            except Exception as error:
+                st.warning("!o!Super-CT不小心卡住了,将于2s后自动刷新")
+                time.sleep(2)
+                st.rerun()
     pi_gai()
 
 
