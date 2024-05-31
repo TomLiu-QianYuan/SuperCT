@@ -3,57 +3,11 @@ import time
 import functions
 import requests
 import streamlit as st
+import json
 
 right_color = "green"
 wrong_color = "red"
 time_to_sleep = 1.0  # 微调此参数
-correct_saying = [
-    "太nb了！你真是绝了！🔥🌟",
-    "太厉害了！你真是天才！🎓💡",
-    "牛气冲天！你的回答太棒了！🐮🌪️",
-    "你太强了！完全答对了！👊🎯",
-    "厉害了我的哥！你的智慧无人能敌！👨‍🔬🌌",
-    "太屌了！你的答案让人惊艳！🚀🌠",
-    "你真是神了！完全答对了！👽🛸",
-    "你太厉害了！你的智慧让人佩服！🤓📚",
-    "太牛了！你的回答太完美了！🌈🌟",
-    "你真是天才！你的智慧让人惊叹！🌟👀",
-    "太厉害了！你的答案太酷了！🤩🌈",
-    "你太屌了！你的智慧真是无穷的！🤖🌌",
-    "太nb了！你的回答太惊艳了！🎉🌟",
-    "你真是神了！你的智慧让人佩服！👼🌟",
-    "你太强了！你的智慧真是令人敬佩！💪💫",
-    "太牛了！你的回答展现了你的才华！👏🌟",
-    "你真是天才！你的智慧让人惊叹！🎓💡",
-    "太厉害了！你的答案太酷了！🤩🌈",
-    "你太屌了！你的智慧真是无穷的！🤖🌌",
-    "太nb了！你的回答太惊艳了！🎉🌟",
-    "你真是神了！你的智慧让人佩服！👼🌟"
-]
-wrong_saying = [
-
-    "别灰心，失败是成功之母！🌈🌱",
-    "错了没关系，重要的是你尝试了！👍💪",
-    "失败只是暂时的，坚持就是胜利！💪🏆",
-    "别丧气，每个人都会遇到挫折！😢🤗",
-    "失败不可怕，可怕的是放弃！🌟🚀",
-    "错了就错了，下次一定会更好！👏🌈",
-    "失败是通往成功的必经之路！🛣️🌌",
-    "别气馁，你还有很多机会！💪💯",
-    "失败只是成功的垫脚石！👀📚",
-    "别灰心，你的努力不会白费！💼⏰",
-    "每个人都会失败，重要的是重新站起来！🤓🌳",
-    "失败是成功的学前班！🎓📚",
-    "别丧气，失败是成长的阶梯！🌱🌈",
-    "错了就错了，关键是吸取教训！🤓💡",
-    "失败只是成功的暂时停留！🚧🏆",
-    "别灰心，你的潜力无限！💪🌟",
-    "失败是成功的磨砺！🌪️🔥",
-    "别气馁，失败是成功的学前班！🎓📚",
-    "失败只是成功的暂时停留！🚧🏆",
-    "别灰心，你的潜力无限！💪🌟",
-    "失败是成功的磨砺！🌪️🔥"
-]
 st.set_page_config(page_title="SuperCT",
                    page_icon=None,
                    layout="centered",
@@ -77,23 +31,34 @@ if 'num' not in st.session_state:
     st.session_state.num = 1
 if 'data' not in st.session_state:
     st.session_state.data = []
-if 'catalogs' not in st.session_state:
-    # st.info("检测到缓存未有目录列表,开始爬取")
-    with st.spinner(text="正在加载中"):
-        with st.expander("展开加载细节"):
-            st.info("开始|链接至https://shishiapcs.github.io")
-            st.session_state['catalogs'] = functions.load_catalog(True, save=False)
-            st.success("结束|链接至https://shishiapcs.github.io")
-            st.info("信息-json格式如下:")
-            st.code(st.session_state['catalogs'])
 if 'english_list' not in st.session_state:
     st.session_state['english_list'] = []
 if 'chinese_list' not in st.session_state:
     st.session_state['chinese_list'] = []
 if 'passage' not in st.session_state:
     st.session_state['passage'] = ''
+
+if 'correct_saying_json' not in st.session_state:
+    st.session_state['correct_saying_json'] = json.loads(open("correct_promot.json", 'r', encoding='utf-8').read())
+    print(st.session_state['correct_saying_json'])
+if 'wrong_saying_json' not in st.session_state:
+    st.session_state['wrong_saying_json'] = json.loads(open("wrong_promot.json", 'r', encoding='utf-8').read())
+if 'correct_saying' not in st.session_state:
+    st.session_state['correct_saying'] = []
+if 'wrong_saying' not in st.session_state:
+    st.session_state['wrong_saying'] = []
+
 if 'accu' not in st.session_state:
     st.session_state['accu'] = ''
+if 'catalogs' not in st.session_state:
+    # st.info("检测到缓存未有目录列表,开始爬取")
+    with st.spinner(text="正在加载网页中"):
+        with st.expander("展开加载细节"):
+            st.info("开始|链接至https://shishiapcs.github.io")
+            st.session_state['catalogs'] = functions.load_catalog(True, save=False)
+            st.success("结束|链接至https://shishiapcs.github.io")
+            st.info("信息-json格式如下:")
+            st.code(st.session_state['catalogs'])
 
 option_sel = st.empty()
 
@@ -157,22 +122,21 @@ def choice_model(temp_session_state_store_answer):
     right_or_wrong = st.empty()
     try:
         if st.session_state['chinese_list'][st.session_state.num - 2] == temp_session_state_store_answer:
-            with right_or_wrong.info(random.choice(correct_saying)):
+            with right_or_wrong.info(random.choice(st.session_state['correct_saying'])):
                 time.sleep(time_to_sleep)
             st.session_state['correct_list'].append(temp_session_state_store_answer)
 
         else:
             st.session_state['wrong_list'].append(temp_session_state_store_answer)
-            with right_or_wrong.error(random.choice(wrong_saying)):
+            with right_or_wrong.error(random.choice(st.session_state['wrong_saying'])):
                 time.sleep(time_to_sleep)
         right_or_wrong.empty()
         st.session_state.data.append({
             'id': st.session_state.num, 'name': temp_session_state_store_answer})
     except:
-        st.warning("~qwq~ SuperCT忙不过来了,即你操作无效一次")
-        st.session_state['accu'] = "因非法操作，无效正确率"
+        st.warning("~qwq~ SuperCT忙不过来了,请稍等")
         time.sleep(1)
-        return
+        st.rerun()
 
 
 def main():
@@ -191,6 +155,12 @@ def main():
             global right_color
             global wrong_color
             st.write("SuperCT正在测试单词时:")
+            st.session_state['correct_saying'] = st.session_state['correct_saying_json'][
+                st.radio(label="谁为你庆祝答对单词",
+                         options=st.session_state['correct_saying_json'].keys())]
+            st.session_state['wrong_saying'] = st.session_state['wrong_saying_json'][
+                st.radio(label="谁为你鼓励答错单词",
+                         options=st.session_state['wrong_saying_json'].keys())]
             time_to_sleep = st.slider(label="切换单词时间(s)", min_value=0.0, max_value=10.0, value=time_to_sleep)
             st.write("SuperCT结束测试单词时:")
             right_color = st.text_input(label="标记正确单词颜色", value=right_color)
