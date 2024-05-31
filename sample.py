@@ -19,7 +19,7 @@ try:
 except:
     st.rerun()
 if 'choose_mode' not in st.session_state:
-    choose_mode = "以中文选英文"
+    st.session_state['choose_mode'] = "以中文选英文"
 if 'correct_list' not in st.session_state:
     st.session_state['correct_list'] = []
 if 'wrong_list' not in st.session_state:
@@ -37,10 +37,15 @@ if 'num' not in st.session_state:
     st.session_state.num = 1
 if 'data' not in st.session_state:
     st.session_state.data = []
+if 'english_list_' not in st.session_state:
+    st.session_state['english_list_'] = []
 if 'english_list' not in st.session_state:
     st.session_state['english_list'] = []
+if 'chinese_list_' not in st.session_state:
+    st.session_state['chinese_list_'] = []
 if 'chinese_list' not in st.session_state:
     st.session_state['chinese_list'] = []
+
 if 'passage' not in st.session_state:
     st.session_state['passage'] = ''
 
@@ -72,16 +77,24 @@ if st.session_state.num < 2:
 
 
 class NewWordApp:
-    def __init__(self, page_id, english_list):
-        st.title(f"{english_list[page_id - 1]}", help=st.session_state['example_dict'][english_list[page_id - 1]])
+    def __init__(self, page_id):
+        print("page-id:", page_id)
+        # get real word(english)
+        if st.session_state['choose_mode'] == '以英文选中文':
+            example_sentence = st.session_state['example_dict'][st.session_state['chinese_list_'][page_id - 1]]
+        else:
+            example_sentence = st.session_state['example_dict'][st.session_state['english_list_'][page_id - 1]]
+
+        st.title(f"{st.session_state['english_list_'][page_id - 1]}",
+                 help=example_sentence)
         st.text('-' + st.session_state['passage'])
         try:
             st.session_state['accu'] = str('%.2f' % ((len(st.session_state['correct_list']) / (page_id - 1)) * 100))
             st.text(f"当前正确率:{('%.2f' % ((len(st.session_state['correct_list']) / (page_id - 1)) * 100))}%")
         except:
             ...
-        st.progress(page_id / len(st.session_state['english_list']),
-                    text=f"当前进度-{page_id}/{len(english_list)}")
+        st.progress(page_id / len(st.session_state['english_list_']),
+                    text=f"当前进度-{page_id}/{len(st.session_state['english_list_'])}")
 
 
 def pi_gai():
@@ -91,7 +104,6 @@ def pi_gai():
     st.balloons()
     st.text("检测文章:" + st.session_state['passage'])
     st.write("正确率为:" + st.session_state['accu'] + "%")
-    
     if ka_zhu_guo:
         st.warning(f"本次检测卡了{ka_zhu_guo}次")
     html_table = """
@@ -105,14 +117,14 @@ def pi_gai():
     <br>
     """
     rows = ''
-    for num2, ic in enumerate(st.session_state['chinese_list']):
+    for num2, ic in enumerate(st.session_state['chinese_list_']):
         if ic in st.session_state['correct_list']:
-            st.session_state.correct_words += ic + '\t' + st.session_state['english_list'][num2] + '\n'
+            st.session_state.correct_words += ic + '\t' + st.session_state['english_list_'][num2] + '\n'
             color = right_color
         else:
-            st.session_state.wrong_words += ic + '\t' + st.session_state['english_list'][num2] + '\n'
+            st.session_state.wrong_words += ic + '\t' + st.session_state['english_list_'][num2] + '\n'
             color = wrong_color
-        rows += f"<tr style='color: {color};'><td>{ic}</td><td>{st.session_state['english_list'][num2]}</td></tr>"
+        rows += f"<tr style='color: {color};'><td>{ic}</td><td>{st.session_state['english_list_'][num2]}</td></tr>"
     # 将数据行插入到表格中
     html_table = html_table.format(rows)
 
@@ -122,11 +134,14 @@ def pi_gai():
 
 
 def choice_model(temp_session_state_store_answer):
-    print(f"session_state_num->{st.session_state.num}")
     st.session_state.num += 1
+
     right_or_wrong = st.empty()
+    print("choice:", temp_session_state_store_answer)
     try:
-        if st.session_state['chinese_list'][st.session_state.num - 2] == temp_session_state_store_answer:
+        print("chinese_lisT:")
+        print(st.session_state['chinese_list_'])
+        if st.session_state['chinese_list_'][st.session_state.num - 2] == temp_session_state_store_answer:
             with right_or_wrong.info(random.choice(st.session_state['correct_saying'])):
                 time.sleep(time_to_sleep)
             st.session_state['correct_list'].append(temp_session_state_store_answer)
@@ -136,8 +151,6 @@ def choice_model(temp_session_state_store_answer):
             with right_or_wrong.error(random.choice(st.session_state['wrong_saying'])):
                 time.sleep(time_to_sleep)
         right_or_wrong.empty()
-        st.session_state.data.append({
-            'id': st.session_state.num, 'name': temp_session_state_store_answer})
     except:
         global ka_zhu_guo
         st.warning("~qwq~ SuperCT忙不过来了,请稍等")
@@ -145,6 +158,17 @@ def choice_model(temp_session_state_store_answer):
         time.sleep(1)
         return
 
+
+# def temp_chinese_english_list():
+#     print(st.session_state['choose_mode'])
+#     if st.session_state['choose_mode'] == '以英文选中文':
+#         st.session_state['english_list_'] = st.session_state['chinese_list']
+#         st.session_state['chinese_list_'] = st.session_state['english_list']
+#     elif st.session_state['choose_mode'] == '以中文选英文':
+#         st.session_state['english_list_'] = st.session_state['english_list']
+#         st.session_state['chinese_list_'] = st.session_state['chinese_list']
+#     st.session_state['choose_mode'] = ''
+#
 
 def main():
     option = option_sel.selectbox(
@@ -162,7 +186,8 @@ def main():
             global right_color
             global wrong_color
             st.write("SuperCT正在测试单词时:")
-            st.session_state['choose_mode'] = st.radio(label="选择测试模式", options=['以中文选英文', '以英文选中文'])
+            st.session_state['choose_mode'] = st.radio(label="选择测试模式", options=['以中文选英文', '以英文选中文'],
+                                                       index=0)
             st.session_state['correct_saying'] = st.session_state['correct_saying_json'][
                 st.radio(label="谁为你庆祝答对单词",
                          options=st.session_state['correct_saying_json'].keys())]
@@ -184,6 +209,7 @@ def main():
                 if not word_app:
                     st.warning("@w@SuperCT无法解析它,换一个文章试试看?")
                     return
+
             for i in word_app.keys():
                 st.session_state['english_list'].append(i)
                 st.session_state['chinese_list'].append(word_app[i])
@@ -192,26 +218,38 @@ def main():
             place_holder.empty()
             begin.empty()
         option_sel.empty()
+        run()
 
-        run(chinese_list__=st.session_state['chinese_list'])
 
-
-def run(english_list_=st.session_state['english_list'], chinese_list__: list = st.session_state['chinese_list']):
+def run():
     option_sel.empty()
+    print(st.session_state['choose_mode'])
+    if st.session_state.num < 2:
+        st.session_state['english_list_'] = st.session_state['english_list']
+        st.session_state['chinese_list_'] = st.session_state['chinese_list']
+        if st.session_state['choose_mode'] == '以英文选中文':
+            st.session_state['english_list_'] = st.session_state['chinese_list']
+            st.session_state['chinese_list_'] = st.session_state['english_list']
+
     while True:
         num = st.session_state.num
-        if num >= len(english_list_) + 1:
+        if num >= len(st.session_state['english_list_']) + 1:
             break
         else:
-            try:
+            if 1:
+                # try:
                 with st.form(key=str(num), clear_on_submit=True):
-                    original_word = chinese_list__[num - 1]
+                    print(st.session_state['chinese_list_'])
+                    print(st.session_state['english_list_'])
+                    original_word = st.session_state['chinese_list_'][num - 1]
                     chinese_list_ = random.sample(
                         [original_word] + random.sample(
-                            chinese_list__, 2),
+                            st.session_state['chinese_list_'], 2),
                         3)
-
-                    NewWordApp(english_list=english_list_, page_id=num)  # show_word
+                    # try:
+                    NewWordApp(page_id=num)  # show_word
+                    # except Exception as error:
+                    #     print("Create new frame error:", error)
                     st.session_state.A = chinese_list_[0]
                     st.session_state.B = chinese_list_[1]
                     st.session_state.C = chinese_list_[2]
@@ -223,10 +261,11 @@ def run(english_list_=st.session_state['english_list'], chinese_list__: list = s
                         continue
                     else:
                         st.stop()
-            except:
-                st.warning("!o!Super-CT不小心卡住了,将于2s后自动刷新")
-                time.sleep(2)
-                st.rerun()
+            # except Exception as error:
+            #     print('error:', error)
+            #     st.warning("!o!Super-CT不小心卡住了,将于2s后自动刷新")
+            #     time.sleep(2)
+            #     st.rerun()
     pi_gai()
 
 
