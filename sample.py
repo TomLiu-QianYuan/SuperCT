@@ -148,9 +148,9 @@ def main():
     )
 
     if st.session_state.num < 2:
-        with place_holder_info.expander("SuperCT的背后故事"):
+        with place_holder_info.expander("SuperCT背后的故事"):
             st.markdown(open("README.md", 'r', encoding='utf-8').read())
-        with setting_sel.expander("^-^快来设置全新的SuperCT吧!"):
+        with setting_sel.expander("配置你的专属SuperCT"):
             global time_to_sleep
             global right_color
             global wrong_color
