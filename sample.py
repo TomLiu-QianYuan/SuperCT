@@ -133,8 +133,7 @@ def choice_model(temp_session_state_store_answer):
     except:
         st.warning("~qwq~ SuperCT忙不过来了,请稍等")
         time.sleep(1)
-        st.rerun()
-
+        return 
 
 def main():
     option = option_sel.selectbox(
