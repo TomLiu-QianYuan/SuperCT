@@ -111,9 +111,9 @@ def pi_gai():
     # 将数据行插入到表格中
     html_table = html_table.format(rows)
 
-    st.markdown(html_table, unsafe_allow_html=True)
     st.download_button("下载错误单词列表", st.session_state.wrong_words, file_name="错误的单词.txt")
     st.download_button("下载正确单词列表", st.session_state.correct_words, file_name="正确的单词.txt")
+    st.markdown(html_table, unsafe_allow_html=True)
 
 
 def choice_model(temp_session_state_store_answer):
