@@ -43,7 +43,8 @@ if 'passage' not in st.session_state:
 
 if 'correct_saying_json' not in st.session_state:
     st.session_state['correct_saying_json'] = json.loads(open("correct_promot.json", 'r', encoding='utf-8').read())
-
+if 'example_dict' not in st.session_state:
+    st.session_state['example_dict'] = dict()
 if 'wrong_saying_json' not in st.session_state:
     st.session_state['wrong_saying_json'] = json.loads(open("wrong_promot.json", 'r', encoding='utf-8').read())
 if 'correct_saying' not in st.session_state:
@@ -69,8 +70,8 @@ if st.session_state.num < 2:
 
 class NewWordApp:
     def __init__(self, page_id, english_list):
-        st.title(f"{english_list[page_id - 1]}")
-        st.write('-' + st.session_state['passage'])
+        st.title(f"{english_list[page_id - 1]}", help=st.session_state['example_dict'][english_list[page_id - 1]])
+        st.text('-' + st.session_state['passage'])
         try:
             st.session_state['accu'] = str('%.2f' % ((len(st.session_state['correct_list']) / (page_id - 1)) * 100))
             st.text(f"当前正确率:{('%.2f' % ((len(st.session_state['correct_list']) / (page_id - 1)) * 100))}%")
@@ -133,7 +134,8 @@ def choice_model(temp_session_state_store_answer):
     except:
         st.warning("~qwq~ SuperCT忙不过来了,请稍等")
         time.sleep(1)
-        return 
+        return
+
 
 def main():
     option = option_sel.selectbox(
@@ -165,7 +167,7 @@ def main():
         st.session_state['passage'] = option
         if st.session_state.num < 2:
             with st.spinner(text="链接至" + "https://shishiapcs.github.io" + st.session_state['catalogs'][option]):
-                word_app = functions.load_words(
+                word_app, st.session_state['example_dict'] = functions.load_words(
                     requests.get("https://shishiapcs.github.io" + st.session_state['catalogs'][option]
                                  ).text)
                 if not word_app:

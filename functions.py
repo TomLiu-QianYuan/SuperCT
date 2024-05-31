@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 
 
-def get_html_content(url: str, save=False):
+def get_html_content(url: str):
     content = requests.get(url)
     # if save:
     #     open(file=f"history.html",mode='wb').write(content)
@@ -16,7 +16,7 @@ def load_catalog(update=True, save=True):
         print("开始链接至:https://shishiapcs.github.io")
         print("[+]正在爬取")
         soup = BeautifulSoup(
-            get_html_content("https://shishiapcs.github.io", save=True), "html.parser"
+            get_html_content("https://shishiapcs.github.io"), "html.parser"
         )
 
         print("[+]爬取起始页完成")
@@ -46,6 +46,7 @@ def load_catalog(update=True, save=True):
 
 def load_words(page_content: str):
     word_dict = dict()
+    example_dict = dict()
     if "Word/Phrase" not in page_content:
         return False
     soup = BeautifulSoup(page_content, 'html.parser')
@@ -54,7 +55,22 @@ def load_words(page_content: str):
         word_dict[soup.select_one(
             f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text] = soup.select_one(
             f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(3)").text
-    if word_dict:
-        return word_dict
+        example_dict[soup.select_one(
+            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text] = soup.select_one(
+            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(4)").text
+
+    if word_dict and example_dict:
+        return word_dict, example_dict
     else:
         return False
+
+
+if __name__ == '__main__':
+    catalogs = load_catalog(save=False)
+    print(catalogs)
+    path = catalogs['TPO61 L3 Green Building ']
+    page_content = get_html_content("https://shishiapcs.github.io" + path)
+    soup = BeautifulSoup(page_content, 'html.parser')
+    td_cont = len(soup.find('tbody').find_all('tr'))
+    for i in range(1, td_cont + 1):
+        print()
