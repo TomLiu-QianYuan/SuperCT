@@ -80,7 +80,8 @@ class NewWordApp:
     def __init__(self, page_id):
         # get real word(english)
         if st.session_state['choose_mode'] == '以英文选中文':
-            example_sentence = st.session_state['example_dict'][st.session_state['chinese_list_'][page_id - 1]]
+            example_sentence = st.session_state['example_dict'][st.session_state['chinese_list_'][page_id - 1]].replace(
+                st.session_state['chinese_list_'][page_id - 1], "▀")
         else:
             example_sentence = st.session_state['example_dict'][st.session_state['english_list_'][page_id - 1]]
 
@@ -154,17 +155,6 @@ def choice_model(temp_session_state_store_answer):
         time.sleep(1)
         return
 
-
-# def temp_chinese_english_list():
-#     print(st.session_state['choose_mode'])
-#     if st.session_state['choose_mode'] == '以英文选中文':
-#         st.session_state['english_list_'] = st.session_state['chinese_list']
-#         st.session_state['chinese_list_'] = st.session_state['english_list']
-#     elif st.session_state['choose_mode'] == '以中文选英文':
-#         st.session_state['english_list_'] = st.session_state['english_list']
-#         st.session_state['chinese_list_'] = st.session_state['chinese_list']
-#     st.session_state['choose_mode'] = ''
-#
 
 def main():
     option = option_sel.selectbox(
@@ -254,7 +244,7 @@ def run():
                         continue
                     else:
                         st.stop()
-            except Exception as error:
+            except:
                 st.warning("!o!Super-CT不小心卡住了,将于2s后自动刷新")
                 time.sleep(2)
                 st.rerun()
