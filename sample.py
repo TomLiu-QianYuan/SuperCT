@@ -91,11 +91,7 @@ def pi_gai():
     st.balloons()
     st.text("检测文章:" + st.session_state['passage'])
     st.write("正确率为:" + st.session_state['accu'] + "%")
-    if ['以中文选英文', "以英文选中文"] in st.session_state['choose_mode']:
-        temper_list = st.session_state['english_list']
-        st.session_state['english_list'] = st.session_state['chinese_list']
-        st.session_state['chinese_list'] = temper_list
-        st.session_state['choose_mode'] = ''
+    
     if ka_zhu_guo:
         st.warning(f"本次检测卡了{ka_zhu_guo}次")
     html_table = """
