@@ -5,6 +5,7 @@ import requests
 import streamlit as st
 import json
 
+ka_zhu_guo = 0
 right_color = "green"
 wrong_color = "red"
 time_to_sleep = 1.0  # 微调此参数
@@ -84,9 +85,13 @@ class NewWordApp:
 def pi_gai():
     global right_color
     global wrong_color
+    global ka_zhu_guo
     st.balloons()
     st.text("检测文章:" + st.session_state['passage'])
     st.write("正确率为:" + st.session_state['accu'] + "%")
+
+    if ka_zhu_guo:
+        st.warning(f"本次检测卡了{ka_zhu_guo}次")
     html_table = """
     <table>
         <tr>
@@ -132,7 +137,9 @@ def choice_model(temp_session_state_store_answer):
         st.session_state.data.append({
             'id': st.session_state.num, 'name': temp_session_state_store_answer})
     except:
+        global ka_zhu_guo
         st.warning("~qwq~ SuperCT忙不过来了,请稍等")
+        ka_zhu_guo += 1
         time.sleep(1)
         return
 
