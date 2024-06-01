@@ -81,13 +81,13 @@ class NewWordApp:
         # get real word(english)
         if st.session_state['choose_mode'] == '以英文选中文':
             example_sentence = st.session_state['example_dict'][st.session_state['chinese_list_'][page_id - 1]].replace(
-                st.session_state['chinese_list_'][page_id - 1], "▀")
+                st.session_state['chinese_list_'][page_id - 1], "_")
         else:
             example_sentence = st.session_state['example_dict'][st.session_state['english_list_'][page_id - 1]]
 
-        st.title(f"{st.session_state['english_list_'][page_id - 1]}",
-                 help=example_sentence)
-        st.text('-' + st.session_state['passage'])
+        st.header(f"{st.session_state['english_list_'][page_id - 1]}",
+                  help=example_sentence)
+        st.write('-' + st.session_state['passage'])
         try:
             st.session_state['accu'] = str('%.2f' % ((len(st.session_state['correct_list']) / (page_id - 1)) * 100))
             st.text(f"当前正确率:{('%.2f' % ((len(st.session_state['correct_list']) / (page_id - 1)) * 100))}%")
@@ -101,7 +101,7 @@ def pi_gai():
     global right_color
     global wrong_color
     global ka_zhu_guo
-    st.balloons()
+    random.choice([st.balloons, st.snow])()
     st.text("检测文章:" + st.session_state['passage'])
     st.write("正确率为:" + st.session_state['accu'] + "%")
     if ka_zhu_guo:
@@ -245,7 +245,7 @@ def run():
                     else:
                         st.stop()
             except:
-                st.warning("!o!Super-CT不小心卡住了,将于2s后自动刷新")
+                st.warning("Super-CT不小心卡住了,将于2s后自动刷新!o!")
                 time.sleep(2)
                 st.rerun()
     pi_gai()
