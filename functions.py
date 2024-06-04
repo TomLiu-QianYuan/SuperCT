@@ -52,12 +52,15 @@ def load_words(page_content: str):
     soup = BeautifulSoup(page_content, 'html.parser')
     td_cont = len(soup.find('tbody').find_all('tr'))
     for i in range(1, td_cont + 1):
+        print(type(soup.select_one(
+            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(4)").text))
         word_dict[soup.select_one(
             f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text] = soup.select_one(
             f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(3)").text
         example_dict[soup.select_one(
             f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text] = soup.select_one(
-            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(4)").text
+            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(4)").text.replace(soup.select_one(
+            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text,'__')
 
     if word_dict and example_dict:
         return word_dict, example_dict

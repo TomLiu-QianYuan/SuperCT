@@ -1,9 +1,12 @@
+import streamlit as st
 import random
 import time
 import functions
 import requests
-import streamlit as st
 import json
+import pandas as pd
+
+# import pyttsx3
 
 ka_zhu_guo = 0
 right_color = "green"
@@ -18,6 +21,24 @@ try:
     print("test")
 except:
     st.rerun()
+if 'accu_list' not in st.session_state:
+    st.session_state['accu_list'] = list()
+# if 'engine_saying' not in st.session_state:
+#     st.session_state['engine_saying'] = pyttsx3.init()
+#     st.session_state['engine_saying'].setProperty('volume', 1.0)
+if 'example_list_temper' not in st.session_state:
+    st.session_state['example_list_temper'] = list()
+
+if 'example_list' not in st.session_state:
+    st.session_state['example_list'] = list()
+if 'temper_word' not in st.session_state:
+    # 用来检测是不是乱选的
+    st.session_state['temper_word'] = ''
+if 'repeat_count' not in st.session_state:
+    # 用来记录重复点击的次数
+    st.session_state['repeat_count'] = 0
+if 'ready' not in st.session_state:
+    st.session_state['ready'] = False
 if 'choose_mode' not in st.session_state:
     st.session_state['choose_mode'] = "以中文选英文"
 if 'correct_list' not in st.session_state:
@@ -78,11 +99,15 @@ if st.session_state.num < 2:
 
 class NewWordApp:
     def __init__(self, page_id):
+
         # get real word(english)
+        example_sentence = ''
         if st.session_state['choose_mode'] == '以英文选中文':
             example_sentence = st.session_state['example_dict'][st.session_state['chinese_list_'][page_id - 1]].replace(
                 st.session_state['chinese_list_'][page_id - 1], "_")
-        else:
+        elif st.session_state['choose_mode'] == '以中文选英文':
+            st.session_state['engine_saying'].say(st.session_state['english_list_'][page_id - 1])
+            # threading.Thread(target=pyttsx3.speak,args=(st.session_state['english_list_'][page_id - 1])).start()
             example_sentence = st.session_state['example_dict'][st.session_state['english_list_'][page_id - 1]]
 
         st.header(f"{st.session_state['english_list_'][page_id - 1]}",
@@ -104,6 +129,9 @@ def pi_gai():
     random.choice([st.balloons, st.snow])()
     st.text("检测文章:" + st.session_state['passage'])
     st.write("正确率为:" + st.session_state['accu'] + "%")
+    if st.session_state['repeat_count']:
+        st.text("点击过快了:" + str(st.session_state['repeat_count']))
+    st.line_chart({'本次作答正确率折线图s': st.session_state['accu_list']})
     if ka_zhu_guo:
         st.warning(f"本次检测卡了{ka_zhu_guo}次")
     html_table = """
@@ -138,6 +166,12 @@ def choice_model(temp_session_state_store_answer):
 
     right_or_wrong = st.empty()
     try:
+        if st.session_state['temper_word'] == temp_session_state_store_answer:
+            st.session_state['temper_count'] += 1
+            st.warning("哥们,慢一点,手速太快了")
+            st.warning("缓一缓再继续吧")
+            time.sleep(5)
+        st.session_state['temper_word'] = temp_session_state_store_answer
         if st.session_state['chinese_list_'][st.session_state.num - 2] == temp_session_state_store_answer:
             with right_or_wrong.info(random.choice(st.session_state['correct_saying'])):
                 time.sleep(time_to_sleep)
@@ -172,7 +206,9 @@ def main():
             global right_color
             global wrong_color
             st.write("SuperCT正在测试单词时:")
-            st.session_state['choose_mode'] = st.radio(label="选择测试模式", options=['以中文选英文', '以英文选中文'],
+            st.session_state['choose_mode'] = st.radio(label="选择测试模式",
+                                                       options=['以中文选英文', '以英文选中文', '以单词选例句',
+                                                                '以例句选单词'],
                                                        index=0)
             st.session_state['correct_saying'] = st.session_state['correct_saying_json'][
                 st.radio(label="谁为你庆祝答对单词",
@@ -188,7 +224,16 @@ def main():
     if option:
         st.session_state['passage'] = option
         if st.session_state.num < 2:
-            with st.spinner(text="链接至" + "https://shishiapcs.github.io" + st.session_state['catalogs'][option]):
+            try:
+                setting_sel.empty()
+                place_holder_info.empty()
+                place_holder.empty()
+                begin.empty()
+            except:
+                ...
+        if st.session_state.num < 2 and not st.session_state['ready']:
+            show_list = []
+            with st.spinner(text="加载中:" + "https://shishiapcs.github.io" + st.session_state['catalogs'][option]):
                 word_app, st.session_state['example_dict'] = functions.load_words(
                     requests.get("https://shishiapcs.github.io" + st.session_state['catalogs'][option]
                                  ).text)
@@ -197,13 +242,21 @@ def main():
                     return
 
             for i in word_app.keys():
+                show_list.append([i, word_app[i]])
                 st.session_state['english_list'].append(i)
                 st.session_state['chinese_list'].append(word_app[i])
-            setting_sel.empty()
-            place_holder_info.empty()
-            place_holder.empty()
-            begin.empty()
-        option_sel.empty()
+                st.session_state['example_list'] = list(st.session_state['example_dict'].values())
+            if not st.session_state['ready']:
+                option_sel.empty()
+                st.code("请划至底部确认单词并开始检测")
+                df = pd.DataFrame(show_list, columns=['Word', '汉语翻译'])
+                st.table(df)
+                if st.button("确认"):
+                    print(st.session_state['example_list'])
+                    st.session_state['ready'] = True
+                    st.rerun()
+                else:
+                    st.stop()
         run()
 
 
@@ -211,14 +264,29 @@ def run():
     option_sel.empty()
     print(st.session_state['choose_mode'])
     if st.session_state.num < 2:
+
         st.session_state['english_list_'] = st.session_state['english_list']
         st.session_state['chinese_list_'] = st.session_state['chinese_list']
         if st.session_state['choose_mode'] == '以英文选中文':
             st.session_state['english_list_'] = st.session_state['chinese_list']
             st.session_state['chinese_list_'] = st.session_state['english_list']
-
+        elif st.session_state['choose_mode'] == '以单词选例句':
+            # for n, v in enumerate(st.session_state['example_list']):
+            #     st.session_state['example_list_temper'].append(v.replace(st.session_state['english_list'][n], ''))
+            st.session_state['english_list_'] = st.session_state['example_list']
+            st.session_state['chinese_list_'] = st.session_state['english_list']
+            st.session_state['example_list_temper'].clear()
+        elif st.session_state['choose_mode'] == '以例句选单词':
+            st.session_state['english_list_'] = st.session_state['english_list']
+            # for n, v in enumerate(st.session_state['example_list']):
+            #     st.session_state['example_list_temper'].append(v.replace(st.session_state['english_list'][n], ''))
+            st.session_state['chinese_list_'] = st.session_state['example_list']
+            st.session_state['example_list_temper'].clear()
     while True:
         num = st.session_state.num
+        if num - 1:
+            st.session_state['accu_list'].append(
+                100 * float('%.2f' % ((len(st.session_state['correct_list']) / (num - 1)) * 100)))
         if num >= len(st.session_state['english_list_']) + 1:
             break
         else:
@@ -245,6 +313,7 @@ def run():
                     else:
                         st.stop()
             except:
+
                 st.warning("Super-CT不小心卡住了,将于2s后自动刷新!o!")
                 time.sleep(2)
                 st.rerun()
