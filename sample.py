@@ -31,6 +31,8 @@ if 'example_list_temper' not in st.session_state:
 
 if 'example_list' not in st.session_state:
     st.session_state['example_list'] = list()
+if 'stop_ac' not in st.session_state:
+    st.session_state['stop_ac'] = 0
 if 'temper_word' not in st.session_state:
     # 用来检测是不是乱选的
     st.session_state['temper_word'] = ''
@@ -106,7 +108,7 @@ class NewWordApp:
             example_sentence = st.session_state['example_dict'][st.session_state['chinese_list_'][page_id - 1]].replace(
                 st.session_state['chinese_list_'][page_id - 1], "_")
         elif st.session_state['choose_mode'] == '以中文选英文':
-            st.session_state['engine_saying'].say(st.session_state['english_list_'][page_id - 1])
+            # st.session_state['engine_saying'].say(st.session_state['english_list_'][page_id - 1])
             # threading.Thread(target=pyttsx3.speak,args=(st.session_state['english_list_'][page_id - 1])).start()
             example_sentence = st.session_state['example_dict'][st.session_state['english_list_'][page_id - 1]]
 
@@ -127,6 +129,9 @@ def pi_gai():
     global wrong_color
     global ka_zhu_guo
     random.choice([st.balloons, st.snow])()
+    st.session_state['correct_list'] = list(set(st.session_state['correct_list']))
+    st.session_state['wrong_list'] = list(set(st.session_state['wrong_list']))
+
     st.text("检测文章:" + st.session_state['passage'])
     st.write("正确率为:" + st.session_state['accu'] + "%")
     if st.session_state['repeat_count']:
@@ -146,13 +151,16 @@ def pi_gai():
     """
     rows = ''
     for num2, ic in enumerate(st.session_state['chinese_list_']):
-        if ic in st.session_state['correct_list']:
-            st.session_state.correct_words += ic + '\t' + st.session_state['english_list_'][num2] + '\n'
-            color = right_color
-        else:
-            st.session_state.wrong_words += ic + '\t' + st.session_state['english_list_'][num2] + '\n'
-            color = wrong_color
-        rows += f"<tr style='color: {color};'><td>{ic}</td><td>{st.session_state['english_list_'][num2]}</td></tr>"
+        try:
+            if ic in st.session_state['correct_list']:
+                st.session_state.correct_words += ic + '\t' + st.session_state['english_list_'][num2] + '\n'
+                color = right_color
+            else:
+                st.session_state.wrong_words += ic + '\t' + st.session_state['english_list_'][num2] + '\n'
+                color = wrong_color
+            rows += f"<tr style='color: {color};'><td>{ic}</td><td>{st.session_state['english_list_'][num2]}</td></tr>"
+        except:
+            continue
     # 将数据行插入到表格中
     html_table = html_table.format(rows)
 
@@ -165,12 +173,13 @@ def choice_model(temp_session_state_store_answer):
     st.session_state.num += 1
 
     right_or_wrong = st.empty()
+    # if 1:
     try:
         if st.session_state['temper_word'] == temp_session_state_store_answer:
-            st.session_state['temper_count'] += 1
+            # st.session_state['temper_count'] += 1
             st.warning("哥们,慢一点,手速太快了")
             st.warning("缓一缓再继续吧")
-            time.sleep(5)
+            # time.sleep(1)
         st.session_state['temper_word'] = temp_session_state_store_answer
         if st.session_state['chinese_list_'][st.session_state.num - 2] == temp_session_state_store_answer:
             with right_or_wrong.info(random.choice(st.session_state['correct_saying'])):
@@ -181,6 +190,7 @@ def choice_model(temp_session_state_store_answer):
             st.session_state['wrong_list'].append(temp_session_state_store_answer)
             with right_or_wrong.error(random.choice(st.session_state['wrong_saying'])):
                 time.sleep(time_to_sleep)
+        st.session_state['stop_ac'] = 0
         right_or_wrong.empty()
     except:
         global ka_zhu_guo
@@ -223,7 +233,7 @@ def main():
             wrong_color = st.text_input(label="标记错误单词颜色", value=wrong_color)
     if option:
         st.session_state['passage'] = option
-        if st.session_state.num < 2:
+        if not st.session_state['ready']:
             try:
                 setting_sel.empty()
                 place_holder_info.empty()
@@ -246,23 +256,24 @@ def main():
                 st.session_state['english_list'].append(i)
                 st.session_state['chinese_list'].append(word_app[i])
                 st.session_state['example_list'] = list(st.session_state['example_dict'].values())
-            if not st.session_state['ready']:
+            option_sel.empty()
+            st.code("请划至底部确认单词并开始检测")
+            df = pd.DataFrame(show_list, columns=['Word', '汉语翻译'])
+            st.table(df)
+            if st.button("确认"):
+                st.session_state['ready'] = True
                 option_sel.empty()
-                st.code("请划至底部确认单词并开始检测")
-                df = pd.DataFrame(show_list, columns=['Word', '汉语翻译'])
-                st.table(df)
-                if st.button("确认"):
-                    st.session_state['ready'] = True
-                    st.rerun()
-                else:
-                    st.stop()
+                st.rerun()
+            else:
+
+                option_sel.empty()
+                st.stop()
         run()
 
 
 def run():
     option_sel.empty()
     if st.session_state.num < 2:
-
         st.session_state['english_list_'] = st.session_state['english_list']
         st.session_state['chinese_list_'] = st.session_state['chinese_list']
         if st.session_state['choose_mode'] == '以英文选中文':
@@ -273,13 +284,14 @@ def run():
             #     st.session_state['example_list_temper'].append(v.replace(st.session_state['english_list'][n], ''))
             st.session_state['english_list_'] = st.session_state['example_list']
             st.session_state['chinese_list_'] = st.session_state['english_list']
-            st.session_state['example_list_temper'].clear()
+            # st.session_state['example_list_temper'].clear()
         elif st.session_state['choose_mode'] == '以例句选单词':
             st.session_state['english_list_'] = st.session_state['english_list']
             # for n, v in enumerate(st.session_state['example_list']):
             #     st.session_state['example_list_temper'].append(v.replace(st.session_state['english_list'][n], ''))
             st.session_state['chinese_list_'] = st.session_state['example_list']
-            st.session_state['example_list_temper'].clear()
+            # st.session_state['example_list_temper'].clear()
+
     while True:
         num = st.session_state.num
         if num - 1:
@@ -288,6 +300,7 @@ def run():
         if num >= len(st.session_state['english_list_']) + 1:
             break
         else:
+            # if 1:
             try:
                 with st.form(key=str(num), clear_on_submit=True):
                     original_word = st.session_state['chinese_list_'][num - 1]
@@ -310,10 +323,14 @@ def run():
                         continue
                     else:
                         st.stop()
-            except:
 
-                st.warning("Super-CT不小心卡住了,将于2s后自动刷新!o!")
-                time.sleep(2)
+            except:
+                st.session_state['stop_ac'] += 1
+                if st.session_state['stop_ac'] > 5:
+                    break
+                # st.warning("Super-CT不小心卡住了,将于0.5s后自动刷新!o!")
+                st.session_state.num += 1
+                # time.sleep(0.5)
                 st.rerun()
     pi_gai()
 
