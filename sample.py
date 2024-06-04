@@ -252,7 +252,6 @@ def main():
                 df = pd.DataFrame(show_list, columns=['Word', '汉语翻译'])
                 st.table(df)
                 if st.button("确认"):
-                    print(st.session_state['example_list'])
                     st.session_state['ready'] = True
                     st.rerun()
                 else:
@@ -262,7 +261,6 @@ def main():
 
 def run():
     option_sel.empty()
-    print(st.session_state['choose_mode'])
     if st.session_state.num < 2:
 
         st.session_state['english_list_'] = st.session_state['english_list']
