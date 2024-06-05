@@ -14,7 +14,7 @@ wrong_color = "red"
 time_to_sleep = 1.0  # 微调此参数
 st.set_page_config(page_title="SuperCT",
                    page_icon=None,
-                   layout="centered",
+                   layout="wide",
                    initial_sidebar_state="auto",
                    menu_items=None)
 try:
@@ -178,7 +178,6 @@ def choice_model(temp_session_state_store_answer):
         if st.session_state['temper_word'] == temp_session_state_store_answer:
             # st.session_state['temper_count'] += 1
             st.warning("哥们,慢一点,手速太快了")
-            st.warning("缓一缓再继续吧")
             # time.sleep(1)
         st.session_state['temper_word'] = temp_session_state_store_answer
         if st.session_state['chinese_list_'][st.session_state.num - 2] == temp_session_state_store_answer:
@@ -205,7 +204,7 @@ def main():
         "快来选择一篇你喜欢的文章吧@OwO@",
         (st.session_state['catalogs'].keys()),
         index=None,
-        placeholder="我爱学习"
+        placeholder="点击此处选择一篇文章并开始检测吧"
     )
 
     if st.session_state.num < 2:
@@ -258,6 +257,7 @@ def main():
                 st.session_state['english_list'].append(i)
                 st.session_state['chinese_list'].append(word_app[i])
                 st.session_state['example_list'] = list(st.session_state['example_dict'].values())
+                print(st.session_state['example_list'])
             setting_sel.empty()
             place_holder_info.empty()
             place_holder.empty()

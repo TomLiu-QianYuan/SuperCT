@@ -1,5 +1,5 @@
 import json
-
+import re
 from bs4 import BeautifulSoup
 import requests
 
@@ -44,6 +44,31 @@ def load_catalog(update=True, save=True):
             return False
 
 
+# def build_regex_for_word_forms(base_word):
+#     # 构建一个正则表达式，尝试匹配基础单词及其潜在的后缀变化
+#     # 这里列举了一些常见的动词后缀和名词复数后缀
+#     suffixes = ['', 's', 'es', 'ed', 'ing', 'er', 'est', 'd', 't', 'll', 've']
+#     patterns = [re.escape(base_word) + '(' + '|'.join(suffixes) + ')?']
+#     # 添加可能的大小写变化处理
+#     full_pattern = r'\b(?:' + '|'.join(patterns) + r')\b'
+#     return full_pattern
+
+
+def replace_word_forms(sentence, base_word_):
+    result = ''
+    if base_word_ in sentence:
+        return sentence.replace(base_word_, len(base_word_) * '_')
+
+    for base_word in base_word_.split(' '):
+        for word in sentence.split(' '):
+            for c in range(1, 4):
+                if base_word[0:-c].upper() in word[0:-c].upper():
+                    result += sentence.replace(word, len(word) * "_")
+    # else:
+        # print("!", sentence)
+    return result
+
+
 def load_words(page_content: str):
     word_dict = dict()
     example_dict = dict()
@@ -55,10 +80,22 @@ def load_words(page_content: str):
         word_dict[soup.select_one(
             f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text] = soup.select_one(
             f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(3)").text
+        specific_word = soup.select_one(f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text
+        final_sentence = replace_word_forms(soup.select_one(
+            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(4)").text, specific_word)
+
+        # elif word.endswith('ies'):
+        #     if specific_word.upper() in word.upper().replace('ies', ''):
+        #         final_sentence.replace(word, '')
+        # elif word.endswith('es'):
+        #     if specific_word.upper() in word.upper().replace('es', ''):
+        #         final_sentence.replace(word, '')
+        # elif word.endswith('s'):
+        #     if specific_word.upper() in word.upper().replace('s', ''):
+        #         final_sentence.replace(word, '')
+
         example_dict[soup.select_one(
-            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text] = soup.select_one(
-            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(4)").text.replace(soup.select_one(
-            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text,'__')
+            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text] = final_sentence
 
     if word_dict and example_dict:
         return word_dict, example_dict
