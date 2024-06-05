@@ -257,7 +257,7 @@ def main():
                 st.session_state['english_list'].append(i)
                 st.session_state['chinese_list'].append(word_app[i])
                 st.session_state['example_list'] = list(st.session_state['example_dict'].values())
-                print(st.session_state['example_list'])
+                # print(st.session_state['example_list'])
             setting_sel.empty()
             place_holder_info.empty()
             place_holder.empty()
