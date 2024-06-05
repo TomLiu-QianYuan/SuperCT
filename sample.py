@@ -242,6 +242,8 @@ def main():
             except:
                 ...
         if st.session_state.num < 2 and not st.session_state['ready']:
+            st.session_state['english_list'] = []
+            st.session_state['chinese_list'] = []
             show_list = []
             with st.spinner(text="加载中:" + "https://shishiapcs.github.io" + st.session_state['catalogs'][option]):
                 word_app, st.session_state['example_dict'] = functions.load_words(
@@ -256,6 +258,10 @@ def main():
                 st.session_state['english_list'].append(i)
                 st.session_state['chinese_list'].append(word_app[i])
                 st.session_state['example_list'] = list(st.session_state['example_dict'].values())
+            setting_sel.empty()
+            place_holder_info.empty()
+            place_holder.empty()
+            begin.empty()
             option_sel.empty()
             st.code("请划至底部确认单词并开始检测")
             df = pd.DataFrame(show_list, columns=['Word', '汉语翻译'])
@@ -294,13 +300,15 @@ def run():
 
     while True:
         num = st.session_state.num
+
         if num - 1:
             st.session_state['accu_list'].append(
                 100 * float('%.2f' % ((len(st.session_state['correct_list']) / (num - 1)) * 100)))
         if num >= len(st.session_state['english_list_']) + 1:
             break
         else:
-            # if 1:
+            st.session_state['english_list_'] = list(set(st.session_state['english_list_']))
+            st.session_state['chinese_list_'] = list(set(st.session_state['chinese_list_']))
             try:
                 with st.form(key=str(num), clear_on_submit=True):
                     original_word = st.session_state['chinese_list_'][num - 1]
@@ -329,7 +337,7 @@ def run():
                 if st.session_state['stop_ac'] > 5:
                     break
                 # st.warning("Super-CT不小心卡住了,将于0.5s后自动刷新!o!")
-                st.session_state.num += 1
+                # st.session_state.num += 1
                 # time.sleep(0.5)
                 st.rerun()
     pi_gai()
