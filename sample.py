@@ -268,6 +268,10 @@ def main():
             st.table(df)
             if st.button("确认"):
                 st.session_state['ready'] = True
+                setting_sel.empty()
+                place_holder_info.empty()
+                place_holder.empty()
+                begin.empty()
                 option_sel.empty()
                 st.rerun()
             else:
