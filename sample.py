@@ -199,6 +199,11 @@ def choice_model(temp_session_state_store_answer):
         return
 
 
+def conf_next():
+    st.session_state['ready'] = True
+    option_sel.empty()
+
+
 def main():
     option = option_sel.selectbox(
         "快来选择一篇你喜欢的文章吧@OwO@",
@@ -209,7 +214,7 @@ def main():
 
     if st.session_state.num < 2:
         with place_holder_info.expander("SuperCT背后的故事"):
-            st.markdown(open("README.md", 'r', encoding='utf-8').read(),unsafe_allow_html=True)
+            st.markdown(open("README.md", 'r', encoding='utf-8').read(), unsafe_allow_html=True)
         with setting_sel.expander("配置你的专属SuperCT"):
             global time_to_sleep
             global right_color
@@ -243,6 +248,7 @@ def main():
         if st.session_state.num < 2 and not st.session_state['ready']:
             st.session_state['english_list'] = []
             st.session_state['chinese_list'] = []
+            st.session_state['example_list'] = []
             show_list = []
             with st.spinner(text="加载中:" + "https://shishiapcs.github.io" + st.session_state['catalogs'][option]):
                 word_app, st.session_state['example_dict'] = functions.load_words(
@@ -256,8 +262,7 @@ def main():
                 show_list.append([i, word_app[i]])
                 st.session_state['english_list'].append(i)
                 st.session_state['chinese_list'].append(word_app[i])
-                st.session_state['example_list'] = list(st.session_state['example_dict'].values())
-                # print(st.session_state['example_list'])
+            # print('exmpl', st.session_state['example_list'])
             setting_sel.empty()
             place_holder_info.empty()
             place_holder.empty()
@@ -266,10 +271,9 @@ def main():
             st.code("请划至底部确认单词并开始检测")
             df = pd.DataFrame(show_list, columns=['Word', '汉语翻译'])
             st.table(df)
-            if st.button("确认"):
-                st.session_state['ready'] = True
-                option_sel.empty()
+            if st.button("确认", on_click=conf_next):
                 st.rerun()
+
             else:
                 option_sel.empty()
                 st.stop()
@@ -277,7 +281,6 @@ def main():
 
 
 def run():
-
     option_sel.empty()
     if st.session_state.num < 2:
         setting_sel.empty()
@@ -292,14 +295,14 @@ def run():
         elif st.session_state['choose_mode'] == '以单词选例句':
             # for n, v in enumerate(st.session_state['example_list']):
             #     st.session_state['example_list_temper'].append(v.replace(st.session_state['english_list'][n], ''))
-            st.session_state['english_list_'] = st.session_state['example_list']
+            st.session_state['english_list_'] = list(st.session_state['example_dict'].values())
             st.session_state['chinese_list_'] = st.session_state['english_list']
             # st.session_state['example_list_temper'].clear()
         elif st.session_state['choose_mode'] == '以例句选单词':
             st.session_state['english_list_'] = st.session_state['english_list']
             # for n, v in enumerate(st.session_state['example_list']):
             #     st.session_state['example_list_temper'].append(v.replace(st.session_state['english_list'][n], ''))
-            st.session_state['chinese_list_'] = st.session_state['example_list']
+            st.session_state['chinese_list_'] = list(st.session_state['example_dict'].values())
             # st.session_state['example_list_temper'].clear()
 
     while True:

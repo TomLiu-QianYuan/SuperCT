@@ -57,21 +57,28 @@ def load_catalog(update=True, save=True):
 def replace_word_forms(sentence, base_word_):
     result = ''
     if base_word_ in sentence:
-        return sentence.replace(base_word_, len(base_word_) * '_')
+        result = sentence.replace(base_word_, len(base_word_) * '_')
+    else:
+        sta = 0
 
-    for base_word in base_word_.split(' '):
         for word in sentence.split(' '):
-            for c in range(1, 4):
-                if base_word[0:-c].upper() in word[0:-c].upper():
-                    result += sentence.replace(word, len(word) * "_")
-    # else:
-        # print("!", sentence)
+            for base_word in base_word_.split(' '):
+                if sta == 1:
+                    return result
+                for c in range(1, 4):
+                    if base_word[0:-c].upper() in word[0:-c].upper():
+                        result += sentence.replace(word, len(word) * "_")
+                        sta = 1
+
+        else:
+            ...
     return result
 
 
 def load_words(page_content: str):
     word_dict = dict()
     example_dict = dict()
+
     if "Word/Phrase" not in page_content:
         return False
     soup = BeautifulSoup(page_content, 'html.parser')
@@ -81,23 +88,14 @@ def load_words(page_content: str):
             f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text] = soup.select_one(
             f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(3)").text
         specific_word = soup.select_one(f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text
-        final_sentence = replace_word_forms(soup.select_one(
-            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(4)").text, specific_word)
-
-        # elif word.endswith('ies'):
-        #     if specific_word.upper() in word.upper().replace('ies', ''):
-        #         final_sentence.replace(word, '')
-        # elif word.endswith('es'):
-        #     if specific_word.upper() in word.upper().replace('es', ''):
-        #         final_sentence.replace(word, '')
-        # elif word.endswith('s'):
-        #     if specific_word.upper() in word.upper().replace('s', ''):
-        #         final_sentence.replace(word, '')
-
-        example_dict[soup.select_one(
-            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text] = final_sentence
-
+        example_sentence = soup.select_one(f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(4)").text
+        # print('example_sentence', example_sentence)
+        final_sentence = replace_word_forms(example_sentence, specific_word)
+        # print(final_sentence)
+        example_dict[specific_word] = final_sentence.split('.')[0] + '.'  # 这个地方可以优化，这个很被动，这个算法
+        print(example_dict)
     if word_dict and example_dict:
+        print('exp-d', example_dict)
         return word_dict, example_dict
     else:
         return False
