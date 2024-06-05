@@ -93,9 +93,9 @@ def load_words(page_content: str):
         final_sentence = replace_word_forms(example_sentence, specific_word)
         # print(final_sentence)
         example_dict[specific_word] = final_sentence.split('.')[0] + '.'  # 这个地方可以优化，这个很被动，这个算法
-        print(example_dict)
+        # print(example_dict)
     if word_dict and example_dict:
-        print('exp-d', example_dict)
+        # print('exp-d', example_dict)
         return word_dict, example_dict
     else:
         return False
