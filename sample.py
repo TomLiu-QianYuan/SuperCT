@@ -327,9 +327,16 @@ def run():
                     NewWordApp(page_id=num)  # show_word
                     # except Exception as error:
                     #     print("Create new frame error:", error)
+
                     st.session_state.A = chinese_list_[0]
                     st.session_state.B = chinese_list_[1]
                     st.session_state.C = chinese_list_[2]
+                    if '.' in st.session_state.A:
+                        st.session_state.A = st.session_state.A.split(".")[0]
+                    if '.' in st.session_state.B:
+                        st.session_state.B = st.session_state.B.split(".")[0]
+                    if '.' in st.session_state.C:
+                        st.session_state.C = st.session_state.C.split(".")[0]
                     if st.form_submit_button(st.session_state.A, on_click=choice_model, args=(st.session_state.A,)):
                         continue
                     if st.form_submit_button(st.session_state.B, on_click=choice_model, args=(st.session_state.B,)):
