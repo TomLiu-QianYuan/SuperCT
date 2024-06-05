@@ -268,22 +268,22 @@ def main():
             st.table(df)
             if st.button("确认"):
                 st.session_state['ready'] = True
-                setting_sel.empty()
-                place_holder_info.empty()
-                place_holder.empty()
-                begin.empty()
                 option_sel.empty()
                 st.rerun()
             else:
-
                 option_sel.empty()
                 st.stop()
         run()
 
 
 def run():
+
     option_sel.empty()
     if st.session_state.num < 2:
+        setting_sel.empty()
+        place_holder_info.empty()
+        place_holder.empty()
+        begin.empty()
         st.session_state['english_list_'] = st.session_state['english_list']
         st.session_state['chinese_list_'] = st.session_state['chinese_list']
         if st.session_state['choose_mode'] == '以英文选中文':
