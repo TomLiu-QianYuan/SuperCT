@@ -311,8 +311,8 @@ def run():
         if num >= len(st.session_state['english_list_']) + 1:
             break
         else:
-            st.session_state['english_list_'] = list(set(st.session_state['english_list_']))
-            st.session_state['chinese_list_'] = list(set(st.session_state['chinese_list_']))
+            # st.session_state['english_list_'] = list(set(st.session_state['english_list_']))
+            # st.session_state['chinese_list_'] = list(set(st.session_state['chinese_list_']))
             try:
                 with st.form(key=str(num), clear_on_submit=True):
                     original_word = st.session_state['chinese_list_'][num - 1]
