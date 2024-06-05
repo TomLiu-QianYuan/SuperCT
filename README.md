@@ -89,4 +89,4 @@ WebVersion1.0.0本地测试通过
 - 以及正确率图像绘制
 - 版本更新为:<b> WebUiVersionV2.1.1 </b>
 - 修复单词数量过多bug
-- 版本更新为: <b> WebUiVersionV2.1.12 </b>
+- 版本更新为: <b> WebUiVersionV2.1.2 </b>
