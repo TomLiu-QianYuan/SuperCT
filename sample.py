@@ -48,7 +48,12 @@ if 'correct_list' not in st.session_state:
     st.session_state['correct_list'] = []
 if 'wrong_list' not in st.session_state:
     st.session_state['wrong_list'] = []
-
+if 'volume' not in st.session_state:
+    st.session_state['volume'] = 1.0
+if 'rate_speak' not in st.session_state:
+    st.session_state['rate_speak'] = 1.0
+if 'pitch_speak' not in st.session_state:
+    st.session_state['pitch_speak'] = 1.0
 if 'correct_words' not in st.session_state:
     st.session_state.correct_words = '以下是正确的单词\n测试时间:' + time.strftime('%a %b %d %H:%M:%S %Y',
                                                                                    time.localtime()) + '\n'
@@ -232,13 +237,19 @@ def main():
                                                                 '以单词选例句',
                                                                 '以例句选单词'],
                                                        index=0)
+
             st.session_state['correct_saying'] = st.session_state['correct_saying_json'][
                 st.radio(label="谁为你庆祝答对单词",
                          options=st.session_state['correct_saying_json'].keys())]
             st.session_state['wrong_saying'] = st.session_state['wrong_saying_json'][
                 st.radio(label="谁为你鼓励答错单词",
                          options=st.session_state['wrong_saying_json'].keys())]
-
+            st.session_state['volume'] = st.slider(label="朗读单词的音量", min_value=0.0, max_value=1.0, step=0.1,
+                                                   value=st.session_state['volume'])
+            st.session_state['pitch_speak'] = st.slider(label="朗读单词的音高", min_value=0.0, max_value=2.0, step=0.1,
+                                                        value=st.session_state['pitch_speak'])
+            st.session_state['rate_speak'] = st.slider(label="朗读单词的速度", min_value=0.0, max_value=10.0, step=0.1,
+                                                       value=st.session_state['rate_speak'])
             time_to_sleep = st.slider(label="切换单词时间(s)", min_value=0.0, max_value=10.0, value=time_to_sleep)
             st.write("SuperCT结束测试单词时:")
             right_color = st.text_input(label="标记正确单词颜色", value=right_color)
@@ -334,9 +345,12 @@ def run():
                     # try:
                     NewWordApp(page_id=num)  # show_word
                     my_js = f"""\
-                    var msg = new SpeechSynthesisUtterance();
-                    msg.text = "{st.session_state['english_list_'][num - 1]}";
-                    window.speechSynthesis.speak(msg);"""
+var msg = new SpeechSynthesisUtterance();
+msg.text = "{st.session_state['english_list_'][num - 1]}";
+msg.pitch = {st.session_state['pitch_speak']};
+msg.volume = {st.session_state['volume']};
+msg.rate = {st.session_state['rate_speak']};
+window.speechSynthesis.speak(msg);"""
 
                     # Wrapt the javascript as html code
                     my_html = f"<script>{my_js}</script>"
