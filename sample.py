@@ -194,7 +194,7 @@ def choice_model(temp_session_state_store_answer):
 
         else:
             st.warning(
-                f"{st.session_state['english_list_'][st.session_state.num - 2]}的意思应该为{st.session_state['chinese_list_'][st.session_state.num - 2]}")
+                f"{st.session_state['english_list_'][st.session_state.num - 2]}应选为{st.session_state['chinese_list_'][st.session_state.num - 2]}")
 
             st.session_state['wrong_list'].append(temp_session_state_store_answer)
 
