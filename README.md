@@ -4,15 +4,16 @@ SuperCT
 - 在此致谢Mr.Mou老师,Carol小姐，Raymond先生,以及Sword先生
 
 ----------
-当前版本：
-V2.2.0(test)(streamlit-WebUIVersion)
+当前版本:
+<b> V2.2.0(Test)(Streamlit-WebUIVersion) </b>
 
 - 作者: TomLiu Suxyds(乾元)
 
 ----------
 使用技术
 
-- 原创算法:句子中寻找变形单词算法(三层递归结合大小写匹配以及字符串截断)(该算法是搜罗全网代码最少的运行效率最高的效果最好的算法)
+- 原创算法:句子中寻找变形单词算法(三层递归结合大小写匹配以及字符串截断)(
+  该算法是搜罗全网代码最少的运行效率最高的效果最好的算法)
 - 使用 streamlit ui框架
 - 使用 requests，beautifulsoup4 爬取网页内容
 - 使用大量缓存(streamlit.session_state)存储临时数据，包括文章列表，单词本等
@@ -66,16 +67,16 @@ V2.2.0(test)(streamlit-WebUIVersion)
 ------------
 2024/5/29日
 
- <b> WebUiVersionV1.0.0 </b>本地测试通过
+- <b> WebUiVersionV1.0.0 </b>本地测试通过
 
 2024/5/29日晚
 
-完成streamlit cloud结合github仓库有完成初步上线部署
+- 完成streamlit cloud结合github仓库有完成初步上线部署
 
 2024/5/30日
 
-据Mr.Mou建议,添加一定量的个性化设置
-并优化了诸多代码
+- 据Mr.Mou建议,添加一定量的个性化设置
+- 并优化了诸多代码
 
 2024/5/30日晚
 
@@ -114,4 +115,5 @@ V2.2.0(test)(streamlit-WebUIVersion)
 - 添加朗读单词功能
 - 添加答错时显示答案选项
 - 添加朗读单词个性化设置
+- 美化README.md
 - 版本更新为: <b> WebUiVersionV2.2.0(Test) </b>
