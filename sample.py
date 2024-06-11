@@ -193,12 +193,13 @@ def choice_model(temp_session_state_store_answer):
             st.session_state['correct_list'].append(temp_session_state_store_answer)
 
         else:
+            st.warning(
+                f"{st.session_state['english_list_'][st.session_state.num - 2]}的意思应该为{st.session_state['chinese_list_'][st.session_state.num - 2]}")
+
             st.session_state['wrong_list'].append(temp_session_state_store_answer)
 
             with right_or_wrong.error(random.choice(st.session_state['wrong_saying'])):
-                right_or_wrong.warning(
-                    f"{st.session_state['english_list_'][st.session_state.num - 2]}的意思应该为{st.session_state['chinese_list_'][st.session_state.num - 2]}")
-                time.sleep(time_to_sleep + 0.5)
+                time.sleep(time_to_sleep)
 
         st.session_state['stop_ac'] = 0
         right_or_wrong.empty()
