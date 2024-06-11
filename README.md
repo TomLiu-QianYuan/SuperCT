@@ -1,11 +1,11 @@
 SuperCT
 
 - 描述:Super CT machine to Scan Which Words You Unfamiliar
-- 十分感谢Mr.Mou老师,Carol小姐，Raymond先生,以及Sword先生
+- 在此致谢Mr.Mou老师,Carol小姐，Raymond先生,以及Sword先生
 
 ----------
 当前版本：
-V2.1.3(stable)(WebUIVersion)
+V2.2.0(test)(streamlit-WebUIVersion)
 
 - 作者: TomLiu Suxyds(乾元)
 
@@ -54,6 +54,12 @@ V2.1.3(stable)(WebUIVersion)
     11. 添加可供选的检测模式(以英文选中文，以中文选英文,以单词选例句，以例句选单词)
 -
     12. 添加正确率图像
+-
+    13. 添加朗读单词功能
+-
+    14. 添加朗读单词个性化设置
+-
+    15. 添加答错单词时错误提升
 
 ------------
 2024/5/29日
