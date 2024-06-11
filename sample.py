@@ -184,12 +184,17 @@ def choice_model(temp_session_state_store_answer):
         if st.session_state['chinese_list_'][st.session_state.num - 2] == temp_session_state_store_answer:
             with right_or_wrong.info(random.choice(st.session_state['correct_saying'])):
                 time.sleep(time_to_sleep)
+
             st.session_state['correct_list'].append(temp_session_state_store_answer)
 
         else:
             st.session_state['wrong_list'].append(temp_session_state_store_answer)
+
             with right_or_wrong.error(random.choice(st.session_state['wrong_saying'])):
-                time.sleep(time_to_sleep)
+                right_or_wrong.warning(
+                    f"{st.session_state['english_list_'][st.session_state.num - 2]}的意思应该为{st.session_state['chinese_list_'][st.session_state.num - 2]}")
+                time.sleep(time_to_sleep + 0.5)
+
         st.session_state['stop_ac'] = 0
         right_or_wrong.empty()
     except:
@@ -222,7 +227,9 @@ def main():
             global wrong_color
             st.write("SuperCT正在测试单词时:")
             st.session_state['choose_mode'] = st.radio(label="选择测试模式",
-                                                       options=['以中文选英文', '以英文选中文', '以单词选例句',
+                                                       options=['以中文选英文',
+                                                                '以英文选中文',
+                                                                '以单词选例句',
                                                                 '以例句选单词'],
                                                        index=0)
             st.session_state['correct_saying'] = st.session_state['correct_saying_json'][
