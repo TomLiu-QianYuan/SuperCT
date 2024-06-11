@@ -12,6 +12,7 @@ V2.2.0(test)(streamlit-WebUIVersion)
 ----------
 使用技术
 
+- 原创算法句子中寻找变形单词算法(三层递归结合大小写匹配)(该算法全网已知最简便但效果与单词模型匹配算法不相上下)
 - 使用 streamlit ui框架
 - 使用 requests，beautifulsoup4 爬取网页内容
 - 使用大量缓存(streamlit.session_state)存储临时数据，包括文章列表，单词本等
@@ -22,6 +23,7 @@ V2.2.0(test)(streamlit-WebUIVersion)
 - 使用random打乱单词顺序
 - 使用大量切片逻辑和循环逻辑等精密算法
 - 每一次打开网页都会爬取最新文章列表已经最新单词
+- 内嵌JavaScript并使用Speech Synthesis API朗读单词
 
 ----------
 
@@ -64,7 +66,7 @@ V2.2.0(test)(streamlit-WebUIVersion)
 ------------
 2024/5/29日
 
-WebVersion1.0.0本地测试通过
+ <b> WebUiVersionV1.0.0 </b>本地测试通过
 
 2024/5/29日晚
 
