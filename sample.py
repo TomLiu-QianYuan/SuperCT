@@ -123,14 +123,6 @@ class NewWordApp:
             ...
         st.progress(page_id / len(st.session_state['english_list_']),
                     text=f"当前进度-{page_id}/{len(st.session_state['english_list_'])}")
-        my_js = f"""\
-var msg = new SpeechSynthesisUtterance();
-msg.text = "{st.session_state['english_list_'][page_id - 1]}";
-window.speechSynthesis.speak(msg);"""
-
-        # Wrapt the javascript as html code
-        my_html = f"<script>{my_js}</script>"
-        html(my_html,width=0,height=0)
 
 
 def pi_gai():
@@ -334,6 +326,15 @@ def run():
                         3)
                     # try:
                     NewWordApp(page_id=num)  # show_word
+                    my_js = f"""\
+                    var msg = new SpeechSynthesisUtterance();
+                    msg.text = "{st.session_state['english_list_'][num - 1]}";
+                    window.speechSynthesis.speak(msg);"""
+
+                    # Wrapt the javascript as html code
+                    my_html = f"<script>{my_js}</script>"
+                    html(my_html, width=0, height=0)
+
                     # except Exception as error:
                     #     print("Create new frame error:", error)
 
