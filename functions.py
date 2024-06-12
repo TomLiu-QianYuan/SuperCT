@@ -57,7 +57,6 @@ def load_catalog(update=True, save=True):
 def replace_word_forms(sentence, base_word_):
     result = ''
     if base_word_ in sentence:
-        # print("直接返回")
         return sentence.replace(base_word_, 6 * '_')
     else:
         sta = 0
@@ -66,9 +65,7 @@ def replace_word_forms(sentence, base_word_):
         for word in sentence.split(' '):
             for base_word in base_word_.split(' '):
                 if base_word.upper() == word.upper():
-                    # print("定位-无变形:", locating_word)
-                    # print("base_word", base_word.upper())
-                    # print("word", word.upper())
+                    # 检测到单词无变形
                     result += sentence.replace(word, 6 * "_")
                     add_location.append(word)
                     sta = 1
@@ -79,11 +76,8 @@ def replace_word_forms(sentence, base_word_):
                         if sta_ == 1:
                             continue
                         if base_word[0:-c].upper() == word[0:-m].upper():
-                            locating_word = word
-                            # print("定位-有变形:", locating_word)
-                            # print("base_word", base_word[0:-c].upper())
-                            # print("word", word[0:-c].upper())
-                            result += sentence.replace(word, len(word) * "_")
+                            # 检测到单词有变形
+                            result += sentence.replace(word, 6 * "_")
                             add_location.append(word)
                             sta_ = 1
         if len(base_word_.split(' ')) < 2:
