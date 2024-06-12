@@ -271,12 +271,14 @@ def main():
             st.session_state['example_list'] = []
             show_list = []
             with st.spinner(text="加载中:" + "https://shishiapcs.github.io" + st.session_state['catalogs'][option]):
-                word_app, st.session_state['example_dict'] = functions.load_words(
+                word_app, temper_list = functions.load_words(
                     requests.get("https://shishiapcs.github.io" + st.session_state['catalogs'][option]
                                  ).text)
                 if not word_app:
                     st.warning("@w@SuperCT无法解析它,换一个文章试试看?")
                     return
+                else:
+                    st.session_state['example_dict'] = temper_list
 
             for i in word_app.keys():
                 show_list.append([i, word_app[i]])
@@ -347,7 +349,7 @@ def run():
                     NewWordApp(page_id=num)  # show_word
                     my_js = f"""\
 var msg = new SpeechSynthesisUtterance();
-msg.text = "{st.session_state['english_list_'][num - 1]}";
+msg.text = "{str(st.session_state['english_list_'][num - 1]).replace('_', '')}";
 msg.pitch = {st.session_state['pitch_speak']};
 msg.volume = {st.session_state['volume']};
 msg.rate = {st.session_state['rate_speak']};

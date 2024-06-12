@@ -5,7 +5,7 @@ SuperCT
 
 ----------
 当前版本:
-<b> V2.2.0(Test)(Streamlit-WebUIVersion) </b>
+<b> V2.2.1(Stable)(Streamlit-WebUIVersion) </b>
 
 - 作者: TomLiu Suxyds(乾元)
 
@@ -118,3 +118,10 @@ SuperCT
 - 美化README.md
 - 重写默认鼓励词并优化显示答案功能
 - 版本更新为: <b> WebUiVersionV2.2.0(Test) </b>
+
+2024/6/11日晚
+
+- 修复朗读单词的下划线bug
+- 优化短语识别算法
+- 版本更新为: <b> WebUiVersionV2.2.1(Stable) </b>
+
