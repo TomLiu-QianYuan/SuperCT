@@ -281,7 +281,7 @@ def main():
                     st.session_state['example_dict'] = temper_list
 
             for i in word_app.keys():
-                show_list.append([i, word_app[i]])
+                show_list.append([i, word_app[i], st.session_state['example_dict'][i]])
                 st.session_state['english_list'].append(i)
                 st.session_state['chinese_list'].append(word_app[i])
             # print('exmpl', st.session_state['example_list'])
@@ -291,7 +291,7 @@ def main():
             begin.empty()
             option_sel.empty()
             st.code("请划至底部确认单词并开始检测")
-            df = pd.DataFrame(show_list, columns=['Word', '汉语翻译'])
+            df = pd.DataFrame(show_list, columns=['单词', '汉语翻译', '例句'])
             st.table(df)
             if st.button("确认", on_click=conf_next):
                 st.rerun()
