@@ -29,7 +29,8 @@ if 'accu_list' not in st.session_state:
 #     st.session_state['engine_saying'].setProperty('volume', 1.0)
 if 'example_list_temper' not in st.session_state:
     st.session_state['example_list_temper'] = list()
-
+if 'link_passage' not in st.session_state:
+    st.session_state['link_passage'] = ''
 if 'example_list' not in st.session_state:
     st.session_state['example_list'] = list()
 if 'stop_ac' not in st.session_state:
@@ -118,8 +119,9 @@ class NewWordApp:
             # threading.Thread(target=pyttsx3.speak,args=(st.session_state['english_list_'][page_id - 1])).start()
             example_sentence = st.session_state['example_dict'][st.session_state['english_list_'][page_id - 1]]
 
-        st.header(f"{st.session_state['english_list_'][page_id - 1]}",
-                  help=example_sentence)
+        st.header(
+            f'''[{st.session_state['english_list_'][page_id - 1]}]({st.session_state['link_passage']}%20(打开单词原链接))''',
+            help=example_sentence, anchor=False)
         st.write('-' + st.session_state['passage'])
         try:
             st.session_state['accu'] = str('%.2f' % ((len(st.session_state['correct_list']) / (page_id - 1)) * 100))
@@ -142,7 +144,7 @@ def pi_gai():
     st.write("正确率为:" + st.session_state['accu'] + "%")
     if st.session_state['repeat_count']:
         st.text("点击过快了:" + str(st.session_state['repeat_count']))
-    st.line_chart({'本次作答正确率折线图s': st.session_state['accu_list']})
+    st.line_chart({'本次作答正确率折线图': st.session_state['accu_list']})
     if ka_zhu_guo:
         st.warning(f"本次检测卡了{ka_zhu_guo}次")
     html_table = """
@@ -271,9 +273,10 @@ def main():
             st.session_state['example_list'] = []
             show_list = []
             with st.spinner(text="加载中:" + "https://shishiapcs.github.io" + st.session_state['catalogs'][option]):
+                st.session_state['link_passage'] = "https://shishiapcs.github.io" + st.session_state['catalogs'][option]
                 word_app, temper_list = functions.load_words(
-                    requests.get("https://shishiapcs.github.io" + st.session_state['catalogs'][option]
-                                 ).text)
+                    requests.get(st.session_state['link_passage']).text)
+
                 if not word_app:
                     st.warning("@w@SuperCT无法解析它,换一个文章试试看?")
                     return
