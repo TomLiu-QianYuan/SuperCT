@@ -12,13 +12,13 @@ def get_html_content(url: str):
 
 def load_catalog(update=True, save=True):
     if update:
-        print("开始链接至:https://shishiapcs.github.io")
-        print("[+]正在爬取")
+        # print("开始链接至:https://shishiapcs.github.io")
+        # print("[+]正在爬取")
         soup = BeautifulSoup(
             get_html_content("https://shishiapcs.github.io"), "html.parser"
         )
 
-        print("[+]爬取起始页完成")
+        # print("[+]爬取起始页完成")
         articles = soup.select('body > article')
         titles = dict()
         if len(articles) >= 4:
@@ -29,7 +29,7 @@ def load_catalog(update=True, save=True):
 
         if save:
             open("catalog.json", 'w').write(json.dumps(titles, indent=1))
-            print("保存历史记录catalog.json完毕")
+            # print("保存历史记录catalog.json完毕")
         # print(titles)
         return titles
     else:
@@ -38,7 +38,7 @@ def load_catalog(update=True, save=True):
                 open("catalog.json", 'r').read()
             )
         except:
-            print("未检到catalog.json文件")
+            # print("未检到catalog.json文件")
             load_catalog(True)
             return False
 
