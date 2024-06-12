@@ -120,7 +120,7 @@ class NewWordApp:
             example_sentence = st.session_state['example_dict'][st.session_state['english_list_'][page_id - 1]]
 
         st.header(
-            f'''[{st.session_state['english_list_'][page_id - 1]}]({st.session_state['link_passage']}%20(打开单词原链接))''',
+            f'''[{st.session_state['english_list_'][page_id - 1]}]({st.session_state['link_passage']} "打开单词原链接")''',
             help=example_sentence, anchor=False)
         st.write('-' + st.session_state['passage'])
         try:
