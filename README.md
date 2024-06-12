@@ -123,5 +123,5 @@ SuperCT
 
 - 修复朗读单词的下划线bug
 - 优化短语识别算法
+- 优化了下划线数量以及间隔
 - 版本更新为: <b> WebUiVersionV2.2.1(Stable) </b>
-
