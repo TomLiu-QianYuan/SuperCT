@@ -1,6 +1,7 @@
 import json
 from bs4 import BeautifulSoup
 import requests
+import re
 
 
 def get_html_content(url: str):
@@ -65,6 +66,7 @@ def replace_word_forms(sentence, base_word_):
             for base_word in base_word_.split(' '):
                 if base_word.upper() == word.upper():
                     # 检测到单词无变形
+                    print(f"word:{word}")
                     result += sentence.replace(word, 6 * "_")
                     add_location.append(word)
                     sta = 1
@@ -84,18 +86,26 @@ def replace_word_forms(sentence, base_word_):
         # 短语定位
         # print(add_location)
         # print(locating_word)
+        print(add_location)
         result = sentence
-        for replace_word_position in add_location:
-            # 去除句子中短语间空隙防止钻空
-            location = result.find(replace_word_position)
-            # print(location)
-            result = result[0:location + len(replace_word_position)] + result[location + len(
-                replace_word_position) + 1:-1]
-        for replaced_word in add_location:
-            # 替换掉短语的每一个单词
-            result = result.replace(replaced_word, 6 * '_')
-
-        return result
+        # for replace_word_position in add_location:
+        #     # 去除句子中短语间空隙防止钻空
+        #     location = result.find(replace_word_position)
+        #     # print(location)
+        #     result = result[0:location + len(replace_word_position)] + result[location + len(
+        #         replace_word_position) + 1:-1]
+        result_ = ''
+        result = result.split(' ')
+        for word_ in add_location:
+            result = ["__" if word__ == word_ else word__ for word__ in result]
+        for item in result:
+            result_ += item + ' '
+        result_ = re.sub(r'\_+', '_', result_)
+        result_ = result_.replace('_ _', '_' * 6)
+        result_ = result_.replace('_ _ _', '_' * 6)
+        result_ = result_.replace('_ _ _ _', '_' * 6)
+        # result = result_
+        return result_
 
 
 def load_words(page_content: str):
@@ -126,5 +136,5 @@ def load_words(page_content: str):
 
 
 if __name__ == '__main__':
-    print(replace_word_forms('Green marketers learned the hard way that traditional marketing principles still apply.',
-                             'learn the hard '))
+    print(replace_word_forms('Focus on analyzing competitors’ past and leadership to understand their assumptions.',
+                             'focus on '))
