@@ -57,35 +57,40 @@ def load_catalog(update=True, save=True):
 def replace_word_forms(sentence, base_word_):
     sentence = sentence.replace('-', ' ')
     result = ''
-    if base_word_ in sentence:
+    if base_word_ in sentence.split(' '):
         return sentence.replace(base_word_, 6 * '_')
     else:
-        sta = 0
         sta_ = 0
+        sta = 0
+
         add_location = []
         for word in sentence.split(' '):
             for base_word in base_word_.split(' '):
                 if base_word.upper() == word.upper():
                     # 检测到单词无变形
-                    print(f"word:{word}")
+                    # print(f"word:{word}")
                     result += sentence.replace(word, 6 * "_")
                     add_location.append(word)
                     sta = 1
-                for c in range(1, 4):
+                    continue
+                for c in range(1, 5):
                     if sta == 1:
                         break
-                    for m in range(1, 4):
+                    for m in range(1, 5):
                         if sta_ == 1:
+                            continue
+                        if len(base_word) < m + 1 or len(base_word) < c + 1:
                             continue
                         if base_word[0:-c].upper() == word[0:-m].upper():
                             # 检测到单词有变形
+                            # print('c', c, base_word[0:-c])
                             result += sentence.replace(word, 6 * "_")
                             add_location.append(word)
                             sta_ = 1
         if len(base_word_.split(' ')) < 2:
             return result
         # 短语定位
-        # print(add_location)
+        print(add_location)
         # print(locating_word)
         # print(add_location)
         result = sentence
@@ -137,5 +142,5 @@ def load_words(page_content: str):
 
 
 if __name__ == '__main__':
-    print(replace_word_forms('Focus on analyzing competitors’ past and leadership to understand their assumptions.',
-                             'focus on '))
+    print(replace_word_forms('All are flutter at the thought of his return',
+                             'at the thought of'))

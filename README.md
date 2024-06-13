@@ -2,7 +2,7 @@
 
 > - 简介:Super CT machine to Scan Which Words You Unfamiliar
 
-#### 在此致谢`Mr.Mou`老师,`Carol`小姐，`Raymond`先生,以及`Sword`先生
+#### 在此致谢`Mr.Mou`老师,`Carol`小姐,`Raymond`先生,`Sword`先生 `Isaiah`先生
 
 ----------
 
@@ -125,4 +125,5 @@
 
 2024/6/12日晚 <b> WebUiVersionV2.2.2(Stable) </b>
 > 进一步优化短语识别算法<br>
-> 美化README.md
+> 美化README.md<br>
+> 再一次优化短语识别过多算法
