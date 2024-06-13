@@ -55,6 +55,7 @@ def load_catalog(update=True, save=True):
 
 
 def replace_word_forms(sentence, base_word_):
+    sentence = sentence.replace('-', ' ')
     result = ''
     if base_word_ in sentence:
         return sentence.replace(base_word_, 6 * '_')
@@ -86,7 +87,7 @@ def replace_word_forms(sentence, base_word_):
         # 短语定位
         # print(add_location)
         # print(locating_word)
-        print(add_location)
+        # print(add_location)
         result = sentence
         # for replace_word_position in add_location:
         #     # 去除句子中短语间空隙防止钻空

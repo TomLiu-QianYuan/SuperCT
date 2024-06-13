@@ -1,34 +1,36 @@
-SuperCT
+# SuperCT
 
-- 描述:Super CT machine to Scan Which Words You Unfamiliar
-- 在此致谢Mr.Mou老师,Carol小姐，Raymond先生,以及Sword先生
+> - 简介:Super CT machine to Scan Which Words You Unfamiliar
 
-----------
-当前版本:
-<b> V2.2.1(Stable)(Streamlit-WebUIVersion) </b>
-
-- 作者: TomLiu Suxyds(乾元)
+#### 在此致谢`Mr.Mou`老师,`Carol`小姐，`Raymond`先生,以及`Sword`先生
 
 ----------
-使用技术
 
-- 原创算法:句子中寻找变形单词算法(三层递归结合大小写匹配以及字符串截断)(
+### **当前版本**:<b> V2.2.2(Stable)(Streamlit-WebUIVersion) </b>
+
+## 作者: TomLiu Suxyds(乾元)
+
+----------
+
+## 使用的技术</h2>
+
+- ` 原创算法` :句子中寻找变形单词算法(三层递归结合大小写匹配以及字符串截断)(
   该算法是搜罗全网代码最少的运行效率最高的效果最好的算法)
-- 使用 streamlit ui框架
-- 使用 requests，beautifulsoup4 爬取网页内容
-- 使用大量缓存(streamlit.session_state)存储临时数据，包括文章列表，单词本等
+- 使用 `streamlit ui`框架
+- 使用 `requests`，`beautifulsoup4` 爬取网页内容
+- 使用大量缓存(`streamlit.session_state`)存储临时数据，包括文章列表，单词本等
 - 查询了大量网页教程，修改若干逻辑bug
-- 引入html展示结果单词列表（颜色区分对错）
+- 引入`html`展示结果单词列表（颜色区分对错）
 - 使用streamlit动态机制
-- 使用json库解析若干语句
-- 使用random打乱单词顺序
+- 使用`json`库解析若干语句
+- 使用`random`打乱单词顺序
 - 使用大量切片逻辑和循环逻辑等精密算法
 - 每一次打开网页都会爬取最新文章列表已经最新单词
-- 内嵌JavaScript并使用Speech Synthesis API朗读单词
+- 内嵌JavaScript并使用`Speech Synthesis API`朗读单词
 
 ----------
 
-2024年初
+## 小故事&功能变动
 
 -
     1. 我决定为carol小姐开发一款背单词软件，第一代程序使用的命令行ui，因小姐觉得太丑了，于是我决定使用更好看的ui
@@ -43,7 +45,7 @@ SuperCT
 -
     5. 后添加若干控件
 -
-    6. 后邀请Sword,Raymond同学测试程序，发现若干bug，并修复
+    6. 后邀请`Sword`,`Raymond`同学测试程序，发现若干bug，并修复
 -
     7. 去除大量不必要功能并保留并更新原始功能
 -
@@ -65,63 +67,62 @@ SuperCT
     15. 添加答错单词时错误提示
 
 ------------
-2024/5/29日
+2024/5/29日 <b>WebUiVersionV1.0.0 </b>
 
-- <b> WebUiVersionV1.0.0 </b>本地测试通过
+> 本地测试通过
 
 2024/5/29日晚
 
-- 完成streamlit cloud结合github仓库有完成初步上线部署
+> 完成streamlit cloud结合github仓库有完成初步上线部署<br>
 
 2024/5/30日
 
-- 据Mr.Mou建议,添加一定量的个性化设置
-- 并优化了诸多代码
+> 据Mr.Mou建议,添加一定量的个性化设置<br>
+> 并优化了诸多代码
 
 2024/5/30日晚
 
-- 大量删改不必要代码,大程度优化加载逻辑,优化函数加载等,并采用多文件管理代码
+> 大量删改不必要代码,大程度优化加载逻辑,优化函数加载等<br>
+> 采用多文件管理代码
 
 2024/5/31日
 
-- 新增个性化提示鼓励,以及sword同学贡献他自定义的语料
-- 添加例句功能
+> 新增个性化提示鼓励,以及sword同学贡献他自定义的语料<br>
+> 添加例句功能
 
-2024/5/31日晚
+2024/5/31日晚<b> WebUiVersionV2.1.0 </b>
 
-- 版本更新为: <b> WebUiVersionV2.1.0 </b>
-- 提供检测模式(以英文选中文，以中文选英文)
+> 新增检测模式(以英文选中文，以中文选英文)
 
-2024/6/4日晚
+2024/6/4日晚 <b> WebUiVersionV2.1.2 </b>
 
-- 成功修复若干bug
-- 新增(以单词选例句，以例句选单词)
-- 以及正确率图像绘制
-- 版本更新为:<b> WebUiVersionV2.1.1 </b>
-- 修复单词数量过多bug
-- 版本更新为: <b> WebUiVersionV2.1.2 </b>
+> 成功修复若干bug<br>
+> 新增检测模式(以单词选例句，以例句选单词)<br>
+> 以及正确率图像绘制<br>
+> 修复单词数量过多bug
 
 2024/6/5日
 
-- 修改提示词并初步优化例句除去待测单词功能
+> 修改提示词并初步优化例句除去待测单词功能
 
-2024/6/5日晚
+2024/6/5日晚 <b> WebUiVersionV2.1.3(Stable) </b>
 
-- 再次优化例句除去待测单词功能并优化布局
-- 版本更新为: <b> WebUiVersionV2.1.3(Stable) </b>
+> 再次优化例句除去待测单词功能并优化布局
 
-2024/6/11日晚
+2024/6/11日晚 <b> WebUiVersionV2.2.0(Test) </b>
 
-- 添加朗读单词功能
-- 添加答错时显示答案功能
-- 添加朗读单词个性化设置
-- 美化README.md
-- 重写默认鼓励词并优化显示答案功能
-- 版本更新为: <b> WebUiVersionV2.2.0(Test) </b>
 
-2024/6/11日晚
+> 添加朗读单词功能<br>
+> 添加答错时显示答案功能<br>
+> 添加朗读单词个性化设置<br>
+> 美化README.md<br>
+> 重写默认鼓励词并优化显示答案功能<br>
 
-- 修复朗读单词的下划线bug
-- 优化短语识别算法
-- 优化了下划线数量以及间隔
-- 版本更新为: <b> WebUiVersionV2.2.1(Stable) </b>
+2024/6/11日晚<b> WebUiVersionV2.2.1(Stable) </b>
+> 修复朗读单词的下划线bug<br>
+> 优化短语识别算法<br>
+> 优化了下划线数量以及间隔<br>
+
+2024/6/12日晚 <b> WebUiVersionV2.2.2(Stable) </b>
+> 进一步优化短语识别算法<br>
+> 美化README.md
