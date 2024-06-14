@@ -38,6 +38,11 @@ if 'link_passage' not in st.session_state:
     st.session_state['link_passage'] = ''
 if 'example_list' not in st.session_state:
     st.session_state['example_list'] = list()
+if 'chinese_list_temp' not in st.session_state:
+    st.session_state['chinese_list_temp'] = list()
+if 'english_list_temp' not in st.session_state:
+    st.session_state['english_list_temp'] = list()
+
 if 'stop_ac' not in st.session_state:
     st.session_state['stop_ac'] = 0
 if 'temper_word' not in st.session_state:
@@ -132,6 +137,15 @@ class NewWordApp:
                     text=f"当前进度-{page_id}/{len(st.session_state['english_list_'])}")
 
 
+# def run_again():
+#
+#     st.session_state['english_list'] = st.session_state['english_list_temp']
+#
+#     st.session_state['chinese_list'] = st.session_state['chinese_list_temp']
+#
+#     run()
+
+
 def pi_gai():
     global right_color
     global wrong_color
@@ -166,6 +180,8 @@ def pi_gai():
             else:
                 st.session_state.wrong_words += ic + '\t' + st.session_state['english_list_'][num2] + '\n'
                 color = wrong_color
+                # st.session_state['english_list_temp'].append(st.session_state['english_list_'][num2])
+                # st.session_state['chinese_list_temp'].append(ic)
             rows += f"<tr style='color: {color};'><td>{ic}</td><td>{st.session_state['english_list_'][num2]}</td></tr>"
         except:
             continue
@@ -175,6 +191,8 @@ def pi_gai():
     st.download_button("下载错误单词列表", st.session_state.wrong_words, file_name="错误的单词.txt")
     st.download_button("下载正确单词列表", st.session_state.correct_words, file_name="正确的单词.txt")
     st.markdown(html_table, unsafe_allow_html=True)
+    # st.button("测试错误单词", on_click=run_again)
+
 
 
 def choice_model(temp_session_state_store_answer):
@@ -234,7 +252,7 @@ def main():
 
     if st.session_state.num < 2:
         with place_holder_info.expander("SuperCT背后的故事"):
-            st.markdown(open("README.md", 'r', encoding='utf-8').read(), unsafe_allow_html=True)
+            st.write(open("README.md", 'r', encoding='utf-8').read(), unsafe_allow_html=True)
         with setting_sel.expander("配置你的专属SuperCT"):
             global time_to_sleep
             global right_color
