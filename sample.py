@@ -8,7 +8,7 @@ import pandas as pd
 from streamlit.components.v1 import html
 
 # import pyttsx3
-
+version = '2.2.2'
 ka_zhu_guo = 0
 right_color = "green"
 wrong_color = "red"
@@ -22,6 +22,11 @@ try:
     print("test")
 except:
     st.rerun()
+if 'catalogs' not in st.session_state:
+    # st.info("检测到缓存未有目录列表,开始爬取")
+    with st.spinner(text="爬取网页中"):
+        st.session_state['catalogs'] = functions.load_catalog(True, save=False)
+        st.toast("目录加载完毕")
 if 'accu_list' not in st.session_state:
     st.session_state['accu_list'] = list()
 # if 'engine_saying' not in st.session_state:
@@ -92,13 +97,8 @@ if 'wrong_saying' not in st.session_state:
 
 if 'accu' not in st.session_state:
     st.session_state['accu'] = ''
-if 'catalogs' not in st.session_state:
-    # st.info("检测到缓存未有目录列表,开始爬取")
-    with st.spinner(text="爬取网页中"):
-        st.session_state['catalogs'] = functions.load_catalog(True, save=False)
-
+logo = st.empty()
 option_sel = st.empty()
-
 if st.session_state.num < 2:
     begin = st.empty()
     setting_sel = st.empty()
@@ -213,12 +213,18 @@ def choice_model(temp_session_state_store_answer):
         return
 
 
+def change_setting():
+    st.toast("配置修改完毕")
+
+
 def conf_next():
     st.session_state['ready'] = True
     option_sel.empty()
+    logo.empty()
 
 
 def main():
+    logo.title("SuperCT" + version, anchor=False, help="Author:Tom Liu")
     option = option_sel.selectbox(
         "快来选择一篇你喜欢的文章吧@OwO@",
         (st.session_state['catalogs'].keys()),
@@ -239,31 +245,39 @@ def main():
                                                                 '以英文选中文',
                                                                 '以单词选例句',
                                                                 '以例句选单词'],
-                                                       index=0)
+                                                       index=0,
+                                                       on_change=change_setting)
 
             st.session_state['correct_saying'] = st.session_state['correct_saying_json'][
                 st.radio(label="谁为你庆祝答对单词",
+                         on_change=change_setting,
                          options=st.session_state['correct_saying_json'].keys())]
             st.session_state['wrong_saying'] = st.session_state['wrong_saying_json'][
-                st.radio(label="谁为你鼓励答错单词",
+                st.radio(label="谁为你鼓励答错单词", on_change=change_setting,
                          options=st.session_state['wrong_saying_json'].keys())]
-            st.session_state['volume'] = st.slider(label="朗读单词的音量", min_value=0.0, max_value=1.0, step=0.1,
+            st.session_state['volume'] = st.slider(label="朗读单词的音量", on_change=change_setting, min_value=0.0,
+                                                   max_value=1.0, step=0.1,
                                                    value=st.session_state['volume'])
-            st.session_state['pitch_speak'] = st.slider(label="朗读单词的音高", min_value=0.0, max_value=2.0, step=0.1,
+            st.session_state['pitch_speak'] = st.slider(label="朗读单词的音高", on_change=change_setting, min_value=0.0,
+                                                        max_value=2.0, step=0.1,
                                                         value=st.session_state['pitch_speak'])
-            st.session_state['rate_speak'] = st.slider(label="朗读单词的速度", min_value=0.0, max_value=10.0, step=0.1,
+            st.session_state['rate_speak'] = st.slider(label="朗读单词的速度", on_change=change_setting, min_value=0.0,
+                                                       max_value=10.0, step=0.1,
                                                        value=st.session_state['rate_speak'])
-            time_to_sleep = st.slider(label="切换单词时间(s)", min_value=0.0, max_value=10.0, value=time_to_sleep)
+            time_to_sleep = st.slider(label="切换单词时间(s)", on_change=change_setting, min_value=0.0, max_value=10.0,
+                                      value=time_to_sleep)
             st.write("SuperCT结束测试单词时:")
-            right_color = st.text_input(label="标记正确单词颜色", value=right_color)
-            wrong_color = st.text_input(label="标记错误单词颜色", value=wrong_color)
+            right_color = st.text_input(label="标记正确单词颜色", on_change=change_setting, value=right_color)
+            wrong_color = st.text_input(label="标记错误单词颜色", on_change=change_setting, value=wrong_color)
     if option:
+        logo.empty()
         st.session_state['passage'] = option
         if not st.session_state['ready']:
             try:
                 setting_sel.empty()
                 place_holder_info.empty()
                 place_holder.empty()
+                logo.empty()
                 begin.empty()
             except:
                 ...
@@ -276,11 +290,12 @@ def main():
                 st.session_state['link_passage'] = "https://shishiapcs.github.io" + st.session_state['catalogs'][option]
                 word_app, temper_list = functions.load_words(
                     requests.get(st.session_state['link_passage']).text)
-
+                st.toast("SuperCT\n单词爬取完毕")
                 if not word_app:
                     st.warning("@w@SuperCT无法解析它,换一个文章试试看?")
                     return
                 else:
+                    st.toast("SuperCT\n单词加载完毕")
                     st.session_state['example_dict'] = temper_list
 
             for i in word_app.keys():
@@ -293,6 +308,7 @@ def main():
             place_holder.empty()
             begin.empty()
             option_sel.empty()
+
             st.code("请划至底部确认单词并开始检测")
             df = pd.DataFrame(show_list, columns=['单词', '汉语翻译', '例句'])
             st.table(df)
