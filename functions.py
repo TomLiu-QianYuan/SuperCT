@@ -90,7 +90,6 @@ def replace_word_forms(sentence, base_word_):
         if len(base_word_.split(' ')) < 2:
             return result
         # 短语定位
-        print(add_location)
         # print(locating_word)
         # print(add_location)
         result = sentence
