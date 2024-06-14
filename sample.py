@@ -224,7 +224,7 @@ def conf_next():
 
 
 def main():
-    logo.title("SuperCT" + version, anchor=False, help="Author:Tom Liu")
+    logo.title("SuperCT" + version, anchor=False, help="By Tom Liu")
     option = option_sel.selectbox(
         "快来选择一篇你喜欢的文章吧@OwO@",
         (st.session_state['catalogs'].keys()),
