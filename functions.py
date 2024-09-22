@@ -1,7 +1,8 @@
 import json
-from bs4 import BeautifulSoup
-import requests
 import re
+
+import requests
+from bs4 import BeautifulSoup
 
 
 def get_html_content(url: str):
@@ -57,7 +58,8 @@ def load_catalog(update=True, save=True):
 def replace_word_forms(sentence, base_word_):
     sentence = sentence.replace('-', ' ')
     result = ''
-    if base_word_ in sentence.split(' '):
+    if base_word_ in sentence.split(' ') or base_word_ in sentence:
+        # print("直接返回", sentence, base_word_)
         return sentence.replace(base_word_, 6 * '_')
     else:
         sta_ = 0
@@ -113,33 +115,62 @@ def replace_word_forms(sentence, base_word_):
         return result_
 
 
-def load_words(page_content: str):
-    word_dict = dict()
-    example_dict = dict()
+def generate_dict(key_list: list, value_list: list) -> dict:
+    '''
+    combine two list to one dictionary
+    :param key_list: key
+    :param value_list: value
+    :return: one dictionary
+    '''
+    result_dict = {}
+    for i in range(len(key_list)):
+        result_dict[key_list[i]] = value_list[i]
+    return result_dict
 
-    if "Word/Phrase" not in page_content:
-        return False
-    soup_ = BeautifulSoup(page_content, 'html.parser')
-    td_cont_ = len(soup_.find('tbody').find_all('tr'))
-    for i in range(1, td_cont_ + 1):
-        word_dict[soup_.select_one(
-            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text] = soup_.select_one(
-            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(3)").text
-        specific_word = soup_.select_one(f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(1)").text
-        example_sentence = soup_.select_one(
-            f"body > article > table > tbody > tr:nth-child({i}) > td:nth-child(4)").text
-        # print('example_sentence', example_sentence)
-        final_sentence = replace_word_forms(example_sentence, specific_word)
-        # print(final_sentence)
-        example_dict[specific_word] = final_sentence.split('.')[0] + '.'  # 这个地方可以优化，这个很被动，这个算法
-        # print(example_dict)
-    if word_dict and example_dict:
-        # print('exp-d', example_dict)
-        return word_dict, example_dict
-    else:
+
+def new_load_word(page_content: str):
+    soup = BeautifulSoup(page_content, 'html.parser')
+    try:
+        tables = soup.find_all('table')
+        if tables:
+            table = tables[0]
+            data_lists = []
+            header_row = table.find('tr')
+            headers = [th.text for th in header_row.find_all('th')]
+            for header in headers:
+                data_lists.append([header])
+            rows = table.find_all('tr')[1:]
+            for row in rows:
+                cells = row.find_all('td')
+                for index, cell in enumerate(cells):
+                    data_lists[index].append(cell.text)
+            result_dict = {}
+            for lst in data_lists:
+                key = lst[0]
+                value = lst[1:]
+                result_dict[key] = value
+            example_list_temper = result_dict['Example Sentence']
+            if "Chinese Explanation" in result_dict.keys():
+                chinese_list = result_dict['Chinese Explanation']
+            else:
+                chinese_list = result_dict['Chinese Translation']
+            if "Word/Phrase" in result_dict.keys():
+                english_list = result_dict['Word/Phrase']
+            else:
+                english_list = result_dict['New Word']
+            example_list = []
+            for i, example in enumerate(example_list_temper):
+                example = replace_word_forms(example.replace(".", ''), english_list[i])
+                example_list.append(example.replace('"', ''))
+
+            word_dict = generate_dict(english_list, chinese_list)
+            example_dict = generate_dict(english_list, example_list)
+            # print(word_dict, example_dict)
+            return word_dict, example_dict
+        else:
+            return False, False
+    except:
         return False, False
 
-
 if __name__ == '__main__':
-    print(replace_word_forms('All are flutter at the thought of his return',
-                             'at the thought of'))
+    print(generate_dict(['a', 'b'], [1, 2]))

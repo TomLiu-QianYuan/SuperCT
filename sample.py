@@ -8,7 +8,7 @@ import pandas as pd
 from streamlit.components.v1 import html
 
 # import pyttsx3
-version = '2.2.2'
+version = '3.0.1'
 ka_zhu_guo = 0
 right_color = "green"
 wrong_color = "red"
@@ -244,7 +244,7 @@ def conf_next():
 def main():
     logo.title("SuperCT" + version, anchor=False, help="By Tom Liu")
     option = option_sel.selectbox(
-        "快来选择一篇你喜欢的文章吧@OwO@",
+        "点击此处选择测试的文章@OwO@",
         (st.session_state['catalogs'].keys()),
         index=None,
         placeholder="点击此处选择一篇文章并开始检测吧"
@@ -306,7 +306,7 @@ def main():
             show_list = []
             with st.spinner(text="加载中:" + "https://shishiapcs.github.io" + st.session_state['catalogs'][option]):
                 st.session_state['link_passage'] = "https://shishiapcs.github.io" + st.session_state['catalogs'][option]
-                word_app, temper_list = functions.load_words(
+                word_app, temper_list = functions.new_load_word(
                     requests.get(st.session_state['link_passage']).text)
                 st.toast("SuperCT\n单词爬取完毕")
                 if not word_app:

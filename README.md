@@ -2,11 +2,17 @@
 
 > 简介:Super CT machine to Scan Which Words You Unfamiliar
 
-#### 在此致谢`Mr.Mou`老师,`Carol`小姐,`Raymond`先生,`Sword`先生 `Isaiah`先生
+#### 在此致谢(排名不分先后)
+
+1. `Mr.Mou`(指导)
+2. `Carol`(测试)
+3. `Raymond`(测试)
+4. `Sword`(测试)
+5. `Isaiah`(测试)
 
 ----------
 
-### **当前版本**:<b> V2.2.2(Stable)(Streamlit-WebUIVersion) </b>
+### **当前版本**:<b> V3.0.1(Test)(Streamlit-WebUIVersion) </b>
 
 ## 作者: TomLiu Suxyds(乾元)
 
@@ -14,8 +20,74 @@
 
 ## 使用的技术</h2>
 
-- ` 原创算法` :句子中寻找变形单词算法(三层递归结合大小写匹配以及字符串截断)(
-  该算法是搜罗全网代码最少的运行效率最高的效果最好的算法)
+- ` 原创算法` :句子中寻找`变形单词算法`(三层递归结合大小写匹配以及字符串截断)(
+  该算法是搜罗全网`代码最少`的运行`效率最高`的效果最好的算法)(文末为此函数源代码)
+
+<details>
+<summary>点击查看"例句中单词识别算法"</summary>
+
+```
+def replace_word_forms(sentence, base_word_):
+    sentence = sentence.replace('-', ' ')
+    result = ''
+    if base_word_ in sentence.split(' ') or base_word_ in sentence:
+        # print("直接返回", sentence, base_word_)
+        return sentence.replace(base_word_, 6 * '_')
+    else:
+        sta_ = 0
+        sta = 0
+
+        add_location = []
+        for word in sentence.split(' '):
+            for base_word in base_word_.split(' '):
+                if base_word.upper() == word.upper():
+                    # 检测到单词无变形
+                    # print(f"word:{word}")
+                    result += sentence.replace(word, 6 * "_")
+                    add_location.append(word)
+                    sta = 1
+                    continue
+                for c in range(1, 5):
+                    if sta == 1:
+                        break
+                    for m in range(1, 5):
+                        if sta_ == 1:
+                            continue
+                        if len(base_word) < m + 1 or len(base_word) < c + 1:
+                            continue
+                        if base_word[0:-c].upper() == word[0:-m].upper():
+                            # 检测到单词有变形
+                            # print('c', c, base_word[0:-c])
+                            result += sentence.replace(word, 6 * "_")
+                            add_location.append(word)
+                            sta_ = 1
+        if len(base_word_.split(' ')) < 2:
+            return result
+        # 短语定位
+        # print(locating_word)
+        # print(add_location)
+        result = sentence
+        # for replace_word_position in add_location:
+        #     # 去除句子中短语间空隙防止钻空
+        #     location = result.find(replace_word_position)
+        #     # print(location)
+        #     result = result[0:location + len(replace_word_position)] + result[location + len(
+        #         replace_word_position) + 1:-1]
+        result_ = ''
+        result = result.split(' ')
+        for word_ in add_location:
+            result = ["__" if word__ == word_ else word__ for word__ in result]
+        for item in result:
+            result_ += item + ' '
+        result_ = re.sub(r'\_+', '_', result_)
+        result_ = result_.replace('_ _', '_' * 6)
+        result_ = result_.replace('_ _ _', '_' * 6)
+        result_ = result_.replace('_ _ _ _', '_' * 6)
+        # result = result_
+        return result_
+```
+</details>
+
 - 使用 `streamlit ui`框架
 - 使用 `requests`，`beautifulsoup4` 爬取网页内容
 - 使用大量缓存(`streamlit.session_state`)存储临时数据，包括文章列表，单词本等
@@ -125,3 +197,11 @@
 > 进一步优化短语识别算法<br>
 > 美化README.md<br>
 > 再一次优化短语识别过多算法
+
+2024/9/22日晚上 <b> WebUiVersionV3.0.1(Test) </b>
+> 实现兼容Mr.Mou全新布局
+> 重写关键函数(new_load_word)
+> 为后续优化选项模式做好准备
+> 优化函数模块
+> 优化错误提示
+
