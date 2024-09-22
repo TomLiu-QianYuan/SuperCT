@@ -27,15 +27,29 @@
 <summary>点击查看"例句中单词识别算法"</summary>
 
 ```
-def replace_word_forms(sentence, base_word_):
-    sentence = sentence.replace('-', ' ')
+def delete_all_char(string: str,
+                    s_char=None) -> str:
+    if s_char is None:
+        s_char = ['"', "'", '[', ']', '{', '}', "\\", '|', ";", ":", "<", ">", "`", "~"]
+    for i in s_char:
+        string = string.replace(i, '')
+    return string
+
+
+def replace_word_forms(sentence: str, base_word_: str):
     result = ''
-    if base_word_ in sentence.split(' ') or base_word_ in sentence:
+    sentence = delete_all_char(sentence)
+    for word in sentence.split(" "):
+        if str(word).lower().startswith(base_word_.lower()) and len(word) - len(base_word_) <= 5:
+            return sentence.replace(word, 6 * "_")
+    if base_word_ in sentence.split(' '):
         # print("直接返回", sentence, base_word_)
         return sentence.replace(base_word_, 6 * '_')
+
     else:
         sta_ = 0
         sta = 0
+        sentence = sentence.replace('-', ' ')
 
         add_location = []
         for word in sentence.split(' '):
@@ -85,6 +99,7 @@ def replace_word_forms(sentence, base_word_):
         result_ = result_.replace('_ _ _ _', '_' * 6)
         # result = result_
         return result_
+
 ```
 </details>
 

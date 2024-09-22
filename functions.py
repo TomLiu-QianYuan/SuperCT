@@ -54,16 +54,29 @@ def load_catalog(update=True, save=True):
 #     full_pattern = r'\b(?:' + '|'.join(patterns) + r')\b'
 #     return full_pattern
 
+def delete_all_char(string: str,
+                    s_char=None) -> str:
+    if s_char is None:
+        s_char = ['"', "'", '[', ']', '{', '}', "\\", '|', ";", ":", "<", ">", "`", "~"]
+    for i in s_char:
+        string = string.replace(i, '')
+    return string
 
-def replace_word_forms(sentence, base_word_):
-    sentence = sentence.replace('-', ' ')
+
+def replace_word_forms(sentence: str, base_word_: str):
     result = ''
+    sentence = delete_all_char(sentence)
+    for word in sentence.split(" "):
+        if str(word).lower().startswith(base_word_.lower()) and len(word) - len(base_word_) <= 5:
+            return sentence.replace(word, 6 * "_")
     if base_word_ in sentence.split(' '):
         # print("直接返回", sentence, base_word_)
         return sentence.replace(base_word_, 6 * '_')
+
     else:
         sta_ = 0
         sta = 0
+        sentence = sentence.replace('-', ' ')
 
         add_location = []
         for word in sentence.split(' '):
@@ -171,6 +184,7 @@ def new_load_word(page_content: str):
             return False, False
     except:
         return False, False
+
 
 if __name__ == '__main__':
     print(generate_dict(['a', 'b'], [1, 2]))
