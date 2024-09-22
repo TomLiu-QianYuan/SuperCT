@@ -208,9 +208,9 @@ def replace_word_forms(sentence: str, base_word_: str):
 > 再一次优化短语识别过多算法
 
 2024/9/22日晚上 <b> WebUiVersionV3.0.1(Test) </b>
-> 实现兼容Mr.Mou全新布局
-> 重写关键函数(new_load_word)
-> 为后续优化选项模式做好准备
-> 优化函数模块
-> 优化错误提示
+> 实现兼容Mr.Mou全新布局<br>
+> 重写关键函数(new_load_word)<br>
+> 为后续优化选项模式做好准备<br>
+> 优化函数模块<br>
+> 优化错误提示<br>
 
