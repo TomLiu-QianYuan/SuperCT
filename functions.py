@@ -58,7 +58,7 @@ def load_catalog(update=True, save=True):
 def replace_word_forms(sentence, base_word_):
     sentence = sentence.replace('-', ' ')
     result = ''
-    if base_word_ in sentence.split(' ') or base_word_ in sentence:
+    if base_word_ in sentence.split(' '):
         # print("直接返回", sentence, base_word_)
         return sentence.replace(base_word_, 6 * '_')
     else:
