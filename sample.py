@@ -16,8 +16,7 @@ time_to_sleep = 1.0  # 微调此参数
 st.set_page_config(page_title="SuperCT",
                    page_icon=None,
                    layout="wide",
-                   initial_sidebar_state="auto",
-                   menu_items=None)
+                   initial_sidebar_state="auto")
 try:
     print("test")
 except:
@@ -26,7 +25,7 @@ if 'catalogs' not in st.session_state:
     # st.info("检测到缓存未有目录列表,开始爬取")
     with st.spinner(text="爬取网页中"):
         st.session_state['catalogs'] = functions.load_catalog(True, save=False)
-        st.toast("目录加载完毕")
+        st.toast("目录加载完毕",icon = "🥞")
 if 'accu_list' not in st.session_state:
     st.session_state['accu_list'] = list()
 # if 'engine_saying' not in st.session_state:
@@ -110,7 +109,7 @@ if st.session_state.num < 2:
     place_holder = st.empty()
     place_holder_info = st.empty()
 
-
+st.toast("目录爬取完毕,选择一篇文章开始检测吧",icon='🎉')
 class NewWordApp:
     def __init__(self, page_id):
 
@@ -232,7 +231,7 @@ def choice_model(temp_session_state_store_answer):
 
 
 def change_setting():
-    st.toast("配置修改完毕")
+    st.toast("配置修改完毕",icon = "🥞")
 
 
 def conf_next():
@@ -308,12 +307,12 @@ def main():
                 st.session_state['link_passage'] = "https://shishiapcs.github.io" + st.session_state['catalogs'][option]
                 word_app, temper_list = functions.new_load_word(
                     requests.get(st.session_state['link_passage']).text)
-                st.toast("SuperCT\n单词爬取完毕")
+                st.toast("SuperCT\n单词爬取完毕",icon = "🥞")
                 if not word_app:
                     st.warning("@w@SuperCT无法解析它,换一个文章试试看?")
                     return
                 else:
-                    st.toast("SuperCT\n单词加载完毕")
+                    st.toast("SuperCT\n单词加载完毕",icon = "🥞")
                     st.session_state['example_dict'] = temper_list
 
             for i in word_app.keys():
