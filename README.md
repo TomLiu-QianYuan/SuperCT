@@ -1,6 +1,7 @@
-# SuperCT
-
-> 简介:Super CT machine to Scan Which Words You Unfamiliar
+## SuperCT V3.0.1(Streamlit)
+- by TomLiu Suxyds
+>Super CT machine to Scan Which Words You Unfamiliar<b>
+---
 
 #### 在此致谢(排名不分先后)
 
@@ -9,20 +10,12 @@
 3. `Raymond`(测试)
 4. `Sword`(测试)
 5. `Isaiah`(测试)
-
 ----------
 
-### **当前版本**:<b> V3.0.1(Test)(Streamlit-WebUIVersion) </b>
-
-## 作者: TomLiu Suxyds(乾元)
-
-----------
-
-## 使用的技术</h2>
+### 使用的技术</h2>
 
 - ` 原创算法` :句子中寻找`变形单词算法`(三层递归结合大小写匹配以及字符串截断)(
   该算法是搜罗全网`代码最少`的运行`效率最高`的效果最好的算法)(文末为此函数源代码)
-
 <details>
 <summary>点击查看"例句中单词识别算法"</summary>
 
@@ -117,9 +110,9 @@ def replace_word_forms(sentence: str, base_word_: str):
 
 ----------
 
-## 小故事&功能变动
+### 小故事&功能变动
 
-    1. 我决定为carol小姐开发一款背单词软件，第一代程序使用的命令行ui，因小姐觉得太丑了，于是我决定使用更好看的ui
+    1. 我决定为carol开发一款背单词软件，第一代程序使用的命令行ui，因小姐觉得太丑了，于是我决定使用更好看的ui
 
     2. 综合考虑了众多条件，因为我没钱购买昂贵的服务器，于是采用了这套免费的云服务项目（streamlit cloud）
 
@@ -152,9 +145,10 @@ def replace_word_forms(sentence: str, base_word_: str):
     15. 添加答错单词时错误提示
 
 ------------
-2024/5/29日 <b>WebUiVersionV1.0.0 </b>
+### 更新日志
 
-> 本地测试通过
+2024/5/29日 <b>WebUiVersionV1.0.0 </b>
+>本地测试通过
 
 2024/5/29日晚
 
