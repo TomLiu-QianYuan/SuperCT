@@ -5,6 +5,7 @@ import time
 import pandas as pd
 import requests
 import streamlit as st
+import streamlit_mermaid as stmd
 from streamlit.components.v1 import html
 
 import functions
@@ -47,7 +48,8 @@ if 'chinese_list_temp' not in st.session_state:
     st.session_state['chinese_list_temp'] = list()
 if 'english_list_temp' not in st.session_state:
     st.session_state['english_list_temp'] = list()
-
+if 'wrong_result_dict' not in st.session_state:
+    st.session_state['wrong_result_dict'] = dict()
 if 'stop_ac' not in st.session_state:
     st.session_state['stop_ac'] = 0
 if 'temper_word' not in st.session_state:
@@ -113,6 +115,7 @@ if st.session_state.num < 2:
     begin = st.empty()
     setting_sel = st.empty()
     place_holder = st.empty()
+    place_holder_info_2 = st.empty()
     place_holder_info = st.empty()
 
     # 初始化完毕
@@ -191,6 +194,7 @@ def pi_gai():
     rows = ''
     right_result_dict = {}
     wrong_result_dict = {}
+    st.session_state['wrong_result_dict'] = wrong_result_dict
     for num2, ic in enumerate(st.session_state['chinese_list_']):
         try:
 
@@ -209,22 +213,21 @@ def pi_gai():
             rows += f"<tr style='color: {color};'><td>{ic}</td><td>{st.session_state['english_list_'][num2]}</td></tr>"
         except:
             continue
-    print(right_result_dict)
-    print(wrong_result_dict)
 
-    # 将数据行插入到表格中
+    with st.chat_message("user"):
+        # 将数据行插入到表格中
+        st.text("本次单词测试下载列表")
+        st.download_button("下载错误单词列表", st.session_state.wrong_words, file_name="错误的单词.txt")
+        st.download_button("下载正确单词列表", st.session_state.correct_words, file_name="正确的单词.txt")
+        excel_buffer = x.extract_and_create_file(dict_wrong=wrong_result_dict, dict_correct=right_result_dict)
+        # 在 Streamlit 中提供下载链接
+        st.download_button(
+            label="下载反馈文件表格XLSX",
+            data=excel_buffer,
+            file_name='本次作答反馈.xlsx',
+            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
     html_table = html_table.format(rows)
-    st.download_button("下载错误单词列表", st.session_state.wrong_words, file_name="错误的单词.txt")
-    st.download_button("下载正确单词列表", st.session_state.correct_words, file_name="正确的单词.txt")
-
-    excel_buffer = x.extract_and_create_file(dict_wrong=wrong_result_dict, dict_correct=right_result_dict)
-    # 在 Streamlit 中提供下载链接
-    st.download_button(
-        label="点击此处下载反馈文件表格XLSX",
-        data=excel_buffer,
-        file_name='本次作答反馈.xlsx',
-        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    )
     st.markdown(html_table, unsafe_allow_html=True)
 
     # st.button("测试错误单词",on_click=again_test(wrong_result_dict))
@@ -287,6 +290,12 @@ def conf_next():
     logo.empty()
 
 
+def stream_data(_LOREM_IPSUM):
+    for word in list(_LOREM_IPSUM):
+        yield word + " "
+        time.sleep(0.06)
+
+
 def main():
     logo.title("SuperCT" + version, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
     option = option_sel.selectbox(
@@ -299,6 +308,7 @@ def main():
     if st.session_state.num < 2:
         with place_holder_info.expander("SuperCT背后的故事"):
             st.write(open("README.md", 'r', encoding='utf-8').read(), unsafe_allow_html=True)
+
         with setting_sel.expander("配置你的专属SuperCT"):
             global time_to_sleep
             global right_color
@@ -333,6 +343,13 @@ def main():
             st.write("SuperCT结束测试单词时:")
             right_color = st.text_input(label="标记正确单词颜色", on_change=change_setting, value=right_color)
             wrong_color = st.text_input(label="标记错误单词颜色", on_change=change_setting, value=wrong_color)
+
+        with place_holder_info_2.expander("SuperCT执行流程"):
+            code = open("Process.mmd", 'r', encoding="utf-8").read()
+            mermaid = stmd.st_mermaid(code)
+            st.write(mermaid)
+            st.write_stream(stream_data(open("Process.txt", 'r', encoding='utf-8').read()))
+
     if option:
         logo.empty()
         st.session_state['passage'] = option
@@ -340,6 +357,7 @@ def main():
             try:
                 setting_sel.empty()
                 place_holder_info.empty()
+                place_holder_info_2.empty()
                 place_holder.empty()
                 logo.empty()
                 begin.empty()
