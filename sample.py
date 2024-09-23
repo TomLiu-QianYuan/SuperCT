@@ -44,6 +44,8 @@ if 'link_passage' not in st.session_state:
     st.session_state['link_passage'] = ''
 if 'example_list' not in st.session_state:
     st.session_state['example_list'] = list()
+if 'read_promote' not in st.session_state:
+    st.session_state['read_promote'] = True
 if 'chinese_list_temp' not in st.session_state:
     st.session_state['chinese_list_temp'] = list()
 if 'english_list_temp' not in st.session_state:
@@ -235,6 +237,22 @@ def pi_gai():
     # st.button("测试错误单词", on_click=run_again)
 
 
+def read_context(content, lang="zh-CN"):
+    if st.session_state['read_promote']:
+        my_js = f"""\
+                                    var msg = new SpeechSynthesisUtterance();
+                                    msg.text = "{str(content)}";
+                                    msg.pitch = {st.session_state['pitch_speak']};
+                                    msg.volume = {st.session_state['volume']};
+                                    msg.lang = '{lang}';
+                                    msg.rate = {st.session_state['rate_speak']};
+                                    window.speechSynthesis.speak(msg);"""
+
+        # Wrapt the javascript as html code
+        my_html = f"<script>{my_js}</script>"
+        html(my_html, width=0, height=0)
+
+
 def choice_model(temp_session_state_store_answer):
     '''
     当用户点击选项时
@@ -252,7 +270,10 @@ def choice_model(temp_session_state_store_answer):
             # time.sleep(1)
         st.session_state['temper_word'] = temp_session_state_store_answer
         if st.session_state['chinese_list_'][st.session_state.num - 2] == temp_session_state_store_answer:
-            with right_or_wrong.info(random.choice(st.session_state['correct_saying'])):
+            right_promote = random.choice(st.session_state['correct_saying'])
+            read_context(right_promote)
+            with right_or_wrong.info(right_promote):
+
                 time.sleep(time_to_sleep)
 
             st.session_state['correct_list'].append(temp_session_state_store_answer)
@@ -262,8 +283,10 @@ def choice_model(temp_session_state_store_answer):
                 f"{st.session_state['english_list_'][st.session_state.num - 2]}应选为{st.session_state['chinese_list_'][st.session_state.num - 2]}")
 
             st.session_state['wrong_list'].append(temp_session_state_store_answer)
+            wrong_promote = random.choice(st.session_state['wrong_saying'])
+            read_context(wrong_promote)
+            with right_or_wrong.error(wrong_promote):
 
-            with right_or_wrong.error(random.choice(st.session_state['wrong_saying'])):
                 time.sleep(time_to_sleep)
 
         st.session_state['stop_ac'] = 0
@@ -322,10 +345,13 @@ def main():
                                                        index=0,
                                                        on_change=change_setting)
 
+            st.session_state['read_promote'] = st.checkbox(label="是否朗读庆祝/鼓励语句",
+                                                           value=st.session_state['read_promote'])
             st.session_state['correct_saying'] = st.session_state['correct_saying_json'][
                 st.radio(label="谁为你庆祝答对单词",
                          on_change=change_setting,
                          options=st.session_state['correct_saying_json'].keys())]
+
             st.session_state['wrong_saying'] = st.session_state['wrong_saying_json'][
                 st.radio(label="谁为你鼓励答错单词", on_change=change_setting,
                          options=st.session_state['wrong_saying_json'].keys())]
