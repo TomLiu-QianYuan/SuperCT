@@ -1,5 +1,6 @@
 ## SuperCT V3.0.2(Streamlit)
-- by TomLiu&Sword
+- 项目地址：https://github.com/TomLiu-QianYuan/SuperCT
+- 开发： TomLiu&SwordChen
 > 一款基于 `shishiapcs.github.io` 的智能的在线背单词软件
 ---
 

@@ -289,7 +289,7 @@ def conf_next():
 
 
 def main():
-    logo.title("SuperCT" + version, anchor=False, help="By Tom Liu")
+    logo.title("SuperCT" + version, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
     option = option_sel.selectbox(
         "点击此处选择测试的文章@OwO@",
         (st.session_state['catalogs'].keys()),
