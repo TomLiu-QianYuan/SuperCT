@@ -2,7 +2,8 @@
 > 一款基于 `shishiapcs.github.io` 的智能的在线背单词软件
 
 - 项目地址：https://github.com/TomLiu-QianYuan/SuperCT
-- 开发： TomLiu&SwordChen
+- 在线平台：https://superct.streamlit.app/
+- 开发： TomLiu(刘一锐)&SwordChen(陈泊洲)
 ---
 
 ### 在此致谢(排名不分先后)
@@ -187,7 +188,8 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
     15. 添加答错单词时错误提示
   
     16. 邀请Sword同学编写xlsx生成功能
-
+    
+    17. 添加展示流程信息
 ------------
 
 ### 更新日志
@@ -252,7 +254,7 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
 > 美化README.md<br>
 > 再一次优化短语识别过多算法
 
-2024/9/22日晚上 <b> WebUiVersionV3.0.1(Test) </b>
+2024/9/22日晚 <b> WebUiVersionV3.0.1(Test) </b>
 > 实现兼容Mr.Mou全新布局<br>
 > 重写关键函数(new_load_word)<br>
 > 为后续优化选项模式做好准备<br>
@@ -262,3 +264,5 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
 2024/9/23日早上 <b> WebUiVersionV3.0.2(Test) </b>
 > 采用Sword编写的xlsx加载生成模块
 
+2024/9/24日晚 <b> WebUiVersionV3.0.2(Stable) </b>
+> 添加展示流程信息

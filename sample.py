@@ -409,6 +409,7 @@ def run():
     if st.session_state.num < 2:
         setting_sel.empty()
         place_holder_info.empty()
+        place_holder_info_2.empty()
         place_holder.empty()
         begin.empty()
         st.session_state['english_list_'] = st.session_state['english_list']
