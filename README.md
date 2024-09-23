@@ -1,4 +1,4 @@
-## SuperCT V3.0.1(Streamlit)
+## SuperCT V3.0.2(Streamlit)
 
 - by TomLiu Suxyds,Sword
 
