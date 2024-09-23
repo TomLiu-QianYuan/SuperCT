@@ -114,8 +114,9 @@ if st.session_state.num < 2:
     setting_sel = st.empty()
     place_holder = st.empty()
     place_holder_info = st.empty()
-# 初始化完毕
-st.toast("目录爬取完毕,选择一篇文章开始检测吧", icon='🎉')
+    st.toast("目录爬取完毕,选择一篇文章开始检测吧", icon='🎉')
+
+    # 初始化完毕
 
 
 class NewWordApp:
