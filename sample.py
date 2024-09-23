@@ -30,7 +30,7 @@ if 'catalogs' not in st.session_state:
 
     with st.spinner(text="爬取网页中"):
         st.session_state['catalogs'] = functions.load_catalog(True, save=False)
-        st.toast("目录加载完毕", icon="🥞")
+    st.toast("目录爬取完毕,选择一篇文章开始检测吧", icon='🎉')
     # st.session_state['catalogs']["本地表格上传"] = ""
 if 'accu_list' not in st.session_state:
     st.session_state['accu_list'] = list()
@@ -114,7 +114,6 @@ if st.session_state.num < 2:
     setting_sel = st.empty()
     place_holder = st.empty()
     place_holder_info = st.empty()
-    st.toast("目录爬取完毕,选择一篇文章开始检测吧", icon='🎉')
 
     # 初始化完毕
 
