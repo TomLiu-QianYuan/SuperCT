@@ -1,14 +1,12 @@
 ## SuperCT V3.0.2(Streamlit)
-
-- by TomLiu Suxyds,Sword
-
-> Super CT machine to Scan Which Words You Unfamiliar<b>
+- by TomLiu&Sword
+> 一款基于 `shishiapcs.github.io` 的智能的在线背单词软件
 ---
 
-#### 在此致谢(排名不分先后)
+### 在此致谢(排名不分先后)
 
 - `Mr.Mou`(指导)
-- `Sword`(测试+模块编写)
+- `Sword`(测试+文档生成模块编写)
 - `Carol`(测试)
 - `Raymond`(测试)
 - `Isaiah`(测试)
@@ -18,8 +16,7 @@
 ### 使用的技术(排名不分先后)</h2>
 
 - ` 原创算法` :句子中寻找`变形单词算法`(三层递归结合大小写匹配以及字符串截断)(
-  该算法是搜罗全网`代码最少`的运行`效率最高`的效果最好的算法)(文末为此函数源代码)
-
+  该算法是搜罗全网`代码最少`的运行`效率最高`的效果最好的算法)
 <details>
 <summary>点击查看"例句中单词识别算法"</summary>
 
@@ -101,7 +98,7 @@ def replace_word_forms(sentence: str, base_word_: str):
 
 </details>
 
-- 完全使用`Sword`的xlsx文件生成模块(xlsx_load.py)
+- 调用`Sword`的xlsx文件生成模块(xlsx_load.py)
 
 <details>
 <summary>点击查看"xlsx_load.py"(by Sword)</summary>
@@ -155,13 +152,13 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
 
 ### 小故事&功能变动
 
-    1. 我决定为carol开发一款背单词软件，第一代程序使用的命令行ui，因小姐觉得太丑了，于是我决定使用更好看的ui
+    1. 我决定为carol开发一款背单词软件，第一代程序使用的命令行ui，因觉得太丑了，于是我决定使用更好看的ui
 
     2. 综合考虑了众多条件，因为我没钱购买昂贵的服务器，于是采用了这套免费的云服务项目（streamlit cloud）
 
     3. 但也意味着只能使用streamlit构建
 
-    4. 于是我不停的学习，修改bug，一次单词顺序的bug我差一点放弃这个项目的开发，好在carol小姐默默支持
+    4. 于是我不停的学习，修改bug，一次单词顺序的bug我差一点放弃这个项目的开发
 
     4. 我不停地对比并研究示例代码，最终明白是streamlit的动态机制和我的多个if条件语句条件导致的及其隐蔽的bug
 
@@ -187,7 +184,7 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
 
     15. 添加答错单词时错误提示
   
-    16. 添加xlsx生成功能(Sword)
+    16. 邀请Sword同学编写xlsx生成功能
 
 ------------
 
