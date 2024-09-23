@@ -348,7 +348,7 @@ def main():
             code = open("Process.mmd", 'r', encoding="utf-8").read()
             mermaid = stmd.st_mermaid(code)
             st.write(mermaid)
-            st.write_stream(stream_data(open("Process.txt", 'r', encoding='utf-8').read()))
+            st.write(open("Process.txt", 'r', encoding='utf-8').read())
 
     if option:
         logo.empty()
@@ -388,6 +388,7 @@ def main():
             setting_sel.empty()
             place_holder_info.empty()
             place_holder.empty()
+            place_holder_info_2.empty()
             begin.empty()
             option_sel.empty()
 
