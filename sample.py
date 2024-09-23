@@ -1,11 +1,14 @@
-import streamlit as st
+import json
 import random
 import time
-import functions
-import requests
-import json
+
 import pandas as pd
+import requests
+import streamlit as st
 from streamlit.components.v1 import html
+
+import functions
+import xlsx_load as x
 
 # import pyttsx3
 version = '3.0.1'
@@ -17,15 +20,18 @@ st.set_page_config(page_title="SuperCT",
                    page_icon=None,
                    layout="wide",
                    initial_sidebar_state="auto")
+# 开始初始化
 try:
     print("test")
 except:
     st.rerun()
 if 'catalogs' not in st.session_state:
     # st.info("检测到缓存未有目录列表,开始爬取")
+
     with st.spinner(text="爬取网页中"):
         st.session_state['catalogs'] = functions.load_catalog(True, save=False)
-        st.toast("目录加载完毕",icon = "🥞")
+        st.toast("目录加载完毕", icon="🥞")
+    # st.session_state['catalogs']["本地表格上传"] = ""
 if 'accu_list' not in st.session_state:
     st.session_state['accu_list'] = list()
 # if 'engine_saying' not in st.session_state:
@@ -108,12 +114,16 @@ if st.session_state.num < 2:
     setting_sel = st.empty()
     place_holder = st.empty()
     place_holder_info = st.empty()
+# 初始化完毕
+st.toast("目录爬取完毕,选择一篇文章开始检测吧", icon='🎉')
 
-st.toast("目录爬取完毕,选择一篇文章开始检测吧",icon='🎉')
+
 class NewWordApp:
-    def __init__(self, page_id):
+    '''
+    创建一个单独地单词选择界面
+    '''
 
-        # get real word(english)
+    def __init__(self, page_id):
         example_sentence = ''
         if st.session_state['choose_mode'] == '以英文选中文':
             example_sentence = st.session_state['example_dict'][st.session_state['chinese_list_'][page_id - 1]].replace(
@@ -136,16 +146,24 @@ class NewWordApp:
                     text=f"当前进度-{page_id}/{len(st.session_state['english_list_'])}")
 
 
-# def run_again():
 #
-#     st.session_state['english_list'] = st.session_state['english_list_temp']
-#
-#     st.session_state['chinese_list'] = st.session_state['chinese_list_temp']
-#
+# def again_test(wrong_dict: dict):
+#     '''
+#     再次测试
+#     :param wrong_dict:
+#     :return:
+#     '''
+#     st.session_state['english_list_'] = list(wrong_dict.keys())
+#     st.session_state['chinese_list_'] = list(wrong_dict.values())
 #     run()
 
 
 def pi_gai():
+    '''
+    批改部分
+    展示批改结果
+    :return:
+    '''
     global right_color
     global wrong_color
     global ka_zhu_guo
@@ -163,38 +181,63 @@ def pi_gai():
     html_table = """
     <table>
         <tr>
-            <th>单词</th>
-            <th>中文</th>
+            <th>选项</th>
+            <th>答案</th>
         </tr>
         {}
     </table>
     <br>
     """
     rows = ''
+    right_result_dict = {}
+    wrong_result_dict = {}
     for num2, ic in enumerate(st.session_state['chinese_list_']):
         try:
+
             if ic in st.session_state['correct_list']:
                 st.session_state.correct_words += ic + '\t' + st.session_state['english_list_'][num2] + '\n'
+                right_result_dict[ic] = st.session_state['english_list_'][num2]
+
                 color = right_color
             else:
                 st.session_state.wrong_words += ic + '\t' + st.session_state['english_list_'][num2] + '\n'
                 color = wrong_color
+                wrong_result_dict[ic] = st.session_state['english_list_'][num2]
+
                 # st.session_state['english_list_temp'].append(st.session_state['english_list_'][num2])
                 # st.session_state['chinese_list_temp'].append(ic)
             rows += f"<tr style='color: {color};'><td>{ic}</td><td>{st.session_state['english_list_'][num2]}</td></tr>"
         except:
             continue
+    print(right_result_dict)
+    print(wrong_result_dict)
+
     # 将数据行插入到表格中
     html_table = html_table.format(rows)
-
     st.download_button("下载错误单词列表", st.session_state.wrong_words, file_name="错误的单词.txt")
     st.download_button("下载正确单词列表", st.session_state.correct_words, file_name="正确的单词.txt")
+
+    excel_buffer = x.extract_and_create_file(dict_wrong=wrong_result_dict, dict_correct=right_result_dict)
+    # 在 Streamlit 中提供下载链接
+    st.download_button(
+        label="点击此处下载反馈文件表格XLSX",
+        data=excel_buffer,
+        file_name='本次作答反馈.xlsx',
+        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
     st.markdown(html_table, unsafe_allow_html=True)
+
+    # st.button("测试错误单词",on_click=again_test(wrong_result_dict))
+
     # st.button("测试错误单词", on_click=run_again)
 
 
-
 def choice_model(temp_session_state_store_answer):
+    '''
+    当用户点击选项时
+    :param temp_session_state_store_answer:临时存储的答案
+    :return: None
+    '''
     st.session_state.num += 1
 
     right_or_wrong = st.empty()
@@ -231,10 +274,14 @@ def choice_model(temp_session_state_store_answer):
 
 
 def change_setting():
-    st.toast("配置修改完毕",icon = "🥞")
+    st.toast("配置修改完毕", icon="🥞")
 
 
 def conf_next():
+    '''
+    确认开始测试单词
+    :return:
+    '''
     st.session_state['ready'] = True
     option_sel.empty()
     logo.empty()
@@ -307,12 +354,12 @@ def main():
                 st.session_state['link_passage'] = "https://shishiapcs.github.io" + st.session_state['catalogs'][option]
                 word_app, temper_list = functions.new_load_word(
                     requests.get(st.session_state['link_passage']).text)
-                st.toast("SuperCT\n单词爬取完毕",icon = "🥞")
+                st.toast("SuperCT\n单词爬取完毕", icon="🥞")
                 if not word_app:
                     st.warning("@w@SuperCT无法解析它,换一个文章试试看?")
                     return
                 else:
-                    st.toast("SuperCT\n单词加载完毕",icon = "🥞")
+                    st.toast("SuperCT\n单词加载完毕", icon="🥞")
                     st.session_state['example_dict'] = temper_list
 
             for i in word_app.keys():

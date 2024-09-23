@@ -5,14 +5,25 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def get_html_content(url: str):
+def get_html_content(url: str) -> str:
+    '''
+    获取网页源码
+    :param url:指定URL
+    :return: 源码
+    '''
     content = requests.get(url)
     # if save:
     #     open(file=f"history.html",mode='wb').write(content)
     return content.text
 
 
-def load_catalog(update=True, save=True):
+def load_catalog(update=True, save=True) -> dict or bool:
+    '''
+    获取shishiapcs.github.io的文章集合爬取
+    :param update:是否重写爬取,如果不是则在本地读取文件加载
+    :param save:是否把结果保存在本地
+    :return:{"文章标题":"文章对应的url路径用于拼接在shishiapcs.github.io后"}
+    '''
     if update:
         # print("开始链接至:https://shishiapcs.github.io")
         # print("[+]正在爬取")
@@ -44,15 +55,6 @@ def load_catalog(update=True, save=True):
             load_catalog(True)
             return False
 
-
-# def build_regex_for_word_forms(base_word):
-#     # 构建一个正则表达式，尝试匹配基础单词及其潜在的后缀变化
-#     # 这里列举了一些常见的动词后缀和名词复数后缀
-#     suffixes = ['', 's', 'es', 'ed', 'ing', 'er', 'est', 'd', 't', 'll', 've']
-#     patterns = [re.escape(base_word) + '(' + '|'.join(suffixes) + ')?']
-#     # 添加可能的大小写变化处理
-#     full_pattern = r'\b(?:' + '|'.join(patterns) + r')\b'
-#     return full_pattern
 
 def delete_all_char(string: str,
                     s_char=None) -> str:
@@ -141,7 +143,12 @@ def generate_dict(key_list: list, value_list: list) -> dict:
     return result_dict
 
 
-def new_load_word(page_content: str):
+def new_load_word(page_content: str) -> dict:
+    '''
+    加载文章内容到字典
+    :param page_content: 源码
+    :return: dict
+    '''
     soup = BeautifulSoup(page_content, 'html.parser')
     try:
         tables = soup.find_all('table')

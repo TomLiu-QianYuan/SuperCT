@@ -1,21 +1,25 @@
 ## SuperCT V3.0.1(Streamlit)
-- by TomLiu Suxyds
->Super CT machine to Scan Which Words You Unfamiliar<b>
+
+- by TomLiu Suxyds,Sword
+
+> Super CT machine to Scan Which Words You Unfamiliar<b>
 ---
 
 #### 在此致谢(排名不分先后)
 
-1. `Mr.Mou`(指导)
-2. `Carol`(测试)
-3. `Raymond`(测试)
-4. `Sword`(测试)
-5. `Isaiah`(测试)
+- `Mr.Mou`(指导)
+- `Sword`(测试+模块编写)
+- `Carol`(测试)
+- `Raymond`(测试)
+- `Isaiah`(测试)
+
 ----------
 
-### 使用的技术</h2>
+### 使用的技术(排名不分先后)</h2>
 
 - ` 原创算法` :句子中寻找`变形单词算法`(三层递归结合大小写匹配以及字符串截断)(
   该算法是搜罗全网`代码最少`的运行`效率最高`的效果最好的算法)(文末为此函数源代码)
+
 <details>
 <summary>点击查看"例句中单词识别算法"</summary>
 
@@ -94,6 +98,45 @@ def replace_word_forms(sentence: str, base_word_: str):
         return result_
 
 ```
+
+</details>
+
+- 完全使用`Sword`的xlsx文件生成模块(xlsx_load.py)
+
+<details>
+<summary>点击查看"xlsx_load.py"(by Sword)</summary>
+
+```
+def extract_and_create_file(dict_wrong, dict_correct: dict):
+    # 该函数用于处理错误单词字典和正确单词字典并生成一个类文件(xlsx格式).
+    # 使用该函数需导入以下四个模块:import openpyxl; from openpyxl.utils import get_column_letter;
+    # from openpyxl.styles import Font; from io import BytesIO
+    # Author:Sword
+    wb = openpyxl.Workbook()
+    sheet = wb.active
+    counter = 0
+    sheet.title = "Your Word List"
+    desired_width = 70
+    sheet.column_dimensions[get_column_letter(1)].width = desired_width
+    for key in dict_wrong.keys():
+        a = sheet.cell(counter + 1, 1, key)
+        b = sheet.cell(counter + 1, 2, dict_wrong[key])
+        a.font = Font(color="FF0000")
+        b.font = Font(color="FF0000")
+        counter += 1
+    for key in dict_correct.keys():
+        a = sheet.cell(counter + 1, 1, key)
+        b = sheet.cell(counter + 1, 2, dict_correct[key])
+        a.font = Font(color="6DB33F")
+        b.font = Font(color="6DB33F")
+        counter += 1
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+    return output
+
+```
+
 </details>
 
 - 使用 `streamlit ui`框架
@@ -143,12 +186,15 @@ def replace_word_forms(sentence: str, base_word_: str):
     14. 添加朗读单词个性化设置
 
     15. 添加答错单词时错误提示
+  
+    16. 添加xlsx生成功能(Sword)
 
 ------------
+
 ### 更新日志
 
 2024/5/29日 <b>WebUiVersionV1.0.0 </b>
->本地测试通过
+> 本地测试通过
 
 2024/5/29日晚
 
@@ -213,4 +259,7 @@ def replace_word_forms(sentence: str, base_word_: str):
 > 为后续优化选项模式做好准备<br>
 > 优化函数模块<br>
 > 优化错误提示<br>
+
+2024/9/23日早上 <b> WebUiVersionV3.0.2(Test) </b>
+> 采用Sword编写的xlsx加载生成模块
 
