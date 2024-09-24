@@ -11,106 +11,76 @@ from streamlit.components.v1 import html
 import functions
 import xlsx_load as x
 
-# import pyttsx3
-version = '3.0.2'
-ka_zhu_guo = 0
-right_color = "green"
-wrong_color = "red"
-time_to_sleep = 1.0  # 微调此参数
+# 定义版本号等常量
+configs = json.loads(open("config.json", 'r').read())
+VERSION = configs['version']
+KA_ZHU_GUO = configs['ka_zhu_guo']
+RIGHT_COLOR = configs['right_color']
+WRONG_COLOR = configs['wrong_color']
+TIME_TO_SLEEP = configs['time_to_sleep']
+
+# 配置 Streamlit 页面设置
 st.set_page_config(page_title="SuperCT",
                    page_icon=None,
                    layout="wide",
                    initial_sidebar_state="auto")
-# 开始初始化
+
+
+# 初始化会话状态变量
+def initialize_session_state():
+    if 'catalogs' not in st.session_state:
+        with st.spinner(text="爬取网页中"):
+            st.session_state['catalogs'] = functions.load_catalog(True, save=False)
+        st.toast("目录爬取完毕,选择一篇文章开始检测吧", icon='🎉')
+
+        st.session_state.setdefault('accu_list', [])
+        # st.session_state.setdefault('engine_saying', None)
+        st.session_state.setdefault('example_list_temper', [])
+        st.session_state.setdefault('link_passage', '')
+        st.session_state.setdefault('example_list', [])
+        st.session_state.setdefault('read_promote', True)
+        st.session_state.setdefault('chinese_list_temp', [])
+        st.session_state.setdefault('english_list_temp', [])
+        st.session_state.setdefault('wrong_result_dict', {})
+        st.session_state.setdefault('stop_ac', 0)
+        st.session_state.setdefault('temper_word', '')
+        st.session_state.setdefault('repeat_count', 0)
+        st.session_state.setdefault('ready', False)
+        st.session_state.setdefault('choose_mode', "以中文选英文")
+        st.session_state.setdefault('correct_list', [])
+        st.session_state.setdefault('wrong_list', [])
+        st.session_state.setdefault('volume', configs['default_volume'])
+        st.session_state.setdefault('rate_speak', configs['default_rate'])
+        st.session_state.setdefault('pitch_speak', configs['default_pitch'])
+        st.session_state.setdefault('correct_words', '以下是正确的单词\n测试时间:' + time.strftime('%a %b %d %H:%M:%S %Y',
+                                                                                                   time.localtime()) + '\n')
+        st.session_state.setdefault('wrong_words', '以下是错误的单词\n测试时间:' + time.strftime('%a %b %d %H:%M:%S %Y',
+                                                                                                 time.localtime()) + '\n')
+        st.session_state.setdefault('start', False)
+        st.session_state.setdefault('num', 1)
+        st.session_state.setdefault('data', [])
+        st.session_state.setdefault('english_list_', [])
+        st.session_state.setdefault('english_list', [])
+        st.session_state.setdefault('chinese_list_', [])
+        st.session_state.setdefault('chinese_list', [])
+        st.session_state.setdefault('passage', '')
+        st.session_state.setdefault('correct_saying_json',
+                                    json.loads(open("correct_promot.json", 'r', encoding='utf-8').read()))
+        st.session_state.setdefault('example_dict', {})
+        st.session_state.setdefault('wrong_saying_json',
+                                    json.loads(open("wrong_promot.json", 'r', encoding='utf-8').read()))
+        st.session_state.setdefault('correct_saying', [])
+        st.session_state.setdefault('wrong_saying', [])
+        st.session_state.setdefault('accu', '')
+
+
+initialize_session_state()
+
 try:
     print("test")
 except:
     st.rerun()
-if 'catalogs' not in st.session_state:
-    # st.info("检测到缓存未有目录列表,开始爬取")
 
-    with st.spinner(text="爬取网页中"):
-        st.session_state['catalogs'] = functions.load_catalog(True, save=False)
-    st.toast("目录爬取完毕,选择一篇文章开始检测吧", icon='🎉')
-    # st.session_state['catalogs']["本地表格上传"] = ""
-if 'accu_list' not in st.session_state:
-    st.session_state['accu_list'] = list()
-# if 'engine_saying' not in st.session_state:
-#     st.session_state['engine_saying'] = pyttsx3.init()
-#     st.session_state['engine_saying'].setProperty('volume', 1.0)
-if 'example_list_temper' not in st.session_state:
-    st.session_state['example_list_temper'] = list()
-if 'link_passage' not in st.session_state:
-    st.session_state['link_passage'] = ''
-if 'example_list' not in st.session_state:
-    st.session_state['example_list'] = list()
-if 'read_promote' not in st.session_state:
-    st.session_state['read_promote'] = True
-if 'chinese_list_temp' not in st.session_state:
-    st.session_state['chinese_list_temp'] = list()
-if 'english_list_temp' not in st.session_state:
-    st.session_state['english_list_temp'] = list()
-if 'wrong_result_dict' not in st.session_state:
-    st.session_state['wrong_result_dict'] = dict()
-if 'stop_ac' not in st.session_state:
-    st.session_state['stop_ac'] = 0
-if 'temper_word' not in st.session_state:
-    # 用来检测是不是乱选的
-    st.session_state['temper_word'] = ''
-if 'repeat_count' not in st.session_state:
-    # 用来记录重复点击的次数
-    st.session_state['repeat_count'] = 0
-if 'ready' not in st.session_state:
-    st.session_state['ready'] = False
-if 'choose_mode' not in st.session_state:
-    st.session_state['choose_mode'] = "以中文选英文"
-if 'correct_list' not in st.session_state:
-    st.session_state['correct_list'] = []
-if 'wrong_list' not in st.session_state:
-    st.session_state['wrong_list'] = []
-if 'volume' not in st.session_state:
-    st.session_state['volume'] = 1.0
-if 'rate_speak' not in st.session_state:
-    st.session_state['rate_speak'] = 1.0
-if 'pitch_speak' not in st.session_state:
-    st.session_state['pitch_speak'] = 1.0
-if 'correct_words' not in st.session_state:
-    st.session_state.correct_words = '以下是正确的单词\n测试时间:' + time.strftime('%a %b %d %H:%M:%S %Y',
-                                                                                   time.localtime()) + '\n'
-if 'wrong_words' not in st.session_state:
-    st.session_state.wrong_words = '以下是错误的单词\n测试时间:' + time.strftime('%a %b %d %H:%M:%S %Y',
-                                                                                 time.localtime()) + '\n'
-if 'start' not in st.session_state:
-    st.session_state['start'] = False
-if 'num' not in st.session_state:
-    st.session_state.num = 1
-if 'data' not in st.session_state:
-    st.session_state.data = []
-if 'english_list_' not in st.session_state:
-    st.session_state['english_list_'] = []
-if 'english_list' not in st.session_state:
-    st.session_state['english_list'] = []
-if 'chinese_list_' not in st.session_state:
-    st.session_state['chinese_list_'] = []
-if 'chinese_list' not in st.session_state:
-    st.session_state['chinese_list'] = []
-
-if 'passage' not in st.session_state:
-    st.session_state['passage'] = ''
-
-if 'correct_saying_json' not in st.session_state:
-    st.session_state['correct_saying_json'] = json.loads(open("correct_promot.json", 'r', encoding='utf-8').read())
-if 'example_dict' not in st.session_state:
-    st.session_state['example_dict'] = dict()
-if 'wrong_saying_json' not in st.session_state:
-    st.session_state['wrong_saying_json'] = json.loads(open("wrong_promot.json", 'r', encoding='utf-8').read())
-if 'correct_saying' not in st.session_state:
-    st.session_state['correct_saying'] = []
-if 'wrong_saying' not in st.session_state:
-    st.session_state['wrong_saying'] = []
-
-if 'accu' not in st.session_state:
-    st.session_state['accu'] = ''
 logo = st.empty()
 option_sel = st.empty()
 if st.session_state.num < 2:
@@ -151,27 +121,15 @@ class NewWordApp:
                     text=f"当前进度-{page_id}/{len(st.session_state['english_list_'])}")
 
 
-#
-# def again_test(wrong_dict: dict):
-#     '''
-#     再次测试
-#     :param wrong_dict:
-#     :return:
-#     '''
-#     st.session_state['english_list_'] = list(wrong_dict.keys())
-#     st.session_state['chinese_list_'] = list(wrong_dict.values())
-#     run()
-
-
 def pi_gai():
     '''
     批改部分
     展示批改结果
     :return:
     '''
-    global right_color
-    global wrong_color
-    global ka_zhu_guo
+    global RIGHT_COLOR
+    global WRONG_COLOR
+    global KA_ZHU_GUO
     random.choice([st.balloons, st.snow])()
     st.session_state['correct_list'] = list(set(st.session_state['correct_list']))
     st.session_state['wrong_list'] = list(set(st.session_state['wrong_list']))
@@ -181,8 +139,8 @@ def pi_gai():
     if st.session_state['repeat_count']:
         st.text("点击过快了:" + str(st.session_state['repeat_count']))
     st.line_chart({'本次作答正确率折线图': st.session_state['accu_list']})
-    if ka_zhu_guo:
-        st.warning(f"本次检测卡了{ka_zhu_guo}次")
+    if KA_ZHU_GUO:
+        st.warning(f"本次检测卡了{KA_ZHU_GUO}次")
     html_table = """
     <table>
         <tr>
@@ -204,10 +162,10 @@ def pi_gai():
                 st.session_state.correct_words += ic + '\t' + st.session_state['english_list_'][num2] + '\n'
                 right_result_dict[ic] = st.session_state['english_list_'][num2]
 
-                color = right_color
+                color = RIGHT_COLOR
             else:
                 st.session_state.wrong_words += ic + '\t' + st.session_state['english_list_'][num2] + '\n'
-                color = wrong_color
+                color = WRONG_COLOR
                 wrong_result_dict[ic] = st.session_state['english_list_'][num2]
 
                 # st.session_state['english_list_temp'].append(st.session_state['english_list_'][num2])
@@ -274,7 +232,7 @@ def choice_model(temp_session_state_store_answer):
             read_context(right_promote)
             with right_or_wrong.info(right_promote):
 
-                time.sleep(time_to_sleep)
+                time.sleep(TIME_TO_SLEEP)
 
             st.session_state['correct_list'].append(temp_session_state_store_answer)
 
@@ -287,14 +245,14 @@ def choice_model(temp_session_state_store_answer):
             read_context(wrong_promote)
             with right_or_wrong.error(wrong_promote):
 
-                time.sleep(time_to_sleep)
+                time.sleep(TIME_TO_SLEEP)
 
         st.session_state['stop_ac'] = 0
         right_or_wrong.empty()
     except:
-        global ka_zhu_guo
+        global KA_ZHU_GUO
         st.warning("~qwq~ SuperCT忙不过来了,请稍等")
-        ka_zhu_guo += 1
+        KA_ZHU_GUO += 1
         time.sleep(1)
         return
 
@@ -320,7 +278,7 @@ def stream_data(_LOREM_IPSUM):
 
 
 def main():
-    logo.title("SuperCT" + version, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
+    logo.title("SuperCT" + VERSION, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
     option = option_sel.selectbox(
         "点击此处选择测试的文章@OwO@",
         (st.session_state['catalogs'].keys()),
@@ -333,9 +291,9 @@ def main():
             st.write(open("README.md", 'r', encoding='utf-8').read(), unsafe_allow_html=True)
 
         with setting_sel.expander("配置你的专属SuperCT"):
-            global time_to_sleep
-            global right_color
-            global wrong_color
+            global TIME_TO_SLEEP
+            global RIGHT_COLOR
+            global WRONG_COLOR
             st.write("SuperCT正在测试单词时:")
             st.session_state['choose_mode'] = st.radio(label="选择测试模式",
                                                        options=['以中文选英文',
@@ -364,11 +322,11 @@ def main():
             st.session_state['rate_speak'] = st.slider(label="朗读单词的速度", on_change=change_setting, min_value=0.0,
                                                        max_value=10.0, step=0.1,
                                                        value=st.session_state['rate_speak'])
-            time_to_sleep = st.slider(label="切换单词时间(s)", on_change=change_setting, min_value=0.0, max_value=10.0,
-                                      value=time_to_sleep)
+            TIME_TO_SLEEP = st.slider(label="切换单词时间(s)", on_change=change_setting, min_value=0.0, max_value=10.0,
+                                      value=TIME_TO_SLEEP)
             st.write("SuperCT结束测试单词时:")
-            right_color = st.text_input(label="标记正确单词颜色", on_change=change_setting, value=right_color)
-            wrong_color = st.text_input(label="标记错误单词颜色", on_change=change_setting, value=wrong_color)
+            RIGHT_COLOR = st.text_input(label="标记正确单词颜色", on_change=change_setting, value=RIGHT_COLOR)
+            WRONG_COLOR = st.text_input(label="标记错误单词颜色", on_change=change_setting, value=WRONG_COLOR)
 
         with place_holder_info_2.expander("SuperCT执行流程"):
             code = open("Process.mmd", 'r', encoding="utf-8").read()
