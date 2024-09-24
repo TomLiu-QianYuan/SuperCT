@@ -1,0 +1,10 @@
+{
+  "version": "3.0.2",
+  "right_color": "green",
+  "wrong_color": "red",
+  "time_to_sleep": 1.0,
+  "default_volume": 1.0,
+  "default_pitch": 1.0,
+  "default_rate": 1.0,
+  "ka_zhu_guo": 0
+}
