@@ -1,9 +1,11 @@
 ## SuperCT V3.0.2(Streamlit)
+
 > 一款基于 `shishiapcs.github.io` 的智能的在线背单词软件
 
 - 项目地址：https://github.com/TomLiu-QianYuan/SuperCT
 - 在线平台：https://superct.streamlit.app/
 - 开发： TomLiu(刘一锐)&SwordChen(陈泊洲)
+
 ---
 
 ### 在此致谢(排名不分先后)
@@ -16,10 +18,29 @@
 
 ----------
 
+### 在本地部署
+
+#### *Notice:你的python版本>=3.10*
+
+-
+    1. 下载源代码文件(.zip)或命令行执行`git clone https://github.com/TomLiu-QianYuan/SuperCT.git`
+-
+    2. 解压并在此路径中打开命令行
+-
+    3. `pip3 install -r requirements.txt`或`pip install -r requirements.txt`
+
+> 你也可以加入一些镜像源 `pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple`
+
+-
+    4. 启动项目 `streamlit run sample.py`或`python -m streamlit run sample.py`
+
+----------
+
 ### 使用的技术(排名不分先后)</h2>
 
 - ` 原创算法` :句子中寻找`变形单词算法`(三层递归结合大小写匹配以及字符串截断)(
   该算法是搜罗全网`代码最少`的运行`效率最高`的效果最好的算法)
+
 <details>
 <summary>点击查看"例句中单词识别算法"</summary>
 
@@ -190,6 +211,7 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
     16. 邀请Sword同学编写xlsx生成功能
     
     17. 添加展示流程信息
+
 ------------
 
 ### 更新日志
