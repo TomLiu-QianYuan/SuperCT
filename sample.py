@@ -38,7 +38,7 @@ def initialize_session_state():
         st.session_state.setdefault('example_list_temper', [])
         st.session_state.setdefault('link_passage', '')
         st.session_state.setdefault('example_list', [])
-        st.session_state.setdefault('read_promote', True)
+        st.session_state.setdefault('read_promote', False)
         st.session_state.setdefault('chinese_list_temp', [])
         st.session_state.setdefault('english_list_temp', [])
         st.session_state.setdefault('wrong_result_dict', {})
