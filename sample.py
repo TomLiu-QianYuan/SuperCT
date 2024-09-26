@@ -137,11 +137,12 @@ def select_passage(a_list):
     # st.set_page_config(page_title='准备', layout='wide')
     with select_holder.expander("选择文章", expanded=True):
 
-        st.title('在开始之前,请选择一篇或多篇文章')
+        st.text('在开始之前,请选择一篇或多篇文章')
         selected_files_ = st.session_state.get('selected_files', {})
 
         # 创建输入框，用户可以输入搜索关键字
-        query = st.text_input('输入搜索关键字:', value='', key='query')
+        query = st.text_input('输入搜索关键字:', value='', key='query',
+                              placeholder="在这里输入文章标题中可能的字符回车即可搜索")
 
         # 根据用户输入过滤文件列表
         filtered_list = [file for file in a_list if query.lower() in file.lower()] if query else a_list
@@ -156,12 +157,13 @@ def select_passage(a_list):
         if st.button('确认选择'):
             if selected_files_:
                 selected_info = '\n'.join([file for file, selected in selected_files_.items() if selected])
-                st.success(f'你选择了以下文章：\n{selected_info}')
+                # st.success(f'你选择了以下文章：\n{selected_info}')
+
                 st.session_state['passage_list'] = selected_info.split('\n')
 
                 # st.session_state['ready'] = True
             else:
-                st.warning('请先选择一个文章')
+                st.warning('请先选择一个文章', icon="📝")
 
         # 底部状态栏
         st.markdown(
@@ -192,8 +194,10 @@ def pi_gai():
     random.choice([st.balloons, st.snow])()
     st.session_state['correct_list'] = list(set(st.session_state['correct_list']))
     st.session_state['wrong_list'] = list(set(st.session_state['wrong_list']))
-
-    st.text("检测文章:" + st.session_state['passage'])
+    passage = ''
+    for i in st.session_state['passage_list']:
+        passage += i + ','
+    st.text("检测文章:" + passage)
     st.write("正确率为:" + st.session_state['accu'] + "%")
     if st.session_state['repeat_count']:
         st.text("点击过快了:" + str(st.session_state['repeat_count']))
@@ -283,7 +287,7 @@ def choice_model(temp_session_state_store_answer):
     try:
         if st.session_state['temper_word'] == temp_session_state_store_answer:
             # st.session_state['temper_count'] += 1
-            st.warning("哥们,慢一点,手速太快了")
+            st.warning("哥们,慢一点,手速太快了", icon="👋")
             # time.sleep(1)
         st.session_state['temper_word'] = temp_session_state_store_answer
         if st.session_state['chinese_list_'][st.session_state.num - 2] == temp_session_state_store_answer:
@@ -310,7 +314,7 @@ def choice_model(temp_session_state_store_answer):
         right_or_wrong.empty()
     except:
         global KA_ZHU_GUO
-        st.warning("~qwq~ SuperCT忙不过来了,请稍等")
+        st.warning("~qwq~ SuperCT忙不过来了,请稍等", icon="😥")
         KA_ZHU_GUO += 1
         time.sleep(1)
         return
@@ -358,7 +362,8 @@ def main():
                 global RIGHT_COLOR
                 global WRONG_COLOR
                 st.write("选择算法")
-                st.session_state['suanfa'] = st.radio(label="例句中单词识别算法", options=["Tom循环算法v3.0", "Sword正则算法v2.0"],
+                st.session_state['suanfa'] = st.radio(label="例句中单词识别算法",
+                                                      options=["Tom循环算法v3.0", "Sword正则算法v2.0"],
                                                       index=1, on_change=change_setting)
                 st.write("SuperCT正在测试单词时:")
                 st.session_state['choose_mode'] = st.radio(label="选择测试模式",
@@ -430,7 +435,6 @@ def main():
             num_word = 0
             select_holder.empty()
             with st.status(label="正在拼命加载中...", expanded=True) as status:
-
                 for passage in st.session_state['passage_list']:
                     st.session_state['link_passage'] = "https://shishiapcs.github.io" + st.session_state['catalogs'][
                         passage]
@@ -444,6 +448,7 @@ def main():
                     if not word_app or not temper_app:
                         status.write(f"{passage} [合并失败],可能是解析失败")
                         st.session_state['passage_list'].remove(passage)
+                        st.warning("文章解析失败啦,请谨慎选择", icon="⚠️")
                         continue
                     status.write(f"{passage}单词量估计:{len(word_app.keys()) - 1}")
                     num_word += len(word_app.keys()) - 1
@@ -451,11 +456,11 @@ def main():
                     temper_list.update(temper_app)  # 合并字典
                     status.write(f"{passage}合并完毕")
                 status.write(f"总单词量估计:{num_word + 1}")
-                status.update(label="加载完毕",state="complete",expanded=False)
+                status.update(label="加载完毕", state="complete", expanded=False)
                 # print(word_list)
 
             if not word_list:
-                st.warning("@w@SuperCT无法解析它,换一个文章试试看?")
+                st.warning("@w@SuperCT无法解析它,换一个文章试试看?", icon="⚠️")
                 st.session_state['passage_list'] = []
                 st.rerun()
             st.toast("SuperCT\n单词加载完毕", icon="🥞")
