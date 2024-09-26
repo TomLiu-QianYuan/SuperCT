@@ -13,7 +13,7 @@ import xlsx_load as x
 
 # 定义版本号等常量
 ENCODING = "utf-8"
-configs = json.loads(open("config.json", 'r',encoding=ENCODING).read())
+configs = json.loads(open("config.json", 'r', encoding=ENCODING).read())
 VERSION = configs['version']
 KA_ZHU_GUO = configs['ka_zhu_guo']
 RIGHT_COLOR = configs['right_color']
@@ -343,16 +343,8 @@ def stream_data(_LOREM_IPSUM):
 
 
 def main():
-    if not st.session_state['clicked_button']:
-        logo.title("SuperCT v" + VERSION, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
-
-        logo_2.write_stream(stream_data(DESCRIPTIONS))
-    # option = option_sel.selectbox(
-    #    "点击此处选择测试的文章@OwO@",
-    #    (st.session_state['catalogs'].keys()),
-    #    index=None,
-    #    placeholder="点击此处选择一篇文章并开始检测吧"
-    # )
+    logo.title("SuperCT v" + VERSION, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
+    logo_2.write_stream(stream_data(DESCRIPTIONS))
     option = option_sel.button("点击此处开始测试")
     if option:
         st.session_state['clicked_button'] = True
@@ -444,17 +436,17 @@ def main():
                 for passage in st.session_state['passage_list']:
                     st.session_state['link_passage'] = "https://shishiapcs.github.io" + st.session_state['catalogs'][
                         passage]
-                    st.write(f"爬取{st.session_state['link_passage']} [开始]")
+                    st.info(f"爬取{st.session_state['link_passage']} [开始]")
                     data = requests.get(st.session_state['link_passage']).text
-                    status.write(f"爬取{st.session_state['link_passage']} [完毕]")
+                    status.success(f"爬取{st.session_state['link_passage']} [完毕]")
                     if "tom" in st.session_state['suanfa']:
                         word_app, temper_app = functions.new_load_word(data, replace=True)
                     else:
                         word_app, temper_app = functions.new_load_word(data, replace=False)
                     if not word_app or not temper_app:
-                        status.write(f"{passage} [合并失败],可能是解析失败")
+                        status.write()
                         st.session_state['passage_list'].remove(passage)
-                        st.warning("文章解析失败啦,请谨慎选择", icon="⚠️")
+                        st.warning(f"{passage} [合并失败],可能是解析失败,请谨慎选择", icon="⚠️")
                         continue
                     status.write(f"{passage}单词量估计:{len(word_app.keys()) - 1}")
                     num_word += len(word_app.keys()) - 1
@@ -466,8 +458,9 @@ def main():
                 # print(word_list)
 
             if not word_list:
-                st.warning("@w@SuperCT无法解析它,换一个文章试试看?", icon="⚠️")
+                st.warning("解析失败,请谨慎选择", icon="⚠️")
                 st.session_state['passage_list'] = []
+                time.sleep(1)
                 st.rerun()
             st.toast("SuperCT\n单词加载完毕", icon="🥞")
             st.session_state['example_dict'] = temper_list
