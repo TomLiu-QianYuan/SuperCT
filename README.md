@@ -1,4 +1,4 @@
-## SuperCT V3.0.2(Streamlit)
+## SuperCT V3.2.0(Streamlit)
 
 > 一款基于 `shishiapcs.github.io` 的智能的在线背单词软件
 
@@ -11,7 +11,7 @@
 ### 在此致谢(排名不分先后)
 
 - `Mr.Mou`(指导)
-- `Sword`(测试+文档生成模块编写)
+- `Sword`(测试+文档生成模块编写+例句中单词匹配)
 - `Carol`(测试)
 - `Raymond`(测试)
 - `Isaiah`(测试)
@@ -122,6 +122,21 @@ def replace_word_forms(sentence: str, base_word_: str):
 
 </details>
 
+- 采用`Sword`的正则表达式识别例句中单词算法
+<details>
+<summary>点击查看"cut_key_word"(by Sword)</summary>
+
+```
+def cut_key_word(exam_word: str, original_sentence: str) -> str:
+    if exam_word in original_sentence.split(' '):
+        return original_sentence.replace(exam_word, '')
+    exam_word_change = exam_word[0:len(exam_word) - 1:1]
+    pattern = f"\\b{exam_word}\\w*\\b|\\b{exam_word_change}\\w*\\b"
+    r = re.sub(pattern, '______', original_sentence, flags=re.IGNORECASE)
+    return r
+```
+</details>
+
 - 调用`Sword`的xlsx文件生成模块(xlsx_load.py)
 
 <details>
@@ -171,7 +186,7 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
 - 使用大量切片逻辑和循环逻辑等精密算法
 - 每一次打开网页都会爬取最新文章列表已经最新单词
 - 内嵌JavaScript并使用`Speech Synthesis API`朗读单词
-
+- 编写全新文章选择,支持多选,支持搜索文章
 ----------
 
 ### 小故事&功能变动
@@ -288,3 +303,7 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
 
 2024/9/24日晚 <b> WebUiVersionV3.0.2(Stable) </b>
 > 添加展示流程信息
+
+2024/9/26日晚 <b> WebUiVersionV3.2.0(Test)</b>
+> 邀请Sword编写例句中单词识别替换算法,并集成入配置选项中
+> 编写全新文章选择,支持多选,支持搜索文章！
