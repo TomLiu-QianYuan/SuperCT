@@ -343,9 +343,10 @@ def stream_data(_LOREM_IPSUM):
 
 
 def main():
-    logo.title("SuperCT v" + VERSION, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
+    if not st.session_state['clicked_button']:
+        logo.title("SuperCT v" + VERSION, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
 
-    logo_2.write_stream(stream_data(DESCRIPTIONS))
+        logo_2.write_stream(stream_data(DESCRIPTIONS))
     # option = option_sel.selectbox(
     #    "点击此处选择测试的文章@OwO@",
     #    (st.session_state['catalogs'].keys()),
