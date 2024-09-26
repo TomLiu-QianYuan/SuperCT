@@ -431,7 +431,7 @@ def main():
             place_holder_info_2.empty()
             place_holder.empty()
             begin.empty()
-            with st.status(label="加载中:" + "https://shishiapcs.github.io"):
+            with st.status(label="加载中:" + "https://shishiapcs.github.io",key="loadwords"):
                 word_list = dict()
                 temper_list = dict()
                 num_word = 0
@@ -451,7 +451,7 @@ def main():
                         st.session_state['passage_list'].remove(passage)
                         continue
                     st.write(f"{passage}单词量估计:{len(word_app.keys()) - 1}")
-                    num_word += len(word_app.keys() - 1)
+                    num_word += len(word_app.keys())-1
                     word_list.update(word_app)  # 合并字典
                     temper_list.update(temper_app)  # 合并字典
                     st.write(f"{passage}合并完毕")
