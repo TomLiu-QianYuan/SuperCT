@@ -431,7 +431,7 @@ def main():
             place_holder_info_2.empty()
             place_holder.empty()
             begin.empty()
-            with st.status(label="加载中:" + "https://shishiapcs.github.io",key="loadwords"):
+            with st.status(label="加载中:" + "https://shishiapcs.github.io"):
                 word_list = dict()
                 temper_list = dict()
                 num_word = 0
