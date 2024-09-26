@@ -138,6 +138,8 @@ class NewWordApp:
 def select_passage(a_list):
     # 创建Streamlit应用程序
     # st.set_page_config(page_title='准备', layout='wide')
+    logo.empty()
+    logo_2.empty()
     with select_holder.expander("选择文章", expanded=True):
         st.write("在开始之前,请选择一篇或多篇文")
         selected_files_ = st.session_state.get('selected_files', {})
@@ -344,7 +346,8 @@ def stream_data(_LOREM_IPSUM):
 
 def main():
     logo.title("SuperCT v" + VERSION, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
-    logo_2.write_stream(stream_data(DESCRIPTIONS))
+    if not st.session_state['clicked_button']:
+        logo_2.write_stream(stream_data(DESCRIPTIONS))
     option = option_sel.button("点击此处开始测试")
     if option:
         st.session_state['clicked_button'] = True
@@ -432,6 +435,8 @@ def main():
             temper_list = dict()
             num_word = 0
             select_holder.empty()
+            logo.empty()
+            logo_2.empty()
             with st.status(label="正在拼命加载中...", expanded=True) as status:
                 for passage in st.session_state['passage_list']:
                     st.session_state['link_passage'] = "https://shishiapcs.github.io" + st.session_state['catalogs'][
@@ -467,7 +472,8 @@ def main():
 
             try:
                 setting_sel.empty()
-
+                logo.empty()
+                logo_2.empty()
                 option_sel.empty()
                 logo.empty()
                 setting_sel.empty()
