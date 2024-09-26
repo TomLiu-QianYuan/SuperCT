@@ -440,7 +440,7 @@ def main():
                         passage]
                     st.write(f"爬取{st.session_state['link_passage']} [开始]")
                     data = requests.get(st.session_state['link_passage']).text
-                    print("data:", data)
+                    # print("data:", data)
                     st.write(f"爬取{st.session_state['link_passage']} [完毕]")
                     if "tom" in st.session_state['suanfa']:
                         word_app, temper_app = functions.new_load_word(data, replace=True)
