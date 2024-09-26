@@ -138,7 +138,7 @@ def select_passage(a_list):
     with select_holder.expander("选择文章", expanded=True):
 
         st.title('在开始之前,请选择一篇或多篇文章')
-        selected_files = st.session_state.get('selected_files', {})
+        selected_files_ = st.session_state.get('selected_files', {})
 
         # 创建输入框，用户可以输入搜索关键字
         query = st.text_input('输入搜索关键字:', value='', key='query')
@@ -149,16 +149,14 @@ def select_passage(a_list):
         # 为每个文件创建一个复选框
         for file in filtered_list:
             if st.checkbox(file, key=f'checkbox_{file}', value=False):
-                selected_files[file] = True
+                selected_files_[file] = True
             else:
-                selected_files.pop(file, None)
+                selected_files_.pop(file, None)
 
         if st.button('确认选择'):
-            if selected_files:
-                selected_info = '\n'.join([file for file, selected in selected_files.items() if selected])
+            if selected_files_:
+                selected_info = '\n'.join([file for file, selected in selected_files_.items() if selected])
                 st.success(f'你选择了以下文章：\n{selected_info}')
-                select_holder.empty()
-                logo.empty()
                 st.session_state['passage_list'] = selected_info.split('\n')
 
                 # st.session_state['ready'] = True
@@ -360,8 +358,8 @@ def main():
                 global RIGHT_COLOR
                 global WRONG_COLOR
                 st.write("选择算法")
-                st.session_state['suanfa'] = st.radio(label="例句中单词识别算法", options=["Tom(V2.0)", "Sword(V1.0)"],
-                                                      index=0, on_change=change_setting)
+                st.session_state['suanfa'] = st.radio(label="例句中单词识别算法", options=["Tom循环算法v3.0", "Sword正则算法v2.0"],
+                                                      index=1, on_change=change_setting)
                 st.write("SuperCT正在测试单词时:")
                 st.session_state['choose_mode'] = st.radio(label="选择测试模式",
                                                            options=['以中文选英文',
@@ -426,36 +424,34 @@ def main():
             st.session_state['chinese_list'] = []
             st.session_state['example_list'] = []
             show_list = []
-            setting_sel.empty()
-            place_holder_info.empty()
-            place_holder_info_2.empty()
-            place_holder.empty()
-            begin.empty()
-            with st.status(label="加载中:" + "https://shishiapcs.github.io",key="loadwords"):
-                word_list = dict()
-                temper_list = dict()
-                num_word = 0
+
+            word_list = dict()
+            temper_list = dict()
+            num_word = 0
+            select_holder.empty()
+            with st.status(label="正在拼命加载中...", expanded=True) as status:
+
                 for passage in st.session_state['passage_list']:
                     st.session_state['link_passage'] = "https://shishiapcs.github.io" + st.session_state['catalogs'][
                         passage]
                     st.write(f"爬取{st.session_state['link_passage']} [开始]")
                     data = requests.get(st.session_state['link_passage']).text
-                    print("data:", data)
-                    st.write(f"爬取{st.session_state['link_passage']} [完毕]")
+                    status.write(f"爬取{st.session_state['link_passage']} [完毕]")
                     if "tom" in st.session_state['suanfa']:
                         word_app, temper_app = functions.new_load_word(data, replace=True)
                     else:
                         word_app, temper_app = functions.new_load_word(data, replace=False)
                     if not word_app or not temper_app:
-                        st.write(f"{passage} [合并失败],可能是解析失败")
+                        status.write(f"{passage} [合并失败],可能是解析失败")
                         st.session_state['passage_list'].remove(passage)
                         continue
-                    st.write(f"{passage}单词量估计:{len(word_app.keys()) - 1}")
-                    num_word += len(word_app.keys())-1
+                    status.write(f"{passage}单词量估计:{len(word_app.keys()) - 1}")
+                    num_word += len(word_app.keys()) - 1
                     word_list.update(word_app)  # 合并字典
                     temper_list.update(temper_app)  # 合并字典
-                    st.write(f"{passage}合并完毕")
-                st.write(f"总单词量估计:{num_word + 1}")
+                    status.write(f"{passage}合并完毕")
+                status.write(f"总单词量估计:{num_word + 1}")
+                status.update(label="加载完毕",state="complete",expanded=False)
                 # print(word_list)
 
             if not word_list:
@@ -465,18 +461,21 @@ def main():
             st.toast("SuperCT\n单词加载完毕", icon="🥞")
             st.session_state['example_dict'] = temper_list
 
-            setting_sel.empty()
+            try:
+                setting_sel.empty()
 
-            option_sel.empty()
-            logo.empty()
-            setting_sel.empty()
-            place_holder_info.empty()
-            option_sel.empty()
-            place_holder_info_2.empty()
-            place_holder.empty()
-            logo.empty()
-            begin.empty()
-            setting_sel.empty()
+                option_sel.empty()
+                logo.empty()
+                setting_sel.empty()
+                place_holder_info.empty()
+                option_sel.empty()
+                place_holder_info_2.empty()
+                place_holder.empty()
+                logo.empty()
+                begin.empty()
+                setting_sel.empty()
+            except:
+                ...
             for i in word_list.keys():
                 show_list.append([i, word_list[i], st.session_state['example_dict'][i]])
                 st.session_state['english_list'].append(i)

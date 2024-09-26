@@ -1,24 +1,24 @@
-## SuperCT V3.2.0(Streamlit)
+## 🌟 SuperCT V3.2.0(Streamlit)
 
 > 一款基于 `shishiapcs.github.io` 的智能的在线背单词软件
 
-- 项目地址：https://github.com/TomLiu-QianYuan/SuperCT
-- 在线平台：https://superct.streamlit.app/
+- 项目地址：[GitHub](https://github.com/TomLiu-QianYuan/SuperCT)
+- 在线平台：[SuperCT](https://superct.streamlit.app/)
 - 开发： TomLiu(刘一锐)&SwordChen(陈泊洲)
 
 ---
 
 ### 在此致谢(排名不分先后)
 
-- `Mr.Mou`(指导)
-- `Sword`(测试+文档生成模块编写+例句中单词匹配)
-- `Carol`(测试)
-- `Raymond`(测试)
-- `Isaiah`(测试)
+- 🧪👨‍🏫`Mr.Mou`(测试+指导)
+- 🧪📝🔍`Sword`(测试+文档生成模块编写+第二种例句中单词匹配算法（正则）)
+- 🧪`Carol`(测试)
+- 🧪`Raymond`(测试)
+- 🧪`Isaiah`(测试)
 
 ----------
 
-### 在本地部署
+### 💻 在本地部署
 
 #### *Notice:你的python版本>=3.10*
 
@@ -36,13 +36,16 @@
 
 ----------
 
-### 使用的技术(排名不分先后)</h2>
+### 🛠️ 技术栈</h2>
+
+- 📘Tom原创的例句中单词识别算法
+
+<details>
 
 - ` 原创算法` :句子中寻找`变形单词算法`(三层递归结合大小写匹配以及字符串截断)(
   该算法是搜罗全网`代码最少`的运行`效率最高`的效果最好的算法)
 
-<details>
-<summary>点击查看"例句中单词识别算法"</summary>
+<summary>点击查看"replace_word_forms"by Tom</summary>
 
 ```
 def delete_all_char(string: str,
@@ -122,7 +125,8 @@ def replace_word_forms(sentence: str, base_word_: str):
 
 </details>
 
-- 采用`Sword`的正则表达式识别例句中单词算法
+- 🔍采用`Sword`的正则表达式识别例句中单词算法
+
 <details>
 <summary>点击查看"cut_key_word"(by Sword)</summary>
 
@@ -135,9 +139,10 @@ def cut_key_word(exam_word: str, original_sentence: str) -> str:
     r = re.sub(pattern, '______', original_sentence, flags=re.IGNORECASE)
     return r
 ```
+
 </details>
 
-- 调用`Sword`的xlsx文件生成模块(xlsx_load.py)
+- 📑调用`Sword`的xlsx文件生成模块 (xlsx_load.py)
 
 <details>
 <summary>点击查看"xlsx_load.py"(by Sword)</summary>
@@ -175,21 +180,22 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
 
 </details>
 
-- 使用 `streamlit ui`框架
-- 使用 `requests`，`beautifulsoup4` 爬取网页内容
-- 使用大量缓存(`streamlit.session_state`)存储临时数据，包括文章列表，单词本等
-- 查询了大量网页教程，修改若干逻辑bug
-- 引入`html`展示结果单词列表（颜色区分对错）
-- 使用streamlit动态机制
-- 使用`json`库解析若干语句
-- 使用`random`打乱单词顺序
-- 使用大量切片逻辑和循环逻辑等精密算法
-- 每一次打开网页都会爬取最新文章列表已经最新单词
-- 内嵌JavaScript并使用`Speech Synthesis API`朗读单词
-- 编写全新文章选择,支持多选,支持搜索文章
+- 🖥️使用 `streamlit ui`框架
+- 🕸️使用 `requests`，`beautifulsoup4` 爬取网页内容
+- 💾使用大量缓存(`streamlit.session_state`)存储临时数据，包括文章列表，单词本等
+- 🔍查询了大量网页教程，修改若干逻辑bug
+- 🎨引入`html`展示结果单词列表（颜色区分对错）
+- 🌀使用streamlit动态机制
+- 📜使用`json`库解析若干语句
+- 🔀使用`random`打乱单词顺序
+- 🧩使用大量切片逻辑和循环逻辑等精密算法
+- 📰每一次打开网页都会爬取最新文章列表已经最新单词
+- 🗣️内嵌JavaScript并使用`Speech Synthesis API`朗读单词
+- 📖编写全新文章选择,支持多选,支持搜索文章
+
 ----------
 
-### 小故事&功能变动
+### 📚小故事&功能变动
 
     1. 我决定为carol开发一款背单词软件，第一代程序使用的命令行ui，因觉得太丑了，于是我决定使用更好看的ui
 
@@ -227,9 +233,11 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
     
     17. 添加展示流程信息
 
+    18. 编写全新文章选择,支持多选,支持搜索文章！
+
 ------------
 
-### 更新日志
+### 📈更新日志
 
 2024/5/29日 <b>WebUiVersionV1.0.0 </b>
 > 本地测试通过
@@ -305,5 +313,5 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
 > 添加展示流程信息
 
 2024/9/26日晚 <b> WebUiVersionV3.2.0(Test)</b>
-> 邀请Sword编写例句中单词识别替换算法,并集成入配置选项中
-> 编写全新文章选择,支持多选,支持搜索文章！
+> 邀请Sword编写例句中单词识别替换算法,并集成入配置选项中<br>
+> 编写全新文章选择,支持多选,支持搜索文章！<br>
