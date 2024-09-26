@@ -343,7 +343,7 @@ def stream_data(_LOREM_IPSUM):
 
 
 def main():
-    logo.title("🌟SuperCT" + VERSION, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
+    logo.title("SuperCT v" + VERSION, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
 
     logo_2.write_stream(stream_data(DESCRIPTIONS))
     # option = option_sel.selectbox(
