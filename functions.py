@@ -1,7 +1,7 @@
 import json
 import sys
 import time
-
+import re
 import requests
 from bs4 import BeautifulSoup
 
@@ -200,9 +200,6 @@ def new_load_word(page_content: str, replace=True) -> dict or [bool, bool]:
             return False, False
     except:
         return False, False
-
-
-import re
 
 
 def cut_key_word(exam_word: str, original_sentence: str) -> str:
