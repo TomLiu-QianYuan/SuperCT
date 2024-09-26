@@ -355,6 +355,8 @@ def main():
     option = option_sel.button("点击此处开始测试")
     if option:
         st.session_state['clicked_button'] = True
+        logo_2.empty()
+        logo.empty()
         option_sel.empty()
     if not st.session_state['clicked_button']:
         if st.session_state.num < 2:
