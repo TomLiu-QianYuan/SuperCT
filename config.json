@@ -1,5 +1,6 @@
 {
   "version": "3.2.0",
+  "descriptions": "一款基于`https://shishiapcs.github.io`的智能的在线背单词软件",
   "right_color": "green",
   "wrong_color": "red",
   "time_to_sleep": 1.0,
