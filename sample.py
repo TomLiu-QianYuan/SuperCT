@@ -12,15 +12,16 @@ import functions
 import xlsx_load as x
 
 # 定义版本号等常量
-configs = json.loads(open("config.json", 'r').read())
+ENCODING = "utf-8"
+configs = json.loads(open("config.json", 'r',encoding=ENCODING).read())
 VERSION = configs['version']
 KA_ZHU_GUO = configs['ka_zhu_guo']
 RIGHT_COLOR = configs['right_color']
 WRONG_COLOR = configs['wrong_color']
 TIME_TO_SLEEP = configs['time_to_sleep']
-
+DESCRIPTIONS = configs['descriptions']
 # 配置 Streamlit 页面设置
-st.set_page_config(page_title="SuperCT",
+st.set_page_config(page_title="🌟SuperCT",
                    page_icon=None,
                    layout="wide",
                    initial_sidebar_state="auto")
@@ -87,11 +88,13 @@ except:
     st.rerun()
 
 logo = st.empty()
+logo_2 = st.empty()
 option_sel = st.empty()
 if st.session_state.num < 2:
     selected_files = st.session_state.get('selected_files', {})
 
     begin = st.empty()
+
     setting_sel = st.empty()
     place_holder = st.empty()
     place_holder_info_2 = st.empty()
@@ -136,12 +139,11 @@ def select_passage(a_list):
     # 创建Streamlit应用程序
     # st.set_page_config(page_title='准备', layout='wide')
     with select_holder.expander("选择文章", expanded=True):
-
-        st.text('在开始之前,请选择一篇或多篇文章')
+        st.write("在开始之前,请选择一篇或多篇文")
         selected_files_ = st.session_state.get('selected_files', {})
 
         # 创建输入框，用户可以输入搜索关键字
-        query = st.text_input('输入搜索关键字:', value='', key='query',
+        query = st.text_input('搜索框', value='', key='query',
                               placeholder="在这里输入文章标题中可能的字符回车即可搜索")
 
         # 根据用户输入过滤文件列表
@@ -336,12 +338,14 @@ def conf_next():
 
 def stream_data(_LOREM_IPSUM):
     for word in list(_LOREM_IPSUM):
-        yield word + " "
-        time.sleep(0.06)
+        yield word
+        time.sleep(0.04)
 
 
 def main():
-    logo.title("SuperCT" + VERSION, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
+    logo.title("🌟SuperCT" + VERSION, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
+
+    logo_2.write_stream(stream_data(DESCRIPTIONS))
     # option = option_sel.selectbox(
     #    "点击此处选择测试的文章@OwO@",
     #    (st.session_state['catalogs'].keys()),
@@ -409,19 +413,18 @@ def main():
                 st.write(open("Process.txt", 'r', encoding='utf-8').read())
     if not st.session_state['passage_list'] and st.session_state['clicked_button']:
         logo.empty()
+        logo_2.empty()
         setting_sel.empty()
         place_holder_info.empty()
         option_sel.empty()
         place_holder_info_2.empty()
         place_holder.empty()
-        logo.empty()
         begin.empty()
 
         select_passage(st.session_state['catalogs'].keys())
 
         # st.rerun()
     if st.session_state['passage_list']:
-        logo.empty()
 
         if st.session_state.num < 2 and not st.session_state['ready']:
 
