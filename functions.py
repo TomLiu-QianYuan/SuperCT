@@ -1,7 +1,7 @@
 import json
-import sys
-import time
 import re
+import time
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -91,10 +91,10 @@ def replace_word_forms(sentence: str, base_word_: str):
                     add_location.append(word)
                     sta = 1
                     continue
-                for c in range(1, 5):
+                for c in range(1, 6):
                     if sta == 1:
                         break
-                    for m in range(1, 5):
+                    for m in range(1, 6):
                         if sta_ == 1:
                             continue
                         if len(base_word) < m + 1 or len(base_word) < c + 1:
@@ -398,6 +398,7 @@ if __name__ == '__main__':
                 'The study concerns the variability in children’s growth rates.',
                 'There is significant variability in how individuals develop.',
                 'Development simply does not follow the same pattern for everyone.']
+    print(replace_word_forms("It's important to analyze your competitors when planning to effectively.", "compete"))
 
 
     def s():
@@ -416,12 +417,7 @@ if __name__ == '__main__':
         t2 = time.time()
 
         print("Tom:", t2 - t1)
-
-
-    if sys.argv[1] == 's':
-        s()
-    if sys.argv[1] == 't':
-        t()
+    
     # a = new_load_word(data, replace=False)
     # word_list, exp_list = list(a[1].keys()), list(a[1].values())
     # c = []
