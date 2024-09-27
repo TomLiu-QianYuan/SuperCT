@@ -195,7 +195,7 @@ def pi_gai():
     global RIGHT_COLOR
     global WRONG_COLOR
     global KA_ZHU_GUO
-    random.choice([st.balloons, st.snow])()
+    st.balloons()
     st.session_state['correct_list'] = list(set(st.session_state['correct_list']))
     st.session_state['wrong_list'] = list(set(st.session_state['wrong_list']))
     passage = ''
@@ -366,7 +366,7 @@ def main():
                 st.write("选择算法")
                 st.session_state['suanfa'] = st.radio(label="例句中单词识别算法",
                                                       options=["Tom循环算法v3.0", "Sword正则算法v2.0"],
-                                                      index=1, on_change=change_setting)
+                                                      index=0, on_change=change_setting)
                 st.write("SuperCT正在测试单词时:")
                 st.session_state['choose_mode'] = st.radio(label="选择测试模式",
                                                            options=['以中文选英文',
