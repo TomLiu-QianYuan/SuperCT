@@ -1,6 +1,7 @@
-# <center> 🌟 SuperCT 🌟  </center>
+<center>  SuperCT  </center>
+============================
 
-##### <center> 一款基于 `https://shishiapcs.github.io` 的智能背单词APP</center>
+#### <center> 一款基于 `https://shishiapcs.github.io` 的智能背单词APP</center>
 
 <center>
 
@@ -16,8 +17,8 @@
 
 ### *V3.2.1*
 
-- #### 项目地址：[点击此处打开对应的GitHub仓库](https://github.com/TomLiu-QianYuan/SuperCT)
-- #### 在线使用平台：[点击此处打开在线使用SuperCT平台](https://superct.streamlit.app/)
+- ##### 项目地址：[点击此处打开对应的GitHub仓库](https://github.com/TomLiu-QianYuan/SuperCT)
+- ##### 在线使用平台：[点击此处打开在线使用SuperCT平台](https://superct.streamlit.app/)
 
 ---
 
