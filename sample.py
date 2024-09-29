@@ -347,7 +347,7 @@ def main():
     logo.title("SuperCT v" + VERSION, anchor=False, help="https://github.com/TomLiu-QianYuan/SuperCT")
     if not st.session_state['clicked_button']:
         logo_2.write_stream(stream_data(DESCRIPTIONS))
-    option = option_sel.button("点击此处开始测试")
+    option = option_sel.button("**点击此处开始测试**")
     if option:
         st.session_state['clicked_button'] = True
         logo_2.empty()
@@ -365,7 +365,7 @@ def main():
                 st.write("选择算法")
                 st.session_state['suanfa'] = st.radio(label="例句中单词识别算法",
                                                       options=["Tom循环算法v3.0", "Sword正则算法v2.0"],
-                                                      index=0, on_change=change_setting)
+                                                      index=1, on_change=change_setting)
                 st.write("SuperCT正在测试单词时:")
                 st.session_state['choose_mode'] = st.radio(label="选择测试模式",
                                                            options=['以中文选英文',
