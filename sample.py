@@ -402,11 +402,6 @@ def main():
                 st.write("SuperCT结束测试单词时:")
                 RIGHT_COLOR = st.text_input(label="标记正确单词颜色", on_change=change_setting, value=RIGHT_COLOR)
                 WRONG_COLOR = st.text_input(label="标记错误单词颜色", on_change=change_setting, value=WRONG_COLOR)
-
-            with place_holder_info_2.expander("SuperCT执行流程"):
-                code = open("Process.mmd", 'r', encoding="utf-8").read()
-                st.markdown(code, unsafe_allow_html=True)
-                st.write(open("Process.txt", 'r', encoding='utf-8').read())
     if not st.session_state['passage_list'] and st.session_state['clicked_button']:
         logo.empty()
         logo_2.empty()
