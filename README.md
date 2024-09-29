@@ -214,4 +214,4 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
 | 2024/9/23 日早上 | WebUiVersionV3.0.2(Test)   | 采用 Sword 编写的 xlsx 加载生成模块                                           |
 | 2024/9/24 日晚  | WebUiVersionV3.0.2(Stable) | 添加展示流程信息                                                           |
 | 2024/9/26 日晚  | WebUiVersionV3.2.0(Test)   | 邀请 Sword 编写例句中单词识别替换算法，并集成入配置选项中，编写全新文章选择，支持多选，支持搜索文章！             |
-| 2024/9/26 日晚  | WebUiVersionV3.2.1(Stable) | 优化 Sword 的正则算法，优化 Readme.md                                        |
+| 2024/9/26 日晚  | WebUiVersionV3.2.1(Stable) | 优化 Sword 的正则算法，优化 Readme.md,去除流程图                                  |
