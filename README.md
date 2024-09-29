@@ -1,38 +1,47 @@
-## 🌟 SuperCT V3.2.0(Streamlit)
+# <center> 🌟 SuperCT 🌟  </center>
 
-> 一款基于 `shishiapcs.github.io` 的智能的在线背单词软件
+##### <center> 一款基于 `https://shishiapcs.github.io` 的智能背单词APP</center>
 
-- 项目地址：[GitHub](https://github.com/TomLiu-QianYuan/SuperCT)
-- 在线平台：[SuperCT](https://superct.streamlit.app/)
-- 开发： TomLiu(刘一锐)&SwordChen(陈泊洲)
+<center>
+
+![](https://img.shields.io/badge/SuperCT-智能背单词APP-yellow)
+![](https://img.shields.io/badge/TomLiu-原创例句单词匹配算法-blue)
+![](https://img.shields.io/badge/SwordChen-例句单词匹配正则算法,xlsx生成-green)
+![](https://img.shields.io/badge/技术架构-前后端分离设计-red)
+
+</center>
+<br>
 
 ---
 
-### 在此致谢(排名不分先后)
+### *V3.2.1*
 
-- 🧪👨‍🏫`Mr.Mou`(测试+指导)
-- 🧪📝🔍`Sword`(测试+文档生成模块编写+第二种例句中单词匹配算法（正则）)
-- 🧪`Carol`(测试)
-- 🧪`Raymond`(测试)
-- 🧪`Isaiah`(测试)
+- #### 项目地址：[点击此处打开对应的GitHub仓库](https://github.com/TomLiu-QianYuan/SuperCT)
+- #### 在线使用平台：[点击此处打开在线使用SuperCT平台](https://superct.streamlit.app/)
+
+---
+
+### 📚开发以及参与者
+
+- 🎯`TomLiu`(主体代码编写以及领导者)
+- 📝`SwordChen`(文档生成模块编写,例句中单词匹配算法（正则）)
+- 👨‍🏫`Mr.Mou`(指导)
+- 🕵️`Carol`(测试)
+- 🕵️`Raymond`(测试)
+- 🕵️`Isaiah`(测试)
 
 ----------
 
 ### 💻 在本地部署
 
-#### *Notice:你的python版本>=3.10*
+#### *Notice:python版本>=3.10*
 
--
-    1. 下载源代码文件(.zip)或命令行执行`git clone https://github.com/TomLiu-QianYuan/SuperCT.git`
--
-    2. 解压并在此路径中打开命令行
--
-    3. `pip3 install -r requirements.txt`或`pip install -r requirements.txt`
-
-> 你也可以加入一些镜像源 `pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple`
-
--
-    4. 启动项目 `streamlit run sample.py`或`python -m streamlit run sample.py`
+| 步骤序号 | 部署步骤                                                                          |
+|------|-------------------------------------------------------------------------------|
+| 1    | 下载源代码文件(.zip)或命令行执行`git clone https://github.com/TomLiu-QianYuan/SuperCT.git` |
+| 2    | 解压并在此路径中打开命令行                                                                 |
+| 3    | 终端输入`pip3 install -r requirements.txt`                                        |
+| 4    | 终端输入`python -m streamlit run sample.py`                                       |
 
 ----------
 
@@ -63,7 +72,7 @@ def replace_word_forms(sentence: str, base_word_: str):
     for word in sentence.split(" "):
         if str(word).lower().startswith(base_word_.lower()) and len(word) - len(base_word_) <= 5:
             return sentence.replace(word, 6 * "_")
-    if base_word_ in sentence.split(' '):
+    if base_word_.replace(" ", '') in sentence.split(' '):
         # print("直接返回", sentence, base_word_)
         return sentence.replace(base_word_, 6 * '_')
 
@@ -99,15 +108,7 @@ def replace_word_forms(sentence: str, base_word_: str):
         if len(base_word_.split(' ')) < 2:
             return result
         # 短语定位
-        # print(locating_word)
-        # print(add_location)
         result = sentence
-        # for replace_word_position in add_location:
-        #     # 去除句子中短语间空隙防止钻空
-        #     location = result.find(replace_word_position)
-        #     # print(location)
-        #     result = result[0:location + len(replace_word_position)] + result[location + len(
-        #         replace_word_position) + 1:-1]
         result_ = ''
         result = result.split(' ')
         for word_ in add_location:
@@ -132,8 +133,6 @@ def replace_word_forms(sentence: str, base_word_: str):
 
 ```
 def cut_key_word(exam_word: str, original_sentence: str) -> str:
-    if exam_word in original_sentence.split(' '):
-        return original_sentence.replace(exam_word, '')
     exam_word_change = exam_word[0:len(exam_word) - 1:1]
     pattern = f"\\b{exam_word}\\w*\\b|\\b{exam_word_change}\\w*\\b"
     r = re.sub(pattern, '______', original_sentence, flags=re.IGNORECASE)
@@ -180,138 +179,39 @@ def extract_and_create_file(dict_wrong, dict_correct: dict):
 
 </details>
 
-- 🖥️使用 `streamlit ui`框架
-- 🕸️使用 `requests`，`beautifulsoup4` 爬取网页内容
-- 💾使用大量缓存(`streamlit.session_state`)存储临时数据，包括文章列表，单词本等
-- 🔍查询了大量网页教程，修改若干逻辑bug
+- 🖥️采用了前后端分离的架构设计。
+
+> 前端使用 Streamlit UI 框架，为用户提供简洁美观的界面。<br>
+> 🕸️后端主要使用 Python 语言进行开发，借助 requests 和 beautifulsoup4
+> 库进行网页内容爬取，通过一系列精密算法对数据进行处理。<br>
+> 💾数据存储方面，利用 streamlit.session_state 进行临时数据存储，确保数据的快速访问和更新)
+
 - 🎨引入`html`展示结果单词列表（颜色区分对错）
-- 🌀使用streamlit动态机制
 - 📜使用`json`库解析若干语句
-- 🔀使用`random`打乱单词顺序
-- 🧩使用大量切片逻辑和循环逻辑等精密算法
-- 📰每一次打开网页都会爬取最新文章列表已经最新单词
+- 🔀使用`random`打乱顺序
+- 🧩使用切片,循环,正则等精密算法
+- 📰实时更新最新文章列表以及最新单词
 - 🗣️内嵌JavaScript并使用`Speech Synthesis API`朗读单词
 - 📖编写全新文章选择,支持多选,支持搜索文章
 
-----------
-
-### 📚小故事&功能变动
-
-    1. 我决定为carol开发一款背单词软件，第一代程序使用的命令行ui，因觉得太丑了，于是我决定使用更好看的ui
-
-    2. 综合考虑了众多条件，因为我没钱购买昂贵的服务器，于是采用了这套免费的云服务项目（streamlit cloud）
-
-    3. 但也意味着只能使用streamlit构建
-
-    4. 于是我不停的学习，修改bug，一次单词顺序的bug我差一点放弃这个项目的开发
-
-    4. 我不停地对比并研究示例代码，最终明白是streamlit的动态机制和我的多个if条件语句条件导致的及其隐蔽的bug
-
-    5. 后添加若干控件
-
-    6. 后邀请`Sword`,`Raymond`同学测试程序，发现若干bug，并修复
-
-    7. 去除大量不必要功能并保留并更新原始功能
-
-    8. 添加一定的安全检测机制
-
-    9. 新增个性化提示鼓励
-
-    10. 添加例句功能
-
-    11. 添加可供选的检测模式(以英文选中文，以中文选英文,以单词选例句，以例句选单词)
-
-    12. 添加正确率图像
-
-    13. 添加朗读单词功能
-
-    14. 添加朗读单词个性化设置
-
-    15. 添加答错单词时错误提示
-  
-    16. 邀请Sword同学编写xlsx生成功能
-    
-    17. 添加展示流程信息
-
-    18. 编写全新文章选择,支持多选,支持搜索文章！
-
-------------
-
 ### 📈更新日志
 
-2024/5/29日 <b>WebUiVersionV1.0.0 </b>
-> 本地测试通过
-
-2024/5/29日晚
-
-> 完成streamlit cloud结合github仓库有完成初步上线部署<br>
-
-2024/5/30日
-
-> 据Mr.Mou建议,添加一定量的个性化设置<br>
-> 并优化了诸多代码
-
-2024/5/30日晚
-
-> 大量删改不必要代码,大程度优化加载逻辑,优化函数加载等<br>
-> 采用多文件管理代码
-
-2024/5/31日
-
-> 新增个性化提示鼓励,以及sword同学贡献他自定义的语料<br>
-> 添加例句功能
-
-2024/5/31日晚<b> WebUiVersionV2.1.0 </b>
-
-> 新增检测模式(以英文选中文，以中文选英文)
-
-2024/6/4日晚 <b> WebUiVersionV2.1.2 </b>
-
-> 成功修复若干bug<br>
-> 新增检测模式(以单词选例句，以例句选单词)<br>
-> 以及正确率图像绘制<br>
-> 修复单词数量过多bug
-
-2024/6/5日
-
-> 修改提示词并初步优化例句除去待测单词功能
-
-2024/6/5日晚 <b> WebUiVersionV2.1.3(Stable) </b>
-
-> 再次优化例句除去待测单词功能并优化布局
-
-2024/6/11日晚 <b> WebUiVersionV2.2.0(Test) </b>
-
-
-> 添加朗读单词功能<br>
-> 添加答错时显示答案功能<br>
-> 添加朗读单词个性化设置<br>
-> 美化README.md<br>
-> 重写默认鼓励词并优化显示答案功能<br>
-
-2024/6/11日晚<b> WebUiVersionV2.2.1(Stable) </b>
-> 修复朗读单词的下划线bug<br>
-> 优化短语识别算法<br>
-> 优化了下划线数量以及间隔<br>
-
-2024/6/12日晚 <b> WebUiVersionV2.2.2(Stable) </b>
-> 进一步优化短语识别算法<br>
-> 美化README.md<br>
-> 再一次优化短语识别过多算法
-
-2024/9/22日晚 <b> WebUiVersionV3.0.1(Test) </b>
-> 实现兼容Mr.Mou全新布局<br>
-> 重写关键函数(new_load_word)<br>
-> 为后续优化选项模式做好准备<br>
-> 优化函数模块<br>
-> 优化错误提示<br>
-
-2024/9/23日早上 <b> WebUiVersionV3.0.2(Test) </b>
-> 采用Sword编写的xlsx加载生成模块
-
-2024/9/24日晚 <b> WebUiVersionV3.0.2(Stable) </b>
-> 添加展示流程信息
-
-2024/9/26日晚 <b> WebUiVersionV3.2.0(Test)</b>
-> 邀请Sword编写例句中单词识别替换算法,并集成入配置选项中<br>
-> 编写全新文章选择,支持多选,支持搜索文章！<br>
+| 更新时间          | 版本信息                       | 更新内容                                                               |
+|---------------|----------------------------|--------------------------------------------------------------------|
+| 2024/5/29 日   | WebUiVersionV1.0.0         | 本地测试通过                                                             |
+| 2024/5/29 日晚  |                            | 完成 streamlit cloud 结合 github 仓库初步上线部署                              |
+| 2024/5/30 日   |                            | 据 Mr.Mou 建议，添加一定量个性化设置并优化诸多代码                                      |
+| 2024/5/30 日晚  |                            | 大量删改不必要代码，大程度优化加载逻辑和函数加载等，采用多文件管理代码                                |
+| 2024/5/31 日   |                            | 新增个性化提示鼓励，以及 Sword 同学贡献他自定义的语料，添加例句功能                              |
+| 2024/5/31 日晚  | WebUiVersionV2.1.0(Tests)  | 新增检测模式（以英文选中文，以中文选英文）                                              |
+| 2024/6/4 日晚   | WebUiVersionV2.1.2(Test)   | 成功修复若干 bug，新增检测模式（以单词选例句，以例句选单词）以及正确率图像绘制，修复单词数量过多 bug             |
+| 2024/6/5 日    | WebUiVersionV2.1.2(Stable) | 修改提示词并初步优化例句除去待测单词功能                                               |
+| 2024/6/5 日晚   | WebUiVersionV2.1.3(Stable) | 再次优化例句除去待测单词功能并优化布局                                                |
+| 2024/6/11 日晚  | WebUiVersionV2.2.0(Test)   | 添加朗读单词功能、添加答错时显示答案功能、添加朗读单词个性化设置、美化 README.md、重写默认鼓励词并优化显示答案功能     |
+| 2024/6/11 日晚  | WebUiVersionV2.2.1(Stable) | 修复朗读单词的下划线 bug、优化短语识别算法、优化下划线数量以及间隔                                |
+| 2024/6/12 日晚  | WebUiVersionV2.2.2(Stable) | 进一步优化短语识别算法、美化 README.md、再一次优化短语识别过多算法                             |
+| 2024/9/22 日晚  | WebUiVersionV3.0.1(Test)   | 实现兼容 Mr.Mou 全新布局、重写关键函数(new_load_word)、为后续优化选项模式做好准备、优化函数模块、优化错误提示 |
+| 2024/9/23 日早上 | WebUiVersionV3.0.2(Test)   | 采用 Sword 编写的 xlsx 加载生成模块                                           |
+| 2024/9/24 日晚  | WebUiVersionV3.0.2(Stable) | 添加展示流程信息                                                           |
+| 2024/9/26 日晚  | WebUiVersionV3.2.0(Test)   | 邀请 Sword 编写例句中单词识别替换算法，并集成入配置选项中，编写全新文章选择，支持多选，支持搜索文章！             |
+| 2024/9/26 日晚  | WebUiVersionV3.2.1(Stable) | 优化 Sword 的正则算法，优化 Readme.md                                        |
