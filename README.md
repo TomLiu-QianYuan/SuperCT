@@ -1,5 +1,4 @@
-<center>  SuperCT  </center>
-============================
+# <center>  SuperCT  </center>
 
 #### <center> 一款基于 `https://shishiapcs.github.io` 的智能背单词APP</center>
 
