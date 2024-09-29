@@ -71,8 +71,8 @@ def replace_word_forms(sentence_: str, base_word_: str):
     sentence = delete_all_char(sentence_)
     for word_ in sentence.split(" "):
         if str(word_).lower().startswith(base_word_.lower()) and len(word_) - len(base_word_) <= 5:
-            return sentence.replace(word_, 6 * "_")
-    if base_word_ in sentence.split(' '):
+            return sentence.replace(base_word_, 6 * "_")
+    if base_word_.replace(" ", '') in sentence.split(' '):
         # print("直接返回", sentence, base_word_)
         return sentence.replace(base_word_, 6 * '_')
 
@@ -107,15 +107,7 @@ def replace_word_forms(sentence_: str, base_word_: str):
         if len(base_word_.split(' ')) < 2:
             return result
         # 短语定位
-        # print(locating_word)
-        # print(add_location)
         result = sentence
-        # for replace_word_position in add_location:
-        #     # 去除句子中短语间空隙防止钻空
-        #     location = result.find(replace_word_position)
-        #     # print(location)
-        #     result = result[0:location + len(replace_word_position)] + result[location + len(
-        #         replace_word_position) + 1:-1]
         result_ = ''
         result = result.split(' ')
         for word_ in add_location:
@@ -202,7 +194,6 @@ def new_load_word(page_content: str, replace=True) -> dict or [bool, bool]:
 
 
 def cut_key_word(exam_word: str, original_sentence: str) -> str:
-
     exam_word_change = exam_word[0:len(exam_word) - 1:1]
     pattern = f"\\b{exam_word}\\w*\\b|\\b{exam_word_change}\\w*\\b"
     r = re.sub(pattern, '______', original_sentence, flags=re.IGNORECASE)
