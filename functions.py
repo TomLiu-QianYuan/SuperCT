@@ -66,12 +66,12 @@ def delete_all_char(string: str,
     return string
 
 
-def replace_word_forms(sentence: str, base_word_: str):
+def replace_word_forms(sentence_: str, base_word_: str):
     result = ''
-    sentence = delete_all_char(sentence)
-    for word in sentence.split(" "):
-        if str(word).lower().startswith(base_word_.lower()) and len(word) - len(base_word_) <= 5:
-            return sentence.replace(word, 6 * "_")
+    sentence = delete_all_char(sentence_)
+    for word_ in sentence.split(" "):
+        if str(word_).lower().startswith(base_word_.lower()) and len(word_) - len(base_word_) <= 5:
+            return sentence.replace(word_, 6 * "_")
     if base_word_ in sentence.split(' '):
         # print("直接返回", sentence, base_word_)
         return sentence.replace(base_word_, 6 * '_')
@@ -79,8 +79,7 @@ def replace_word_forms(sentence: str, base_word_: str):
     else:
         sta_ = 0
         sta = 0
-        sentence = sentence.replace('-', ' ')
-
+        # sentence = sentence.replace('-', ' ')
         add_location = []
         for word in sentence.split(' '):
             for base_word in base_word_.split(' '):
@@ -203,8 +202,7 @@ def new_load_word(page_content: str, replace=True) -> dict or [bool, bool]:
 
 
 def cut_key_word(exam_word: str, original_sentence: str) -> str:
-    if exam_word in original_sentence.split(' '):
-        return original_sentence.replace(exam_word, '')
+
     exam_word_change = exam_word[0:len(exam_word) - 1:1]
     pattern = f"\\b{exam_word}\\w*\\b|\\b{exam_word_change}\\w*\\b"
     r = re.sub(pattern, '______', original_sentence, flags=re.IGNORECASE)
@@ -398,7 +396,18 @@ if __name__ == '__main__':
                 'The study concerns the variability in children’s growth rates.',
                 'There is significant variability in how individuals develop.',
                 'Development simply does not follow the same pattern for everyone.']
-    print(replace_word_forms("It's important to analyze your competitors when planning to effectively.", "compete"))
+    c = load_catalog(True, False).values()
+    for n, i in enumerate(c):
+
+        words, example = new_load_word(
+            page_content=get_html_content(f"https://shishiapcs.github.io/{i}"), replace=False)
+        # print(example)
+        if words in [0, 1]:
+            continue
+        for v in words.keys():
+            if "_" not in cut_key_word(v, example[v]):
+                print(example[v], v)
+        print(f"完成{n + 1}/{len(c)}")
 
 
     def s():
@@ -417,7 +426,7 @@ if __name__ == '__main__':
         t2 = time.time()
 
         print("Tom:", t2 - t1)
-    
+
     # a = new_load_word(data, replace=False)
     # word_list, exp_list = list(a[1].keys()), list(a[1].values())
     # c = []
