@@ -5,7 +5,6 @@ import time
 import pandas as pd
 import requests
 import streamlit as st
-import streamlit_mermaid as stmd
 from streamlit.components.v1 import html
 
 import functions
@@ -406,31 +405,7 @@ def main():
 
             with place_holder_info_2.expander("SuperCT执行流程"):
                 code = open("Process.mmd", 'r', encoding="utf-8").read()
-                st.markdown("""# `functions.py` 详细思维导图架构
-
-```mermaid
-digraph {
-    A[开始] -> B[get_html_content]
-    B -> C[load_catalog]
-    C -> D[delete_all_char]
-    D -> E[replace_word_forms]
-    E -> F[generate_dict]
-    F -> G[new_load_word]
-    G -> H[cut_key_word]
-    H -> I[结束]
-
-    load_catalog -> J[读取更新本地catalog.json]
-    J -> K[解析网页更新catalog.json]
-    K -> L[返回文章标题与URL映射]
-
-    new_load_word -> M[解析HTML表格内容]
-    M -> N[提取单词列表]
-    N -> O[提取中文翻译列表]
-    O -> P[提取例句列表]
-    P -> Q[生成单词与中文翻译字典]
-    Q -> R[生成单词与例句字典]
-    R -> I
-}""",unsafe_allow_html=True)
+                st.markdown(code, unsafe_allow_html=True)
                 st.write(open("Process.txt", 'r', encoding='utf-8').read())
     if not st.session_state['passage_list'] and st.session_state['clicked_button']:
         logo.empty()
